@@ -408,8 +408,8 @@ loop     lda i1
 
 showscnpg
          .block
-xlimit   = $fff
-ylimit   = $ffe
+xlimit   = $14
+ylimit   = $15
          #assign16 i1,viewport
          jsr updatepc
          lda #$c
@@ -1125,10 +1125,10 @@ drawrect .block
 ;uses: adjcell:2, adjcell2:2, currp:2, t1, t2, t3, i1:2, i2
 ;calls: pixel11
 x8pos    = currp
-x8poscp  = $ff5
+x8poscp  = $a7
 x8bit    = currp+1
 y8pos    = t1
-y8poscp  = $ff7
+y8poscp  = $a8
 y8byte   = i2
 rectulx  = adjcell2
 rectuly  = adjcell2+1
@@ -1361,11 +1361,11 @@ cl2      inx
 clrrect  .block   ;x8poscp, y8poscp
 ;uses: adjcell:2, adjcell2:2, currp:2, i1:2, i2, t1, t2, t3, $fd
 x8pos    = t3
-x8poscp  = $ff5
-x8bit    = $ff6
-y8pos    = $ff8 ;*
-y8poscp  = $ff7
-y8byte   = i2 ;*
+x8poscp  = $a7
+x8bit    = $9b
+y8pos    = $9c
+y8poscp  = $a8
+y8byte   = i2
 rectulx  = adjcell2
 rectuly  = adjcell2+1
          jsr xchgxy
@@ -1845,17 +1845,15 @@ loop12   asl vptilecx
          clc
          adc vptilecx
          sta vptilecx
-         rts
          .bend
 
-crsrset  .block
-         jsr crsrset1
+gexit2   rts
+
+crsrset  jsr crsrset1
          lda zoom
-         bne cont5
+         bne gexit2
 
          jmp pixel11
-cont5    rts
-         .bend
 
 crsrcalc .block
          lda i1+1    ;start of coorditates calculation
@@ -1942,22 +1940,66 @@ l3       stx xcrsr
          sta xcrsr+1
          cld
          lda zoom
-         beq exit
+         bne l8
 
+         rts
+
+l8       ldy #up
+         ldx #7
          lda vptilecy
-         bmi cont1
+         bmi cont3
 
+         ldy #down
          cmp #24
-         bcs cont1
+         bcc cont4
 
+         ldx #16
+cont3    stx vptilecy
+         bne cont1
+
+cont4    ldy #left
          lda vptilecx
-         bmi cont1
+         bmi cont5
 
+         ldy #right
          cmp #40
          bcc cont2
 
-cont1    jsr setviewport
-         jsr showscnpg
+         ldx #32
+cont5    stx vptilecx
+cont1    lda (viewport),y
+         tax
+         iny
+         lda (viewport),y
+         sta viewport+1
+         sta adjcell+1
+         stx viewport
+         stx adjcell
+         ldy #down
+         jsr nextcell
+         dey
+         jsr nextcell
+         lda #4
+         sta i2
+loopx    ldy #right
+         jsr nextcell
+         dec i2
+         bne loopx
+
+         lda viewport
+         clc
+         adc #<44*tilesize
+         tax
+         lda viewport+1
+         adc #>44*tilesize
+         cmp adjcell+1
+         bne l7
+
+         cpx adjcell
+         beq cont0
+
+l7       jsr setviewport
+cont0    jsr showscnpg
 cont2    lda #0
          sta t1
          lda vptilecy

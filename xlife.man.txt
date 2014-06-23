@@ -97,6 +97,11 @@
  files from the disk directory. Use mask
  to show only matched files.
 
+ The tentative pattern may show only up to
+ 960 cells.  This is enough to show  every
+ cell from a pattern file with the size up
+ to 8 blocks.
+
  The universe size is 160x192.
 
  The rules with  "born on"  condition  0

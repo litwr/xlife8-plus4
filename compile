@@ -1,4 +1,6 @@
-rm '(c).s00'
+rm '(c).s00' xlife.prg cat.prg seqreader.prg
+petcat -w3 cat.bas >cat.prg
+petcat -w3 seqreader.bas >seqreader.prg
 txt2seq '(c).txt' u
 
 tmpx -i xlife.asm -l xlife.lst

@@ -721,5 +721,5 @@ nextcell lda (adjcell),y
          lda (adjcell),y
          sta adjcell+1
          stx adjcell
-         rts
+         rts    ;ZF=0
 

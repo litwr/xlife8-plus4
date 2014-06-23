@@ -8,14 +8,42 @@
         .null "15872:litwr-2014"
         .BYTE 0,0
 
-irq194   pha       ;irq194, irqbench, irq210, irq210x should start at the same page
+irq210x  pha         ;for zoom in - text mode
+         txa
+         pha
+         tya
+         pha
+         ldx mode
+         lda bgedit,x
+         sta $ff15
+         sta $ff3e
+         jsr KBDREAD
+         sta $ff3f
+         pla
+         tay
+         lda #<irq195x
+         sta $fffe
+         lda #195
+         bne irqe1
+         ;jmp irqe
+
+irq195x  pha
+         lda bgbl
+         sta $ff15
+         lda #<irq210x
+         sta $fffe
+         lda #210
+         sta $ff0b
+         bne irqe2
+
+irq194   pha       ;irq194, irq195x, irqbench, irq210, irq210x must start at the same page
          txa
          pha
          lda #8
          sta $ff14
          lda $ff06
          and #$df
-         ldx #8
+         ldx #7
 irql0    dex
          bne irql0
 
@@ -27,10 +55,35 @@ irql0    dex
          lda #<irq210
          sta $fffe
          lda #210
+         bne irqe1
+
+irq210   pha
+         txa
+         pha
+         tya
+         pha
+         lda #$18
+         sta $ff14
+         lda $ff06
+         ora #$20
+         sta $ff06
+         lda #$c8
+         sta $ff12
+         ldx mode
+         lda bgedit,x
+         sta $ff15
+         lda #<irq194
+         sta $fffe
+         sta $ff3e
+         jsr KBDREAD
+         sta $ff3f
+         pla
+         tay
+         lda #194
 irqe1    sta $ff0b
 irqe     pla
          tax
-         pla
+irqe2    pla
          inc $ff09
          rti
 
@@ -90,46 +143,6 @@ irqbench .block       ;timer interrupt
          beq irqe
          .bend
 
-irq210   pha
-         txa
-         pha
-         tya
-         pha
-         lda #$18
-         sta $ff14
-         lda $ff06
-         ora #$20
-         sta $ff06
-         lda #$c8
-         sta $ff12
-         ldx mode
-         lda bgedit,x
-         sta $ff15
-         lda #<irq194
-         sta $fffe
-         sta $ff3e
-         jsr KBDREAD
-         sta $ff3f
-         pla
-         tay
-         lda #194
-         jmp irqe1
-
-irq210x  pha         ;for zoom in - text mode
-         txa
-         pha
-         tya
-         pha
-         ldx mode
-         lda bgedit,x
-         sta $ff15
-         sta $ff3e
-         jsr KBDREAD
-         sta $ff3f
-         pla
-         tay
-         jmp irqe
-
 crsrbit  .byte $80    ;x bit position
 crsrbyte .byte 0      ;y%8
 crsrx    .byte 0      ;x/4 -  not at pseudographics
@@ -144,9 +157,6 @@ ttab     .byte 0,1,2,3,3,4,5,6,7,8,8,9,$10,$11,$12,$13,$13,$14
          .byte $75,$76,$77,$78,$78,$79,$80,$81,$82,$83,$83,$84
          .byte $85,$86,$87,$88,$88,$89,$90,$91,$92,$93,$93,$94
          .byte $95,$96,$97,$98,$98,$99
-vistab   .byte 0,1,4,5,$10,$11,$14,$15
-         .byte $40,$41,$44,$45,$50,$51,$54,$55
-bittab   .byte 1,2,4,8,16,32,64,128
 ctab     .byte 0,8,$16,$24,$32,$40,$48,$56,$64,$72,$80,$88,$96
          .byte 4,$12,$20,$28,$36,$44,$52,$60,$68,$76,$84
 zoom     .byte 0
@@ -1060,6 +1070,9 @@ del1st   #assign16 startp,i1
 
 curdev   .byte 8
 ppmode   .byte 1    ;putpixel mode: 0 - tentative, 1 - active
+vistab   .byte 0,1,4,5,$10,$11,$14,$15
+         .byte $40,$41,$44,$45,$50,$51,$54,$55
+bittab   .byte 1,2,4,8,16,32,64,128
          .include "video.s"
 
          * = $7300   ;no page alignement required

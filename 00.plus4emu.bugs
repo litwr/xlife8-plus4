@@ -1,6 +1,6 @@
 bugs
 * PAL inv - 40x36, xlife's manpage, ...
-* fix to dir
+* fix to dir for load files (disk images, prg, ...)
 * dir"*=s" does not work for working directory
 * sometimes debugger shows incorrect (disp =1) address
 
@@ -10,6 +10,9 @@ missed
 * no flash screen at debugger step
 * cpc6128emu is 3 times faster
 * CPU flags
+
+question
+* mouse-cursor interface
 
 cpc6128
 * working directory is not accessible
