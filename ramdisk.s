@@ -40,7 +40,7 @@ m1       cpy #0
          .bend
 
 ramdisk  .block
-         jsr $ff4f
+         jsr JPRIMM
          .byte 147,30
          .text "enter file#"
          .byte $d,28,"0",144

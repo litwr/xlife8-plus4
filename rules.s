@@ -212,7 +212,7 @@ loop3   inx
         txa
         eor #$30
 showr1  cpy #10
-        bne cont2        
+        bne cont2
 
         lda #"*"
 cont2   sta $fd4,y
@@ -235,9 +235,9 @@ loop2   asl
         beq cont4
 
         lda #"8"
-        jsr $ffd2
+        jsr BSOUT
 cont4   lda #"/"
-        jsr $ffd2
+        jsr BSOUT
         lda #1
 loop4   bit born
         bne cont5
@@ -249,7 +249,7 @@ loop5   asl
         beq cont3
 
         lda #"8"
-        jmp $ffd2
+        jmp BSOUT
 
 cont5   jsr showr0
         jmp loop5
@@ -265,7 +265,7 @@ loop3   inx
 
         txa
         eor #$30
-        jsr $ffd2
+        jsr BSOUT
         pla
 cont3   rts
         .bend

@@ -48,10 +48,10 @@ l5       lda #$1b
 
 cont2    inc mode
 l4       rts
-         
+
 cont3    cmp #"Q"-"A"+$c1
          bne cont5
-         
+
          lda #3
          sta mode
          rts
@@ -74,7 +74,7 @@ l3       sta mode
 
 cont4    cmp #"T"-"A"+$c1
          bne cont6
-         
+
          #chgtopology
 
 cont6    cmp #"O"-"A"+$41
@@ -85,12 +85,12 @@ cont6    cmp #"O"-"A"+$41
 
          lda tilecnt
          bne l8
-  
+
          lda tilecnt+1
          bne l8
 
 l1       rts
-       
+
 l8       jsr zerocc
          jsr generate
          jsr showscn
@@ -118,7 +118,7 @@ cont8    cmp #"C"-"A"+$c1
          beq l1
 
 l10      jmp clear
-         
+
 cont10   cmp #"E"-"A"+$c1
          bne cont11
 
@@ -128,7 +128,7 @@ cont10   cmp #"E"-"A"+$c1
          lda #1
          sta pseudoc
 l11      jmp showscn
-         
+
 cont11   cmp #"!"
          bne cont12
 
@@ -184,7 +184,7 @@ m1       jsr decben
          jsr setbench
 bloop    lda tilecnt
          bne bl7
- 
+
          lda tilecnt+1
          bne bl7
 
@@ -208,7 +208,7 @@ qbexit   jsr tograph
          jmp showscn
 
 cont15   cmp #"R"-"A"+$c1
-         bne cont16a
+         bne cont16
 
          jsr totext
          jsr inborn
@@ -223,15 +223,11 @@ cont15   cmp #"R"-"A"+$c1
          jsr fillrt
 finish   jsr tograph
          jsr showrules
-         jmp showscn
+         jsr showscn
+         jsr crsrset      ;showscn also calls crsrset! but crsrset is fast now...
+         jmp crsrcalc
 
-cont16   ldx mode
-         cpx #2
-         bne cont16x
-
-         jmp cont18
-
-cont16a  cmp #$1d   ;cursor right
+cont16   cmp #$1d   ;cursor right
          bne cont16x
 
          jsr crsrclr
@@ -249,7 +245,7 @@ cright   inc vptilecx
          beq cxright
 
          lsr crsrbit
-         jmp crsrset
+         jmp cont17u
 
 cxright  lda #$80
          bne cm6
@@ -265,7 +261,7 @@ cont16x  cmp #$9d   ;cursor left
          lda vptilecx
          sbc #8
 qleft    sta vptilecx
-         jmp crsrset
+         jmp cont17u
 
 cleft    dec vptilecx
          lda crsrbit
@@ -273,7 +269,7 @@ cleft    dec vptilecx
          beq cxleft
 
          asl crsrbit
-         jmp crsrset
+         jmp cont17u
 
 cxleft   lda #1
 cm6      ldx #0
@@ -285,7 +281,7 @@ cm1      sta t1
          lda (crsrtile),y
          cmp #>plainbox
          bne cm4
-   
+
          cpx #<plainbox
          bne cm4
 
@@ -299,7 +295,7 @@ cm4      sta crsrtile+1
 cm5      lda t1
          ldx i2
          sta crsrbit,x
-         jmp crsrset
+         jmp cont17u
 
 cont16b  cmp #$91   ;cursor up
          bne cont16c
@@ -312,14 +308,14 @@ cont16b  cmp #$91   ;cursor up
          lda vptilecy
          sbc #8
 qup      sta vptilecy
-         jmp crsrset
+         jmp cont17u
 
 cup      dec vptilecy
          lda crsrbyte
          beq cxup
 
          dec crsrbyte
-         jmp crsrset
+         jmp cont17u
 
 cxup     lda #7
 cm3      ldx #1
@@ -343,7 +339,7 @@ cdown    inc vptilecy
          beq cxdown
 
          inc crsrbyte
-         jmp crsrset
+         bne cont17u
 
 cxdown   lda #0
          beq cm3
@@ -361,10 +357,8 @@ cont17   cmp #$20   ;space
          and crsrbit
          beq lsp1
 
+         #ispyr crsrtile
          clc
-         lda (crsrtile),y
-         adc #1
-         sta (crsrtile),y
          lda #1
          jsr inctsum
 lsp2     lda zoom
@@ -372,12 +366,9 @@ lsp2     lda zoom
 
          jsr showscnpg
 lsp3     jsr infoout
-         jmp crsrset
+         jmp cont17u
 
-lsp1     sec
-         lda (crsrtile),y
-         sbc #1
-         sta (crsrtile),y
+lsp1     #dcpyr crsrtile
          jsr dectsum
          bne lsp2
 
@@ -397,7 +388,8 @@ cont17t  sta crsrbit
 
          jsr setviewport
          jsr showscnpg
-cont17u  jmp crsrset
+cont17u  jsr crsrset
+         jmp crsrcalc
 
 cont17f  cmp #19        ;home
          bne cont17a
@@ -449,7 +441,7 @@ cont17v  lda zoom
          jsr zoomout
 nozoom3  jsr totext
          lda #147
-         jsr $ffd2
+         jsr BSOUT
          jmp cont17w
 
 cont17d  cmp #"+"
@@ -474,7 +466,7 @@ cont17g  cmp #"V"-"A"+$c1
          bne cont17h
 
          jsr totext
-         jsr $ff4f
+         jsr JPRIMM
          .byte 144,147,0
 
          jsr curoff
@@ -533,7 +525,7 @@ shift    lda $543   ;shift st
          dey
          cmp #>plainbox
          bne cm4x
-   
+
          cpx #<plainbox
          beq cont20
 
@@ -547,43 +539,43 @@ decben   dec scrbench+6   ;ac = $39
          ldy scrbench+6
          cpy #$2f
          bne dbexit
-         
+
          sta scrbench+6
          dec scrbench+5
          ldy scrbench+5
          cpy #$2f
          bne dbexit
-         
+
          sta scrbench+5
          dec scrbench+4
          ldy scrbench+4
          cpy #$2f
          bne dbexit
-         
+
          sta scrbench+4
          dec scrbench+3
          ldy scrbench+3
          cpy #$2f
          bne dbexit
-         
+
          sta scrbench+3
          dec scrbench+2
          ldy scrbench+2
          cpy #$2f
          bne dbexit
-         
+
          sta scrbench+2
          dec scrbench+1
          ldy scrbench+1
          cpy #$2f
          bne dbexit
-         
+
          sta scrbench+1
          dec scrbench
          ldy scrbench
          cpy #$2f
          bne dbexit
-         
+
          sta scrbench   ;zf is set at 9999999
 dbexit   rts
 

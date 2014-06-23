@@ -6,7 +6,7 @@ printhex .macro
          lsr
          lsr
          eor #$30
-         jsr $ffd2
+         jsr BSOUT
          pla
          and #$f
          eor #$30
@@ -14,7 +14,7 @@ printhex .macro
          bcc l1
 
          adc #6     ;CY=1
-l1       jsr $ffd2
+l1       jsr BSOUT
          .endm
 
 totext   sta $ff3e
@@ -56,7 +56,7 @@ tographx jsr tograph0
 
 showbench
          .block
-         jsr $ff4f
+         jsr JPRIMM
          .byte 147
          .text "time:"
          .byte $d
@@ -64,14 +64,9 @@ showbench
          rts
          .bend
 
-copyr    lda #3
-         ldx #<copyleft
-         ldy #>copyleft
-         jmp showtxt
-
 scrbench = $c17
 insteps  .block
-         jsr $ff4f
+         jsr JPRIMM
          .byte 144,147
          .null "number of generations: "
 loop3    ldy #0
@@ -87,6 +82,9 @@ loop1    tya
          cmp #$14
          beq cont2
 
+         cmp #$1b
+         beq exit
+
          cmp #$30
          bcc loop1
 
@@ -100,11 +98,11 @@ loop1    tya
          iny
          bne loop1
 
-cont1    jsr curoff 
+cont1    jsr curoff
          tya
          bne cont3
 
-         rts        ;return yr=len, zf=1
+exit     rts        ;return yr=len, zf=1
 
 cont3    ldx #6
          sty temp
@@ -128,7 +126,7 @@ cont2    dey
 
 scrborn = $d1f
 inborn  .block
-         jsr $ff4f
+         jsr JPRIMM
          .byte 147,30
          .text "the rules are defined by "
          .byte 31
@@ -206,7 +204,7 @@ cont2    dey
 
 scrstay = $d47
 instay  .block
-         jsr $ff4f
+         jsr JPRIMM
          .byte $d
          .null "stay = "
 loop3    ldy #1
@@ -253,7 +251,7 @@ cont2    dey
          .bend
 
 indens   .block
-         jsr $ff4f
+         jsr JPRIMM
          .byte 144,147
          .text "select density or press "
          .byte 28
@@ -292,7 +290,7 @@ loop1    jsr getkey
 exit     rts
          .bend
 
-help     jsr $ff4f
+help     jsr JPRIMM
          .byte 144,147
          .text "        *** xlife commands ***"
          .byte $d,18,28,"!",30
@@ -301,7 +299,7 @@ help     jsr $ff4f
          .text " set random density - default 59%"
          .byte $d,18,28,"+",30,"/",28,"-",30
          .null " zoom in/out"
-         jsr $ff4f
+         jsr JPRIMM
          .byte $d,18,28,".",30,"/",28,"h","o","m","e",30
          .text " center/home cursor"
          .byte $d,18,28,"?",30
@@ -318,7 +316,7 @@ help     jsr $ff4f
          .text " toggle hide mode - about 70% faster"
          .byte $d,18,28,"l",30
          .null " load and transform file"
-         jsr $ff4f
+         jsr JPRIMM
          .byte $d,28,146,"l",18,30
          .text " reload pattern"
          .byte $d,18,28,"o",30
@@ -339,7 +337,7 @@ help     jsr $ff4f
          .text " reload/set&save palette"
          .byte $d,28,"@",18,30
          .null " toggle device #"
-         jsr $ff4f
+         jsr JPRIMM
          .byte $d,144,146,"u",18
          .text "se "
          .byte 28
@@ -359,33 +357,7 @@ help     jsr $ff4f
          .byte 146,0
          jmp getkey
 
-initxt   lda #"G"-"A"+1
-         sta $fc0
-         lda #"%"
-         sta $fd2
-         lda #"X"-"A"+1
-         sta $fdf
-         lda #"Y"-"A"+1
-         sta $fe4
-         rts
-
-clrscn   .block
-         ldy #0
-         sty i1
-         lda #$20
-         sta i1+1
-l2       tya
-l1       sta (i1),y
-         iny
-         bne l1
-
-         inc i1+1
-         lda #$3e
-         cmp i1+1
-         bne l2
-         .bend
-
-setcolor .block          ;it should be after clrscn!
+setcolor .block
          ldy bordertc
          lda topology
          beq cont
@@ -496,7 +468,7 @@ nocy1    iny
          sta i1+1
          jsr updatepc
          bcc loop4
-         
+
 cont1    pha
          lda #32
          bne cont2
@@ -516,7 +488,7 @@ cont3    dec xlimit
          lda i1+1
          sbc #>tilesize*39
          sta i1+1
-         jsr updatepc      
+         jsr updatepc
          jmp loop3
          .bend
 
@@ -544,32 +516,25 @@ showscn  .block
          jmp showscnpg
 
 cont1    lda tilecnt
-         bne cont
- 
+         bne xcont2
+
          lda tilecnt+1
          beq gexit
-
-cont     lda pseudoc
-         beq showscn2
-
-         jmp showscnp
          .bend
 
-showscn0 .block
-         lda zoom
+xcont2   lda pseudoc
+         beq showscn2
+         jmp showscnp
+
+showscn0 lda zoom
          beq rts1
 
          lda tilecnt
-         bne cont
- 
+         bne xcont2
+
          lda tilecnt+1
-         beq rts1
-
-cont     lda pseudoc
-         beq showscn2
-
-         jmp showscnp
-         .bend
+         bne xcont2
+         rts
 
 showscn2 .block
          #assign16 currp,startp
@@ -623,22 +588,11 @@ loop     ldy #video
 
          cpx #1
          bne cont
-
          jmp crsrset
 
 cont     sta currp+1
          stx currp
          jmp loop
-         .bend
-
-infoout  .block
-         ldy #4
-loop2    lda cellcnt,y
-         sta $fc9,y
-         dey
-         bpl loop2
-
-         jmp showtinfo
          .bend
 
 showscnp .block
@@ -702,7 +656,6 @@ loop     ldy #video
 
          cpx #1
          bne cont
-
          jmp crsrset
 
 cont     sta currp+1
@@ -713,7 +666,7 @@ cont     sta currp+1
 xclrscn  .block
          lda tilecnt
          bne cont1
- 
+
          lda tilecnt+1
          bne cont1
 
@@ -723,7 +676,7 @@ cont1    #assign16 currp,startp
 loop     ldy #sum
          lda (currp),y
          beq lnext
- 
+
          ldy #video
          lda (currp),y
          sta i1
@@ -842,12 +795,12 @@ cont1    lda #$20
 
          eor #$30
          sta tcscr+1
-exit     rts 
+exit     rts
          .bend
 
 loadmenu .block
 scrfn    = $c00+120
-         jsr $ff4f
+         jsr JPRIMM
          .byte 147,30
          .text "input filename, an empty string means toshow directory, press "
          .byte 28
@@ -868,7 +821,7 @@ loop1    tya
          jsr getkey
          cmp #27
          bne cont7
-         
+
 exit     jsr curoff
          lda #0
          rts
@@ -899,7 +852,7 @@ cont8    cmp #32
          ldx #0
          stx fnlen
          sta fn,y
-loop8    jsr $ffd2
+loop8    jsr BSOUT
          iny
          bpl loop1
 
@@ -919,7 +872,7 @@ menu2    jsr setdirmsk
          cpx #27
          beq repeat
 
-         jsr $ff4f
+         jsr JPRIMM
          .byte 147,30
          .text "use "
          .byte 28
@@ -936,9 +889,9 @@ menu2    jsr setdirmsk
          cmp #$15
          bne cont10
 
-         jsr $ff4f
+         jsr JPRIMM
          .byte 19,27,"d",0
-cont10   jsr $ff4f
+cont10   jsr JPRIMM
          .byte 19,27,"w",30
 msglen  = 20
          .text "enter file# or "
@@ -952,7 +905,7 @@ loop1a   tya
          jsr getkey
          cmp #27
          bne cont7a
-         
+
 repeat   jsr curoff
          jmp loadmenu
 
@@ -971,38 +924,48 @@ cont7a   cmp #$d
          cmp #$3a
          bcs loop1a
 
-loop8a   jsr $ffd2
+loop8a   jsr BSOUT
          iny
          bpl loop1a
 
 cont1a   tya
          beq loop1a
 
-         sty fnlen
+         pha     ;save y
          lda #msglen
          sta $3b
          lda #0
          sta $c00+msglen,y
-         lda #$71
+         lda #$71     ;white = invisible cursor
          sta $800+msglen,y
          lda #$c
          sta $3c
          lda $c00+msglen
          clc
-         jsr $8e3e      ;str->int
+         jsr STR2INT
+         lda $15
+         bne l1
+
          jsr findfn
+l1       pla
+         tay
+         lda #32
+         sta $c00+msglen,y
+         lda fnlen
+         sta $800+msglen,y
+         beq loop1a
          jmp curoff
 
 cont2a   dey
          bmi loop3a
 
          dey
-         jmp loop8a         
+         jmp loop8a
          .bend
 
 getsvfn  .block
 scrfn    = $c00+40
-         jsr $ff4f
+         jsr JPRIMM
          .byte 147,30
          .text "enter filename or press "
          .byte 28
@@ -1019,7 +982,7 @@ loop1    tya
          jsr getkey
          cmp #27
          bne cont7
-         
+
          jsr curoff
          ldy #0
          sta svfnlen
@@ -1038,11 +1001,11 @@ cont7    cmp #$d
          beq loop1
 
          sta svfn,y
-loop8    jsr $ffd2
+loop8    jsr BSOUT
          iny
          bpl loop1
 
-cont1    sty svfnlen    
+cont1    sty svfnlen
          jmp curoff
 
 cont2    dey
@@ -1058,8 +1021,8 @@ showrect .block
          clc
          ldy #0
          ldx #24
-         jsr $fff0        ;set position for the text
-         jsr $ff4f
+         jsr PLOT        ;set position for the text
+         jsr JPRIMM
          .byte 30
          .text "move, "
          .byte 28,"r",30
@@ -1143,7 +1106,7 @@ finish0  php
          jsr restbl
          jsr totext
          lda #147
-         jsr $ffd2
+         jsr BSOUT
          plp
          rts
          .bend
@@ -1184,7 +1147,7 @@ loop1    dex
 
          stx m1+1
          sta xcut        ;0 -> xcut
-         sta ycut         
+         sta ycut
          lda crsrx
          lsr
          asl
@@ -1198,7 +1161,7 @@ m1       adc #0
          sec
          sbc x0
          bcs cont2
-         
+
          eor #$ff
          beq cont10
 
@@ -1206,7 +1169,7 @@ m1       adc #0
 cont10   lda rectulx
          adc #1
          bcc cont7
-         
+
 cont4    adc x0
          bcs cont5
 
@@ -1218,7 +1181,7 @@ cont5    lda #160
 cont2    sec
          sbc rectulx
          bcs cont7
- 
+
          eor #$ff
          adc #1
 cont7    sta x8pos
@@ -1255,7 +1218,7 @@ cont6    lda #192
 cont1    sec
          sbc rectuly
          bcs cont8
- 
+
          eor #$ff
          adc #1
 cont8    sta y8pos
@@ -1291,7 +1254,7 @@ loop10   jsr pixel11
          sty y8byte
          cpy #8
          bne loop10
- 
+
          ldy #down
          jsr nextcell
          lda #0
@@ -1306,7 +1269,7 @@ loop11   jsr pixel11
          dey
          sty y8byte
          bpl loop11
- 
+
          ldy #up
          jsr nextcell
          lda #7
@@ -1331,7 +1294,7 @@ loop12   jsr pixel11
          txa
          lsr
          tax
-         lda x8bit        
+         lda x8bit
          cmp #8
          bne loop12
 
@@ -1340,7 +1303,7 @@ loop12   jsr pixel11
          eor i1
          sta i1
          bne loop12
- 
+
 nextrt   ldy #right
          jsr nextcell
          lda #$80
@@ -1360,7 +1323,7 @@ loop15   jsr pixel11
          txa
          asl
          tax
-         lda x8bit  
+         lda x8bit
          cmp #16
          bne loop15
 
@@ -1369,7 +1332,7 @@ loop15   jsr pixel11
          sbc #8
          sta i1
          bcs loop15
- 
+
 nextlt   ldy #left
          jsr nextcell
          lda #1
@@ -1386,22 +1349,11 @@ drrect1  ldy #video
          ldy y8byte
          lda x8bit
          and #$f
-         bne cont14
+         beq cont14
+         jmp xcont4
 
-         lda x8bit
-         lsr
-         lsr
-         lsr
-         lsr
-         bpl cont15
-
-cont14   tax
-         lda #8
-         eor i1
-         sta i1
-         txa
-cont15   tax
-         rts
+cont14   lda x8bit
+         jmp xcont3
          .bend
 
 calcx    .block        ;$80 -> 0, $40 -> 1, ...
@@ -1409,7 +1361,7 @@ calcx    .block        ;$80 -> 0, $40 -> 1, ...
 cl2      inx
          asl
          bcc cl2
-          
+
          txa
          rts
          .bend
@@ -1625,29 +1577,29 @@ crsrset1 .block
          lda (crsrtile),y
          and crsrbit
          bne cont3
-    
+
          ldx crsrocc
 cont3    stx $ff16
          lda crsrbit
          and #$f
-         bne cont2
+         bne xcont4
 
          lda crsrbit
-         lsr
-         lsr
-         lsr
-         lsr
-         jmp cont1
+         .bend
 
-cont2    tax
-         clc
+xcont3   lsr
+         lsr
+         lsr
+         lsr
+         bpl xcont1
+
+xcont4   tax
          lda #8
-         adc i1
+         eor i1
          sta i1
          txa
-cont1    tax
+xcont1   tax
          rts
-         .bend
 
 pixel11  lda vistab,x
          asl
@@ -1668,7 +1620,7 @@ setdirmsk
          lda curdev
          eor #$30
          sta devtxt+1
-         jsr $ff4f
+         jsr JPRIMM
          .byte 147
 msglen   = 40
 devtxt   .text "u0"
@@ -1711,7 +1663,7 @@ cont7    tax
          beq loop1
 
          sta dirname+3,y
-loop8    jsr $ffd2
+loop8    jsr BSOUT
          iny
          bpl loop1
 
@@ -1749,7 +1701,7 @@ setviewport
          ora $fe6
          eor #$30
          bne cont1
-         
+
          lda $fe7
          cmp #$38
          bcs cont1
@@ -1789,7 +1741,7 @@ cont2    lda $fe0
          ora $fe1
          eor #$30
          bne cont3
-         
+
          lda $fe2
          cmp #$38
          bcs cont3
@@ -1890,7 +1842,7 @@ loop12   asl vptilecx
          asl vptilecy
          dey
          bne loop12
-         
+
          lda crsrbyte
          clc
          adc vptilecy
@@ -1899,7 +1851,7 @@ loop12   asl vptilecx
          jsr calcx
          clc
          adc vptilecx
-         sta vptilecx 
+         sta vptilecx
          rts
          .bend
 
@@ -1908,8 +1860,12 @@ crsrset  .block
          lda zoom
          bne cont5
 
-         jsr pixel11
-cont5    lda i1+1    ;start of coorditates calculation
+         jmp pixel11
+cont5    rts
+         .bend
+
+crsrcalc .block
+         lda i1+1    ;start of coorditates calculation
          sec
          sbc #$20
          sta i1+1
@@ -2006,7 +1962,7 @@ l3       stx xcrsr
 
          cmp #40
          bcc cont2
- 
+
 cont1    jsr setviewport
          jsr showscnpg
 cont2    lda #0
@@ -2029,18 +1985,18 @@ exit     rts
          .bend
 
 infov    .block
-         jsr $ff4f
+         jsr JPRIMM
          .byte 147,144,0
 
          lda fnlen
          beq cont1
-         
-         jsr $ff4f
+
+         jsr JPRIMM
          .null "last loaded filename: "
- 
+
          ldy #0
 loop1    lda fn,y
-         jsr $ffd2
+         jsr BSOUT
          iny
          cpy fnlen
          bne loop1
@@ -2058,44 +2014,44 @@ xmax     = adjcell
 ymax     = adjcell+1
 sizex    = adjcell2
 sizey    = adjcell2+1
-         jsr $ff4f
+         jsr JPRIMM
          .byte $d
          .null "active pattern size: "
 
          lda #0
          ldx sizex
-         jsr $a45f      ;int -> str
+         jsr INT2STR
          lda #"x"
-         jsr $ffd2
+         jsr BSOUT
          lda #0
 
          ldx sizey
-         jsr $a45f      ;int -> str
-         jsr $ff4f
+         jsr INT2STR
+         jsr JPRIMM
          .byte $d
          .null "box life bounds: "
 
          lda #0
          ldx xmin
-         jsr $a45f      ;int -> str
-         jsr $ff4f
+         jsr INT2STR
+         jsr JPRIMM
          .null "<=x<="
 
          lda #0
          ldx xmax
-         jsr $a45f      ;int -> str
+         jsr INT2STR
          lda #" "
-         jsr $ffd2
+         jsr BSOUT
          lda #0
          ldx ymin
-         jsr $a45f      ;int -> str
-         jsr $ff4f
+         jsr INT2STR
+         jsr JPRIMM
          .null "<=y<="
 
          lda #0
          ldx ymax
-         jsr $a45f      ;int -> str
-cont2    jsr $ff4f
+         jsr INT2STR
+cont2    jsr JPRIMM
          .byte $d
          .null "rules: "
          jsr showrules2
@@ -2107,7 +2063,7 @@ chgclrs1 ldx i1
          stx i1
          lda borderpc,x
          #printhex
-         jsr $ff4f
+         jsr JPRIMM
          .null "): "
          rts
 
@@ -2136,7 +2092,7 @@ curpos8  = 464
 curpos9  = 508
          ldx #$ff
          stx i1
-         jsr $ff4f
+         jsr JPRIMM
          .byte 147,30
          .text "press "
          .byte 28
@@ -2155,7 +2111,7 @@ curpos9  = 508
          lda 3072+curpos1
          ldy 3073+curpos1
          jsr chgclrs2
-cont1    jsr $ff4f
+cont1    jsr JPRIMM
          .byte $d
          .null "the torus border ("
          jsr chgclrs1
@@ -2167,7 +2123,7 @@ cont1    jsr $ff4f
          lda 3072+curpos2
          ldy 3073+curpos2
          jsr chgclrs2
-cont2    jsr $ff4f
+cont2    jsr JPRIMM
          .byte $d
          .null "the cursor over live cell ("
          jsr chgclrs1
@@ -2179,7 +2135,7 @@ cont2    jsr $ff4f
          lda 3072+curpos3
          ldy 3073+curpos3
          jsr chgclrs2
-cont3    jsr $ff4f
+cont3    jsr JPRIMM
          .byte $d
          .null "the cursor over empty cell ("
          jsr chgclrs1
@@ -2191,7 +2147,7 @@ cont3    jsr $ff4f
          lda 3072+curpos4
          ldy 3073+curpos4
          jsr chgclrs2
-cont4    jsr $ff4f
+cont4    jsr JPRIMM
          .byte $d
          .null "the live cell ("
          jsr chgclrs1
@@ -2203,7 +2159,7 @@ cont4    jsr $ff4f
          lda 3072+curpos5
          ldy 3073+curpos5
          jsr chgclrs2
-cont5    jsr $ff4f
+cont5    jsr JPRIMM
          .byte $d
          .null "the new cell ("
          jsr chgclrs1
@@ -2215,7 +2171,7 @@ cont5    jsr $ff4f
          lda 3072+curpos6
          ldy 3073+curpos6
          jsr chgclrs2
-cont6    jsr $ff4f
+cont6    jsr JPRIMM
          .byte $d
          .null "the edit background ("
          jsr chgclrs1
@@ -2227,7 +2183,7 @@ cont6    jsr $ff4f
          lda 3072+curpos7
          ldy 3073+curpos7
          jsr chgclrs2
-cont7    jsr $ff4f
+cont7    jsr JPRIMM
          .byte $d
          .null "the go background ("
          jsr chgclrs1
@@ -2239,7 +2195,7 @@ cont7    jsr $ff4f
          lda 3072+curpos8
          ldy 3073+curpos8
          jsr chgclrs2
-cont8    jsr $ff4f
+cont8    jsr JPRIMM
          .byte $d
          .null "the status background ("
          jsr chgclrs1
@@ -2252,13 +2208,13 @@ cont8    jsr $ff4f
          ldy 3073+curpos9
          jsr chgclrs2
 cont9    jsr curoff
-         jsr $ff4f
+         jsr JPRIMM
          .byte $d
          .null "to save this config?"
 loop     jsr getkey
          cmp #"n"
          beq exit
-  
+
          cmp #"y"
          bne loop
 

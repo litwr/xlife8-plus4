@@ -25,7 +25,7 @@ lnext    ldy #next
          iny
          lda (currp),y
          bne cont1
-         
+
          cpx #1
          beq cont2
 
@@ -36,7 +36,7 @@ cont1    sta currp+1
 cont2    jsr showscn
          jsr cleanup0
          jmp infoout
-         .bend       
+         .bend
 
 iniadjc  lda (currp),y
          sta adjcell
@@ -167,93 +167,6 @@ inctiles .block
 
          inc i1+1
 l1       rts
-         .bend
-
-inilinks .block
-         jsr totiles
-         ldy #0
-         sty adjcell
-         lda #$20
-         sta adjcell+1
-         ldx #vermax
-         stx i2
-l1       ldx #hormax
-l5       jsr inivideo
-         ldy #left
-         lda i1
-         sec
-         sbc #tilesize
-         sta (i1),y
-         lda i1+1
-         sbc #0
-         iny
-         sta (i1),y
-         lda i1		
-         sbc #<(hormax+1)*tilesize
-         iny            ;ul
-         sta (i1),y
-         lda i1+1
-         sbc #>(hormax+1)*tilesize
-         iny
-         sta (i1),y
-         lda i1		
-         sbc #<hormax*tilesize
-         iny            ;up
-         sta (i1),y
-         lda i1+1
-         sbc #>hormax*tilesize
-         iny
-         sta (i1),y
-         lda i1		
-         sbc #<(hormax-1)*tilesize
-         iny            ;ur
-         sta (i1),y
-         lda i1+1
-         sbc #>(hormax-1)*tilesize
-         iny
-         sta (i1),y
-         lda i1		
-         clc
-         adc #tilesize
-         iny            ;right
-         sta (i1),y
-         lda i1+1
-         adc #0
-         iny
-         sta (i1),y
-         lda i1
-         adc #<(hormax+1)*tilesize
-         iny		;dr
-         sta (i1),y
-         lda i1+1
-         adc #>(hormax+1)*tilesize
-         iny
-         sta (i1),y       
-         lda i1
-         adc #<hormax*tilesize
-         iny		;down
-         sta (i1),y
-         lda i1+1
-         adc #>hormax*tilesize
-         iny
-         sta (i1),y    
-         lda i1
-         adc #<(hormax-1)*tilesize
-         iny		;dl
-         sta (i1),y
-         lda i1+1
-         adc #>(hormax-1)*tilesize
-         iny
-         sta (i1),y
-         jsr inctiles
-         dex
-         bne l5
-
-         dec i2
-         beq l3
- 
-         jmp l1
-l3       rts
          .bend
 
 torus    .block
@@ -414,14 +327,14 @@ l2       ldy #ur
          lda #>tiles+(hormax*(vermax-1)*tilesize)
          iny
          sta tiles+((hormax-1)*tilesize),y
-         
+
          ldy #dl   ;bottom left corner
          lda #<tiles+((hormax-1)*tilesize)
          sta tiles+(hormax*(vermax-1)*tilesize),y
          lda #>tiles+((hormax-1)*tilesize)
          iny
          sta tiles+(hormax*(vermax-1)*tilesize),y
-                  
+
          ldy #dr   ;bottom right corner
          lda #<tiles
          sta tiles+((vermax*hormax-1)*tilesize),y
@@ -466,7 +379,7 @@ l4       ldy #dr
          sta (i1),y
          lda #>plainbox
          iny
-         sta (i1),y       
+         sta (i1),y
          lda #<plainbox
          iny		;down
          sta (i1),y
@@ -600,7 +513,7 @@ cont1    sty i1+1
          ldy #down
          bne cont4
 
-cont5    
+cont5
          .bend
 
 calccells
@@ -684,7 +597,7 @@ loop1    dex
          lsr
          bcc loop1
 
-         stx m1+1         
+         stx m1+1
          lda crsrx
          lsr
          asl
@@ -697,9 +610,8 @@ m1       adc #0
          sec
          sbc x0
          bcc exit
-
          bcs cont2
-         
+
 cont4    adc x0
          bcs exit
 
@@ -718,7 +630,6 @@ cont2    sta x8pos
          sec
          sbc y0
          bcc exit
-
          bcs cont1
 
 cont3    adc y0
@@ -788,7 +699,7 @@ cdown    ldy #down      ;y=/=0
 
 cup      ldy #up       ;y=/=0
          jsr nextcell
-         inc y8pos  
+         inc y8pos
          jmp loop2
 
 cleft    ldy #left      ;y=0, x=/=0

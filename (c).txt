@@ -1,4 +1,4 @@
-Xlife for Commodore plus/4 v2
+Xlife for Commodore plus/4 v3
 ported to 8-bit universe by litwr
 
 (c) 2013 This program is under GNU GPL

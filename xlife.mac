@@ -20,8 +20,8 @@ ntscmask = $FC
 gencnt   = $FC1   ; .. $FC7
 xdir     = 3      ;linear transformation
 ydir     = 4
-x0       = 5  
-y0       = 6  
+x0       = 5
+y0       = 6
 xchgdir  = $92
 tcscr    = $fcf   ; .. $fd1
 xcrsr    = $fe0   ; .. $fe2
@@ -48,8 +48,8 @@ down     = 20
 dl       = 22
 next     = 24
 count    = 26
-sum      = 60
 video    = 58
+sum      = 60
 pc       = 61
 tile     .macro
 l0       .byte 0
@@ -264,7 +264,7 @@ cellsum  .macro
 
          sta cellcnt+4
          bcc cont2
-     
+
 l1       sbc #$a
          sta cellcnt+4
          ldy #$30
@@ -313,3 +313,10 @@ loop2    lda $1900,y
          bne loop2
          .endm
 
+ispyr    .segment
+         .byte $f3,\1     ;incsbc
+         .endm
+
+dcpyr    .segment
+         .byte $d3,\1     ;deccmp
+         .endm

@@ -10,7 +10,7 @@ calcspd .block
         sta $3b
         lda #>eval1
         sta $3c
-        jsr $932c	;eval expression
+        jsr EVALEXPR	;eval expression
         ldy #0
 loop1   lda irqcnt,y
         cmp #$30

@@ -1,6 +1,7 @@
 ;this program doesn't contain code of the original Xlife
 ;written by litwr, 2013
 ;it is under GNU GPL
+         .include "plus4.mac"
          .include "xlife.mac"
          * = $1001
         .BYTE $16,$10,0,0,$9E
@@ -107,7 +108,7 @@ irq210   pha
          lda #<irq194
          sta $fffe
          sta $ff3e
-         jsr $db11
+         jsr KBDREAD
          sta $ff3f
          pla
          tay
@@ -123,7 +124,7 @@ irq210x  pha         ;for zoom in - text mode
          lda bgedit,x
          sta $ff15
          sta $ff3e
-         jsr $db11
+         jsr KBDREAD
          sta $ff3f
          pla
          tay
@@ -307,7 +308,7 @@ loop1    tya
 cont7    cpy #2    ;hex length limit
          beq loop1
 
-loop8    jsr $ffd2
+loop8    jsr BSOUT
          iny
          bpl loop1
 
@@ -323,26 +324,6 @@ cont2    dey
 
          dey
          jmp loop8
-         .bend
-
-inivideo .block
-;set video base for the current tile
-;changes: adjcell:2
-;# of calls: 1
-         ldy #video
-         lda adjcell
-         sta (i1),y
-         iny
-         lda adjcell+1
-         sta (i1),y
-         clc
-         lda #16
-         adc adjcell
-         sta adjcell
-         bcc l1
-
-         inc adjcell+1
-l1       rts
          .bend
 
 zerocnt  .block
@@ -367,7 +348,7 @@ curoff   lda #$ff
 
 io2      tay
 io1      ldx curdev
-         jmp $ffba    ;setlfs
+         jmp SETLFS
 
 tograph0 lda #$18
          ora ntscmask
@@ -387,6 +368,21 @@ tograph0 lda #$18
          cli
          rts
 
+infoout  .block
+         ldy #4
+loop2    lda cellcnt,y
+         sta $fc9,y
+         dey
+         bpl loop2
+
+         jmp showtinfo
+         .bend
+
+copyr    lda #3
+         ldx #<copyleft
+         ldy #>copyleft
+         jmp showtxt
+
          * = $1800
          .include "ramdata.s"
 
@@ -401,11 +397,11 @@ start    lda $ff07
          sta $ff07
          jsr help
          lda #147
-         jsr $ffd2
+         jsr BSOUT
          #iniram
          sei
          sta $ff3f
-         jsr clrscn
+         jsr setcolor
          lda #$18
          sta $ff14
          lda #$3b
@@ -423,7 +419,14 @@ start    lda $ff07
          sta $ff0b
          lda #$a2
          sta $ff0a
-         jsr initxt
+         lda #"G"-"A"+1
+         sta $fc0
+         lda #"%"
+         sta $fd2
+         lda #"X"-"A"+1
+         sta $fdf
+         lda #"Y"-"A"+1
+         sta $fe4
          cli
 
          #zero16 tilecnt
@@ -432,9 +435,9 @@ start    lda $ff07
          #inibcd gencnt,6
          #inibcd xcrsr,2
          #inibcd ycrsr,2
- 
-         jsr inilinks
-         jsr torus
+
+         ;jsr inilinks
+         ;jsr torus
          ;jsr plain
 
          ldy #1
@@ -448,7 +451,8 @@ start    lda $ff07
          jsr zerocc
          jsr infoout
          jsr showrules
-         jsr crsrset
+         jsr crsrset       ;unite with the next!
+         jsr crsrcalc
 mainloop jsr dispatcher
          lda mode
          beq mainloop
@@ -464,22 +468,21 @@ mainloop jsr dispatcher
          lda #8
          ora ntscmask
          sta $ff07
-         jsr $ff4f
+         jsr JPRIMM
          .byte 147
          .text "welcome to basic!"
          .byte $d,0
-         jsr $8a7b         ;NEW
-         jmp $8003
+         jsr NEW
+         jmp WARMRESTART
 
 cont3    lda tilecnt
          bne cont4
- 
+
          lda tilecnt+1
          bne cont4
 
-         lda #0
          sta mode
-         jmp mainloop
+         beq mainloop
 
 cont4    lda mode
          cmp #2
@@ -513,14 +516,14 @@ loop     ldy #sum
 cont3    ldy #0		;up
          lda (currp),y
          beq ldown
-         
+
          tax
          ldy #up
          jsr iniadjc
          clc
          ldy #count+31
          jsr fixcnt1e
-         
+
          ldy #count+7
          jsr fixcnt1
 
@@ -531,14 +534,14 @@ cont3    ldy #0		;up
 ldown    ldy #7
          lda (currp),y
          beq lleft
-         
+
          tax
          ldy #down
          jsr iniadjc
          clc
          ldy #count+3
          jsr fixcnt1e
-         
+
          ldy #count+27
          jsr fixcnt1
 
@@ -556,20 +559,13 @@ lleft    ldy #left
 
          sta t1
          ldy #count+3
-         lda #1
-         clc
-         adc (adjcell),y
-         sta (adjcell),y
-         lda #1
+         #ispyr adjcell
          ldy #count+7
-         adc (adjcell),y
-         sta (adjcell),y
+         #ispyr adjcell
          ldy #ul
          jsr iniadjc2
-         lda #1
          ldy #count+31
-         adc (adjcell2),y
-         sta (adjcell2),y
+         #ispyr adjcell2
          jsr chkadd2
 
 ll1      ldy #1
@@ -579,18 +575,11 @@ ll1      ldy #1
 
          sta t1
          ldy #count+3
-         lda #1
-         clc
-         adc (adjcell),y
-         sta (adjcell),y
-         lda #1
+         #ispyr adjcell
          ldy #count+7
-         adc (adjcell),y
-         sta (adjcell),y
-         lda #1
+         #ispyr adjcell
          ldy #count+11
-         adc (adjcell),y
-         sta (adjcell),y
+         #ispyr adjcell
 ll2      ldy #2
          lda (currp),y
          and #$80
@@ -598,18 +587,11 @@ ll2      ldy #2
 
          sta t1
          ldy #count+7
-         lda #1
-         clc
-         adc (adjcell),y
-         sta (adjcell),y
-         lda #1
+         #ispyr adjcell
          ldy #count+11
-         adc (adjcell),y
-         sta (adjcell),y
-         lda #1
+         #ispyr adjcell
          ldy #count+15
-         adc (adjcell),y
-         sta (adjcell),y
+         #ispyr adjcell
 ll3      ldy #3
          lda (currp),y
          and #$80
@@ -617,18 +599,11 @@ ll3      ldy #3
 
          sta t1
          ldy #count+11
-         lda #1
-         clc
-         adc (adjcell),y
-         sta (adjcell),y
-         lda #1
+         #ispyr adjcell
          ldy #count+15
-         adc (adjcell),y
-         sta (adjcell),y
-         lda #1
+         #ispyr adjcell
          ldy #count+19
-         adc (adjcell),y
-         sta (adjcell),y 
+         #ispyr adjcell
 ll4      ldy #4
          lda (currp),y
          and #$80
@@ -636,18 +611,11 @@ ll4      ldy #4
 
          sta t1
          ldy #count+15
-         lda #1
-         clc
-         adc (adjcell),y
-         sta (adjcell),y
-         lda #1
+         #ispyr adjcell
          ldy #count+19
-         adc (adjcell),y
-         sta (adjcell),y
-         lda #1
+         #ispyr adjcell
          ldy #count+23
-         adc (adjcell),y
-         sta (adjcell),y
+         #ispyr adjcell
 ll5      ldy #5
          lda (currp),y
          and #$80
@@ -655,18 +623,11 @@ ll5      ldy #5
 
          sta t1
          ldy #count+19
-         lda #1
-         clc
-         adc (adjcell),y
-         sta (adjcell),y
-         lda #1
+         #ispyr adjcell
          ldy #count+23
-         adc (adjcell),y
-         sta (adjcell),y
-         lda #1
+         #ispyr adjcell
          ldy #count+27
-         adc (adjcell),y
-         sta (adjcell),y
+         #ispyr adjcell
 ll6      ldy #6
          lda (currp),y
          and #$80
@@ -674,18 +635,11 @@ ll6      ldy #6
 
          sta t1
          ldy #count+23
-         lda #1
-         clc
-         adc (adjcell),y
-         sta (adjcell),y
-         lda #1
+         #ispyr adjcell
          ldy #count+27
-         adc (adjcell),y
-         sta (adjcell),y
-         lda #1
+         #ispyr adjcell
          ldy #count+31
-         adc (adjcell),y
-         sta (adjcell),y
+         #ispyr adjcell
 ll7      ldy #7
          lda (currp),y
          and #$80
@@ -693,20 +647,13 @@ ll7      ldy #7
 
          sta t1
          ldy #count+27
-         lda #1
-         clc
-         adc (adjcell),y
-         sta (adjcell),y
-         lda #1
+         #ispyr adjcell
          ldy #count+31
-         adc (adjcell),y
-         sta (adjcell),y
+         #ispyr adjcell
          ldy #dl
          jsr iniadjc2
-         lda #1
          ldy #count+3
-         adc (adjcell2),y
-         sta (adjcell2),y
+         #ispyr adjcell2
          jsr chkadd2
 lexit    jsr chkaddt
          ldy #right
@@ -871,7 +818,7 @@ lr7      ldy #7
          sta (adjcell2),y
          jsr chkadd2
 rexit    jsr chkaddt
-         
+
          ldy #1
          lda (currp),y
          beq l2
@@ -950,7 +897,7 @@ lnext    ldy #next
          iny
          lda (currp),y
          bne cont2
-         
+
          cpx #1
          beq stage2
 
@@ -960,7 +907,7 @@ cont2    sta currp+1
 
 stage2   #assign16 currp,startp
          .bend
-         
+
 genloop2 ldy #sum
          .block
          lda #0
@@ -1115,15 +1062,6 @@ curdev   .byte 8
          .include "video.s"
 
          * = $7300   ;no page alignement required
-tiles    .block
-cnt      .var total
-loop     .lbl
-         #tile
-cnt      .var cnt-1
-         .ifne cnt
-         .goto loop
-         .endif
-         .bend
-
+tiles    .include "initiles.s"
          .include "tab12.s"
 
