@@ -97,7 +97,7 @@ l4       lda i1
          cmp #3
          bne loop0
  
-         rts       ;ZF=1
+         rts       ;ZF=1 required for loadpat
 
 l1       lda #1
          ldy t1

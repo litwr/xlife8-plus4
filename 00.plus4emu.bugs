@@ -9,6 +9,7 @@ missed
 * screen not blank at debugger
 * no flash screen at debugger step
 * cpc6128emu is 3 times faster
+* CPU flags
 
 cpc6128
 * working directory is not accessible

@@ -23,6 +23,13 @@ loop     ldx $ef
          rts
          .bend
 
+scrnorm  lda #$1b
+         bne scrblnk1
+
+scrblnk  lda #$b
+scrblnk1 sta $ff06
+         rts
+
 dispatcher
          ldx $ef
          bne ldisp1
@@ -42,8 +49,7 @@ dispat0  .block
          dec mode
          beq l4
 
-l5       lda #$1b
-         sta $ff06
+l5       jsr scrnorm
          bne l4
 
 cont2    inc mode
@@ -68,9 +74,7 @@ cont5    cmp #"H"-"A"+$41
 
 l3       sta mode
          jsr xclrscn
-         lda #$b
-         sta $ff06
-         rts
+         jmp scrblnk
 
 cont4    cmp #"T"-"A"+$c1
          bne cont6
@@ -223,6 +227,7 @@ cont15   cmp #"R"-"A"+$c1
          jsr fillrt
 finish   jsr tograph
          jsr showrules
+         jsr calccells    ;for load sequence
          jsr showscn
          jsr crsrset      ;showscn also calls crsrset! but crsrset is fast now...
          jmp crsrcalc
@@ -417,10 +422,8 @@ nozoom1  jsr totext
          beq exitload
 
 cont17w  jsr loadpat
-exitload jsr tograph
-         jsr showrules
-         jsr calccells
-         jsr showscn
+         jsr scrnorm
+exitload jsr finish
          pla
          bne zoomin
 

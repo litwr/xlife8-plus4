@@ -1,11 +1,11 @@
 ;this program doesn't contain code of the original Xlife
-;written by litwr, 2013
+;written by litwr, 2013, 2014, v3
 ;it is under GNU GPL
          .include "plus4.mac"
          .include "xlife.mac"
          * = $1001
         .BYTE $16,$10,0,0,$9E
-        .null "15872:litwr-2013"
+        .null "15872:litwr-2014"
         .BYTE 0,0
 
 irq194   pha       ;irq194, irqbench, irq210, irq210x should start at the same page
@@ -1059,6 +1059,7 @@ del1st   #assign16 startp,i1
          .bend
 
 curdev   .byte 8
+ppmode   .byte 1    ;putpixel mode: 0 - tentative, 1 - active
          .include "video.s"
 
          * = $7300   ;no page alignement required

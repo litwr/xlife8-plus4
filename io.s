@@ -1,3 +1,42 @@
+readtent .block
+         ldy #0
+         sty $b8
+         lda #8
+         sta $b9
+loop     jsr READSS
+         bne checkst
+
+         jsr BASIN
+         sta ($b8),y
+         
+         jsr READSS
+         bne checkst
+
+         lda $b9
+         pha
+         eor #4
+         sta $b9
+         jsr BASIN
+         sta ($b8),y
+         pla
+         sta $b9
+         inc $b8
+         bne l1
+
+         inc $b9
+l1       cmp #>(960+(8*256))
+         bne loop
+
+         lda $b8
+         cmp #<960
+         bne loop
+
+checkst  lda $b9
+         eor #8
+         sta $b9
+         rts
+         .bend
+
 loadpat  .block
          lda fnlen
          ldx #<fn
@@ -23,9 +62,6 @@ loop4    jsr READSS
          cpy #2
          bne loop4
 
-         jsr showrect
-         bcs eof
-
          ldy #0
 loop2    jsr READSS
          bne checkst
@@ -45,6 +81,12 @@ loop2    jsr READSS
          and #1
          bne eof
 
+         jsr scrblnk
+         jsr readtent
+         jsr showrect
+         bcs eof
+
+         jsr scrblnk
          ldy #3
 loop1    lda live,y
          cmp $fe8,y
@@ -52,6 +94,9 @@ loop1    lda live,y
 
          dey
          bpl loop1
+
+cont7    jsr puttent
+         bcc eof
 
 loop5    ldy #0
 loop6    jsr READSS
@@ -70,7 +115,8 @@ checkst  cmp #$40
          bne error
          beq eof
 
-error    jsr showds
+error    jsr scrnorm
+         jsr showds
          lda #0
          sta fnlen
 eof      jmp endio
@@ -82,7 +128,7 @@ loop3    lda $fe8,y
          bpl loop3
 
          jsr fillrt   ;sets ZF=1
-         beq loop5
+         beq cont7
          .bend
 
 showds   .block

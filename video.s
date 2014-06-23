@@ -1043,6 +1043,7 @@ showrect .block
          jsr tograph0
          jsr showscn0
 loop0    jsr drawrect
+         jsr showtent
          jsr crsrset0
 loop1    jsr getkey
          cmp #$9d   ;cursor left
@@ -1105,8 +1106,6 @@ finish0  php
          jsr clrrect
          jsr restbl
          jsr totext
-         lda #147
-         jsr BSOUT
          plp
          rts
          .bend
@@ -1145,9 +1144,9 @@ loop1    dex
          lsr
          bcc loop1
 
-         stx m1+1
          sta xcut        ;0 -> xcut
          sta ycut
+         stx m1+1
          lda crsrx
          lsr
          asl
@@ -1339,14 +1338,7 @@ nextlt   ldy #left
          sta x8bit
          bne looplt
 
-drrect1  ldy #video
-         lda (adjcell),y
-         tax
-         iny
-         lda (adjcell),y
-         sta i1+1
-         stx i1
-         ldy y8byte
+drrect1  jsr seti1
          lda x8bit
          and #$f
          beq cont14
@@ -1367,13 +1359,13 @@ cl2      inx
          .bend
 
 clrrect  .block   ;x8poscp, y8poscp
-;uses: adjcell:2, adjcell2:2, currp:2, i1:2, i2, t1, t2, t3
+;uses: adjcell:2, adjcell2:2, currp:2, i1:2, i2, t1, t2, t3, $fd
 x8pos    = t3
 x8poscp  = $ff5
 x8bit    = $ff6
 y8pos    = $ff8 ;*
 y8poscp  = $ff7
-y8byte   = $ff9 ;*
+y8byte   = i2 ;*
 rectulx  = adjcell2
 rectuly  = adjcell2+1
          jsr xchgxy
@@ -1396,53 +1388,49 @@ cl3      clc
          sta x8poscp
 
          #assign16 adjcell,crsrtile
-         jsr ymove
-         jsr xmove
-         lda x8poscp
-         sta x8pos
-         lda y8poscp
-         sta y8pos
-         lda crsrbyte
-         sta y8byte
-         lda crsrbit
-         sta x8bit
-         #assign16 adjcell,crsrtile
-         jsr xmove
-ymove    lda ydir
+         lda ydir
          bne loopup
 
-loopdn   jsr clrect1
-         jsr clrect3
-loop10   jsr clrect2
-         dec y8pos
+loopdn   jsr xclrect
          beq exit
 
          inc y8byte
          lda y8byte
          cmp #8
-         bne loop10
- 
+         bne loopdn
+
          ldy #down
          jsr nextcell
          lda #0
          sta y8byte
          bpl loopdn
 
-loopup   jsr clrect1
-         jsr clrect3
-loop11   jsr clrect2
-         dec y8pos
+loopup   jsr xclrect
          beq exit
 
          dec y8byte
-         bpl loop11
- 
+         bpl loopup
+
          ldy #up
          jsr nextcell
          lda #7
          sta y8byte
          bpl loopup
 
+xclrect  lda adjcell
+         pha
+         lda adjcell+1
+         pha
+         jsr xmove
+         pla
+         sta adjcell+1
+         pla
+         sta adjcell
+         lda x8poscp
+         sta x8pos
+         lda crsrbit
+         sta x8bit
+         dec y8pos
 exit     rts
 
 xmove    lda xdir
@@ -1511,16 +1499,9 @@ clrect4  lda #8
 cont1a   rts
 
 clrect1  #assign16 currp,adjcell
-         ldy #video
-         lda (currp),y
-         sta i1
-         iny
-         lda (currp),y
-         sta i1+1
-         rts
+         jmp seti1
 
-clrect2  ldy y8byte
-         lda x8bit
+clrect2  lda x8bit
          and #$f0
          beq cont1
 
@@ -1549,19 +1530,31 @@ cont3    lda #pc
          sta t1
          lda (currp),y
          sty t2
-         sta i2
+         sta $fd
          ldy t1
          lda (currp),y
          tay
-         and i2
+         and $fd
          ldx t2
          sta pctemp1,x   ;old
          tya
          eor #$ff
-         and i2
+         and $fd
          sta pctemp2,x   ;new
          ldy y8byte
          #vidmac2p
+         rts
+         .bend
+
+seti1    .block
+y8byte   = i2
+         ldy #video
+         lda (adjcell),y
+         sta i1
+         iny
+         lda (adjcell),y
+         sta i1+1
+         ldy y8byte
          rts
          .bend
 
@@ -2220,5 +2213,84 @@ loop     jsr getkey
 
          jsr savecf
 exit     rts
+         .bend
+
+putpixel2 .block 
+         tax
+         jsr seti1
+         txa
+         and #$f
+         beq l1
+
+         tax
+         lda i1
+         eor #8
+         sta i1
+         bne l2
+
+l1       txa
+         lsr
+         lsr
+         lsr
+         lsr
+         tax
+l2       lda vistab,x
+         sta t2
+         asl
+         sta t3
+         ora t2
+         eor #$ff
+         and (i1),y
+         ora t3
+         sta (i1),y
+         rts
+         .bend
+
+showtent .block   ;used: 
+         lda x0
+         pha
+         lda y0
+         pha
+         lda #0
+         sta $14
+         sta $15
+         sta ppmode
+loop     lda $15
+         cmp $b9
+         bne l1
+
+         ldx $14
+         cpx $b8
+         beq exit
+
+l1       eor #8
+         sta $15
+         ldx #0
+         lda ($14,x)
+         sta x0
+         lda $15
+         eor #4
+         sta $15
+         lda ($14,x)
+         sta y0
+         ora x0
+         beq l3
+
+         jsr putpixel
+l3       lda $15
+         eor #$c
+         sta $15
+         inc $14
+         bne loop
+
+         inc $15
+         bne loop
+
+exit     pla
+         sta y0
+         pla
+         sta x0
+         inc ppmode
+         rts
          .bend
 

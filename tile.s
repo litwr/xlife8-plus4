@@ -585,7 +585,7 @@ exit     rts         ;ZF=0
          .bend
 
 putpixel .block
-;uses: adjcell:2, adjcell2:2, t1, i2
+;uses: adjcell:2, adjcell2:2, t1, i2, t2
 x8pos    = adjcell2
 x8bit    = adjcell2+1
 y8pos    = t1
@@ -655,16 +655,16 @@ cont1    sta y8pos
          sta x8bit
          lda crsrx
          lsr
-         sta $e1
+         sta t2
          lda x8pos
          lsr
          lsr
          lsr
          sec
-         sbc $e1
+         sbc t2
          sta x8pos
          #assign16 adjcell,crsrtile
-         sei
+         ;sei
          sta $ff3f
          lda y8pos
 loop2    bmi cup
@@ -674,18 +674,14 @@ loop2    bmi cup
 loop3    bmi cleft
          bne cright
 
-         jsr chkadd	;uses adjcell!
          lda #7
          sec
          sbc x8bit
          tay
          lda bittab,y
-         ldy y8byte
-         ora (adjcell),y
-         sta (adjcell),y
-         sta $ff3e
-         cli
-         rts
+         ldy ppmode
+         bne putpixel3
+         jmp putpixel2
 
 cright   ldy #right     ;y=0, x=/=0
          jsr nextcell
@@ -708,6 +704,17 @@ cleft    ldy #left      ;y=0, x=/=0
          jmp loop3
          .bend
 
+putpixel3 .block 
+y8byte   = i2
+         ldy y8byte
+         ora (adjcell),y
+         sta (adjcell),y
+         jsr chkadd	;uses adjcell!
+         sta $ff3e
+         ;cli
+         rts
+         .bend
+
 nextcell lda (adjcell),y
          tax
          iny
@@ -715,3 +722,4 @@ nextcell lda (adjcell),y
          sta adjcell+1
          stx adjcell
          rts
+

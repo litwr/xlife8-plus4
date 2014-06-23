@@ -1,5 +1,5 @@
-;used zp: 3-7, $14, $8e-8f, $92, $b6-b7, $ba-bb, $d0-e7, $f1-f8, $fc
-;free zp: $b8-b9, $9f-a2, $a8, $cc, $fd
+;used zp: 3-7, $14, $8e-8f, $92, $b6-b7, $b8-bb, $d0-e7, $f1-f8, $fc-fd
+;free zp: $9f-a2, $a7-a8, $cc
 viewport = $8e    ;+$8f
 startp   = $D4    ;+$D5
 currp    = $D8    ;+$D9

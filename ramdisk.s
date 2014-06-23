@@ -1,3 +1,24 @@
+maketent .block
+         ldy #2
+         lda ($14),y
+         lsr     ;CY=1
+         sbc #1
+         sta $b8
+         iny
+         ldx #0
+         stx $b9
+loop     lda ($14),y
+         sta $800,x
+         iny
+         lda ($14),y
+         sta $c00,x
+         iny
+         inx
+         cpx $b8
+         bne loop
+         rts
+         .bend
+
 loadram  .block   ;in: AC
          asl
          tax
@@ -7,36 +28,56 @@ loadram  .block   ;in: AC
          sta $15
          ldy #0
          lda ($14),y
-         sta x0,y     ;geometry
+         sta x0       ;geometry
          iny 
          lda ($14),y
-         sta x0,y     ;geometry
-
+         sta y0       ;geometry
+         jsr maketent
          jsr showrect
-         bcc cont
+         bcc puttent
 
          rts
+         .bend
 
-cont     ldy #2
-         lda ($14),y
-         sta m1+1
-         iny
-loop     lda ($14),y
+puttent  .block
+         lda #0
+         sta currp
+         lda #8
+         sta currp+1
+loop     ldy #0
+         lda (currp),y
          sta x0
-         iny
-         lda ($14),y
+         lda currp+1
+         pha
+         eor #4
+         sta currp+1
+         lda (currp),y
          sta y0
-         iny
-         tya
-         pha 
-         jsr putpixel
          pla
-         tay
-m1       cpy #0
+         sta currp+1
+         jsr putpixel
+         inc currp
+         bne l1
+
+         inc currp+1
+l1       lda $b9
+         eor #8
+         cmp currp+1
          bne loop
 
-         clc
-         rts
+         lda currp
+         cmp $b8
+         bne loop
+
+         cmp #<960
+         bne l2
+
+         lda $b9
+         cmp #>960
+         beq l3
+
+l2       clc
+l3       rts
          .bend
 
 ramdisk  .block
