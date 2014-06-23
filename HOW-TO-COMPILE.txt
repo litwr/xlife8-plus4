@@ -1,0 +1,16 @@
+This program was developed under Linux.  Cygwin for Microsoft Windows provides
+similar environment.  The script `compile' makes all necessary steps to build
+all files of Xlife distribution.
+
+The compilation requires presence of `tmpx' cross assembler -
+http://turbo.style64.org/.  It is theoretically possible to compile sources
+under Commodore 64 or Plus/4 with Turbo Assembler Macro.
+
+The script `compile' also converts several ASCII texts to PETSCII texts.  This
+requires presence of several special utilities:
+   1) awk, sed, tr, rm - standard utilities for any Unix relative OS;
+   2) txt2seq - a converter of ASCII texts to S00 format -
+      http://litwr2.atspace.eu/p4_download.html
+
+It also compresses the executables by p4compress (a part of plus4emu) -
+http://sourceforge.net/projects/plus4emu
