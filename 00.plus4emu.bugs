@@ -1,0 +1,14 @@
+bugs
+* PAL inv - 40x36, xlife's manpage, ...
+* fix to dir
+* dir"*=s" does not work for working directory
+* sometimes debugger shows incorrect (disp =1) address
+
+missed
+* return & 'step to' buttons at debugger
+* screen not blank at debugger
+* no flash screen at debugger step
+* cpc6128emu is 3 times faster
+
+cpc6128
+* working directory is not accessible

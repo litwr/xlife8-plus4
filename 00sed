@@ -1,0 +1,4 @@
+for i in $*
+do
+    sed -i 's/\$a45f.*$/INT2STR/i' $i
+done
