@@ -1122,14 +1122,14 @@ exit     rts
          .bend
 
 drawrect .block
-;uses: adjcell:2, adjcell2:2, currp:2, t1, t2, t3, i1:2, i2
+;uses: adjcell:2, adjcell2:2, currp:2, t1, t2, t3, i1:2, $fd
 ;calls: pixel11
 x8pos    = currp
 x8poscp  = $a7
 x8bit    = currp+1
 y8pos    = t1
 y8poscp  = $a8
-y8byte   = i2
+y8byte   = $fd                ;connected to seti1
 rectulx  = adjcell2
 rectuly  = adjcell2+1
 xcut     = t3
@@ -1358,14 +1358,14 @@ cl2      inx
          rts
          .bend
 
-clrrect  .block   ;x8poscp, y8poscp
-;uses: adjcell:2, adjcell2:2, currp:2, i1:2, i2, t1, t2, t3, $fd
+clrrect  .block   ;in: x8poscp, y8poscp
+;uses: adjcell:2, adjcell2:2, currp:2, i1:2, i2, t1, t2, t3, 7, $fd
 x8pos    = t3
 x8poscp  = $a7
 x8bit    = $9b
 y8pos    = $9c
 y8poscp  = $a8
-y8byte   = i2
+y8byte   = $fd   ;connected to seti1
 rectulx  = adjcell2
 rectuly  = adjcell2+1
          jsr xchgxy
@@ -1529,25 +1529,22 @@ cont3    lda #pc
          adc y8byte
          sta t1
          lda (currp),y
-         sty t2
-         sta $fd
+         sty 7
+         sta i2
          ldy t1
          lda (currp),y
          tay
-         and $fd
-         ldx t2
+         and i2
+         ldx 7
          sta pctemp1,x   ;old
          tya
-         eor #$ff
-         and $fd
-         sta pctemp2,x   ;new
          ldy y8byte
-         #vidmac2p
-         rts
          .bend
 
+         jmp xcont7
+
 seti1    .block
-y8byte   = i2
+y8byte   = $fd
          ldy #video
          lda (adjcell),y
          sta i1

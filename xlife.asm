@@ -206,7 +206,7 @@ tab3     .byte 0, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2, 3, 2, 3, 3, 4
          .byte 4, 5, 5, 6, 5, 6, 6, 7, 5, 6, 6, 7, 6, 7, 7, 8
 
 crsrclr  .block
-;removes cursor from graph screen          
+;removes cursor from graph screen
 ;in: zoom, crsrtile, crsrbyte, crsrbit, pseudoc
 ;change: 7, currp:2, i1:2, pctemp1:8, pctemp2:8, t1
          lda zoom
@@ -260,13 +260,14 @@ cont3    lda #pc
          ldx 7
          sta pctemp1,x   ;old
          tya
-         eor #$ff
+         ldy crsrbyte
+         .bend
+
+xcont7   eor #$ff
          and i2
          sta pctemp2,x   ;new
-         ldy crsrbyte
          #vidmac2p
          rts
-         .bend
 
 inccurrp .block
 ;increases currp

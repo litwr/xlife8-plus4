@@ -585,11 +585,11 @@ exit     rts         ;ZF=0
          .bend
 
 putpixel .block
-;uses: adjcell:2, adjcell2:2, t1, i2, t2
+;uses: adjcell:2, adjcell2:2, t1, t2, $fd
 x8pos    = adjcell2
 x8bit    = adjcell2+1
 y8pos    = t1
-y8byte   = i2
+y8byte   = $fd    ;connected to seti1
          jsr xchgxy
          ldx #8
          lda crsrbit
@@ -705,7 +705,7 @@ cleft    ldy #left      ;y=0, x=/=0
          .bend
 
 putpixel3 .block 
-y8byte   = i2
+y8byte   = $fd      ;connected to seti1, putpixel
          ldy y8byte
          ora (adjcell),y
          sta (adjcell),y

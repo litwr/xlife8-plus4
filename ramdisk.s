@@ -83,8 +83,10 @@ l3       rts
 ramdisk  .block
          jsr JPRIMM
          .byte 147,30
-         .text "enter file#"
-         .byte $d,28,"0",144
+         .text "enter file# or hit "
+         .byte 28
+         .text "esc"
+         .byte $d,"0",144
          .text " glider"
          .byte $d,28,"1",144
          .text " small fish"
