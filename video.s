@@ -826,8 +826,6 @@ exit     jsr curoff
          lda #0
          rts
 
-xl1      jmp loadmenu
-
 cont7    cmp #$d
          beq cont1
 
@@ -839,9 +837,7 @@ cont7    cmp #$d
 
          jsr curoff
          jsr ramdisk
-         bcc exit
-
-         bcs xl1
+         jmp exit
 
 cont8    cmp #32
          bcc loop1
