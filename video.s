@@ -1615,7 +1615,11 @@ devtxt   .text "u0"
          .byte 28
          .text "enter"
          .byte 30
-         .text " = *)"
+         .text " = *, "
+         .byte 28
+         .text "@"
+         .byte 30
+         .text ")"
          .byte $d,144,0
 loop3    ldy #0
          sty $ff0c

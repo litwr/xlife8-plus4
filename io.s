@@ -8,7 +8,7 @@ loop     jsr READSS
 
          jsr BASIN
          sta ($b8),y
-         
+
          jsr READSS
          bne checkst
 
