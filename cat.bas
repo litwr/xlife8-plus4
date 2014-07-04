@@ -63,5 +63,5 @@
  3020 ifx=0thenit=i1:elseit=i2
  3030 ify<ittheny=y+1
  3040 return
- 10000 dataxlife,0,0,manpage,0,0,seqreader,0,0
+ 10000 dataxlife,0,0,manpage,0,0,seqreader,0,0,default-colors,0,0
 
