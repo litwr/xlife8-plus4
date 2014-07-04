@@ -173,7 +173,13 @@ cont1    lda ymax
          .bend
 
 rndbyte  .block
-         lda $ff1e
+         lda #8
+         sec
+         sbc t3
+         sta t2
+         lda density
+         sta adjcell2
+loop1    lda $ff1e
          lsr
          lsr
          sta x0
@@ -190,7 +196,6 @@ rndbyte  .block
          sta x0
 
          ldy t2
-         inc t2
          ora (adjcell),y
          tax
          sta (adjcell),y
@@ -198,6 +203,9 @@ rndbyte  .block
          ldy #sum
          adc (adjcell),y
          sta (adjcell),y
+         dec adjcell2
+         bne loop1
+
          rts
          .bend
 

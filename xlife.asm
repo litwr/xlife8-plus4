@@ -168,7 +168,7 @@ cfnlen   = live-cfn-3
 cfn      .text "@0:colors-cf"
 live     .byte 12,0
 born     .byte 8,0
-density  .byte 4
+density  .byte 3
 eval1    .byte $c4,"("              ;str$(ddddddd/dddddd.dd)
 bencnt   .byte 0,0,0,0,0,0,0,$ad
 irqcnt   .byte 0,0,0,0,0,0,".", 0,0,")",0
