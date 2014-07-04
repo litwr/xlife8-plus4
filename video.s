@@ -259,21 +259,25 @@ indens   .block
          .byte 144
          .text " to exit"
          .byte $d,28,"0",30
-         .text " - 94%"
+         .text " - 12.5%"
          .byte $d,28,"1",30
-         .text " - 82%"
+         .text " - 28%"
          .byte $d,28,"2",30
-         .text " - 70%"
+         .text " - 42%"
          .byte $d,28,"3",30
-         .text " - 59%"
+         .text " - 54%"
          .byte $d,28,"4",30
-         .text " - 47%"
+         .text " - 64%"
          .byte $d,28,"5",30
-         .text " - 35%"
+         .text " - 73%"
          .byte $d,28,"6",30
-         .text " - 23%"
+         .text " - 81%"
          .byte $d,28,"7",30
-         .text " - 12%"
+         .text " - 88.5%"
+         .byte $d,28,"8",30
+         .text " - 95%"
+         .byte $d,28,"9",30
+         .text " - 100%"
          .byte 144,0
 loop1    jsr getkey
          cmp #$1b
@@ -282,10 +286,11 @@ loop1    jsr getkey
          cmp #$30
          bcc loop1
 
-         cmp #$38
+         cmp #$40
          bcs loop1
 
          eor #$30
+         adc #1
          sta density
 exit     rts
          .bend

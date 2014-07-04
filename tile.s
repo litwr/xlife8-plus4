@@ -104,9 +104,7 @@ fixcnt1  lda tab13,x
          rts
 
 chkaddt  lda t1
-         bne chkadd
-
-exit2    rts
+         beq exit2
 
 chkadd   ldy #next
          lda (adjcell),y
@@ -123,11 +121,12 @@ addnode  .block
          sta (adjcell),y
          #assign16 startp,adjcell
          inc tilecnt
-         bne exit
+         bne exit2
 
          inc tilecnt+1
-exit     rts
          .bend
+
+exit2    rts
 
 chkadd2  ldy #next
          lda (adjcell2),y
@@ -462,18 +461,25 @@ l2       ldy #ur
 
 random   .block
 ;uses: adjcell:2, adjcell2:2, i1:2, i2, t1, t2, t3, x0
+         lda #0
+         sta adjcell2
+cont6    lda adjcell2
+         inc adjcell2
+         cmp density
+         beq cont5
+
+         lda #0     ;dir: 0 - left, 1 - right
+         sta t1
          lda #<tiles+((hormax*4+3)*tilesize)  ;start random area
          sta adjcell
          lda #>tiles+((hormax*4+3)*tilesize)
          sta adjcell+1
-         lda #0     ;dir: 0 - left, 1 - right
-         sta t1
          lda #right
          sta i1+1
-         lda #16    ;ver rnd max
-         sta i1
          lda #14    ;hor rnd max
          sta i2
+         lda #16    ;ver rnd max
+         sta i1
 cont3    ldy #sum
          lda #0
          sta t2
@@ -498,7 +504,7 @@ cont4    lda (adjcell),y
          bne cont3
 
 cont2    dec i1
-         beq cont5
+         beq cont6
 
          lda #14    ;hor rnd max
          sta i2

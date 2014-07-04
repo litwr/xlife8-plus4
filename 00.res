@@ -9,3 +9,4 @@
 +tentative!
 +smoother scrolling at zoomed in mode
 +status bar special color for zoom in mode
++better randomization
