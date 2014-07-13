@@ -1001,7 +1001,7 @@ cont7    cmp #$d
          cpy #15    ;fn length limit
          beq loop1
 
-         sta svfn,y
+         sta svfn+3,y
 loop8    jsr BSOUT
          iny
          bpl loop1

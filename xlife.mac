@@ -28,7 +28,6 @@ xcrsr    = $fe0   ; .. $fe2
 ycrsr    = $fe5   ; .. $fe7
 fn       = $1bc0  ; .. $1bd1
 svfnlen  = $1bd2
-svfn     = $1bd3  ; .. $1be6
 temp     = $b6    ; .. $b7
 pctemp1  = $f1    ; .. $f8
 pctemp2  = $1ff8  ; .. $1fff

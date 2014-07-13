@@ -15,9 +15,9 @@
  \x!  Place random cells on  the  area  of
     the universe on the screen.
  \x%  Set a percentage density for a  ran-
-    domly filled area.  Default  is 59%.
+    domly filled area.  Default  is 42%.
  \x+  Zoom the view in.
- \x-  Zoom the view out. 
+ \x-  Zoom the view out.
  \x.  Place cursor to the center  of  uni-
     verse.
  \x?  Help for xlife.
@@ -53,9 +53,9 @@
     verse if  you  want  to  start  from
     scratch.  It is possible  either  to
     select pattern at the directory list
-    directly or to  enter  pattern name.
-    At the latter case it is possible to
-    use wild cards.
+    directly or  to  enter  the  pattern
+    name.  At  the  latter  case  it  is
+    possible to use wild cards.
  \xL  Immediately reload, at  the  cursor,
     a copy of the last  pattern  loaded.
     It doesn't work for ramdisk pattern.
@@ -66,7 +66,9 @@
     rules are  23/3  (alive  on  two  or
     three  neighbors,  birth  on   three
     neighbors for an empty cell).
- \xS  Save the universe to a file.
+ \xS  Save the universe to a file.  It  is
+    correct to save to the existed  file
+    but no warning message is provided.
  \xT  Set up the topology.  It is possible
     to use  the  rectangular  area  with
     connected edges (anchor ring,  tore)
@@ -97,10 +99,12 @@
  files from the disk directory. Use mask
  to show only matched files.
 
- The tentative pattern may show only up to
- 960 cells.  This is enough to show  every
- cell from a pattern file with the size up
- to 8 blocks.
+ The tentative pattern may show only  up
+ to 960 cells.  The other cells are  not
+ shown but loaded later.  This  quantity
+ is enough to show the every cell from a
+ pattern file with the size up to 8 disk
+ blocks.
 
  The universe size is 160x192.
 
@@ -109,6 +113,12 @@
 
  The files on ramdisk are  without  com-
  ments.
+
+ If a wrong filename is given for a file
+ to save then the save will not be  done
+ but without the error message.  The fi-
+ lename should  not  contain  wildcards,
+ commas, ...
 
 \bFORMATS
 
@@ -135,7 +145,7 @@
 
 \g This utility  from Xlife  main  sources
  may convert CELLS,  LIF,  L,  RLE,  and
- MCL formats.  It maybe  used  from  any
+ MCL formats.  It may be used  from  any
  relative to Unix OS or  from  Microsoft
  Windows.  The lifeconv utility takes  a
  pattern name as an argument.  It writes
@@ -258,4 +268,5 @@
 
 \bSEE ALSO
 
-\p  http://www.conwaylife.com/\b
+\p  http://www.conwaylife.com\b
+\p  http://freecode.com/projects/xlife\b

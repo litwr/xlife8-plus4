@@ -179,7 +179,7 @@ bordertc .byte $25    ;torus
 crsrc    .byte $6b
 crsrocc  .byte $e3    ;over cell
 livcellc .byte $25
-newcellc .byte $55
+newcellc .byte $1d
 bgedit   .byte $71
 bggo     .byte $75
 bgbl     .byte $76
@@ -1074,6 +1074,8 @@ ppmode   .byte 1    ;putpixel mode: 0 - tentative, 1 - active
 vistab   .byte 0,1,4,5,$10,$11,$14,$15
          .byte $40,$41,$44,$45,$50,$51,$54,$55
 bittab   .byte 1,2,4,8,16,32,64,128
+svfn     .text "@0:"
+         .repeat 20,0
          .include "video.s"
 
          * = $7300   ;no page alignement required

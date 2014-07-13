@@ -383,19 +383,21 @@ cury     = adjcell+1
          jsr io2
          ldy svfnlen
          lda #","
-         sta svfn,y
-         sta svfn+2,y
-         lda #"u"
-         sta svfn+1,y
-         lda #"w"
          sta svfn+3,y
+         sta svfn+5,y
+         lda #"u"
+         sta svfn+4,y
+         lda #"w"
+         sta svfn+6,y
          tya
          clc
-         adc #4
+         adc #7
          ldx #<svfn
          ldy #>svfn
          jsr SETNAM
          jsr OPEN
+         bcs error
+
          ldx #8
          jsr CHOUT    ;open channel for write
          bcs error
