@@ -445,6 +445,7 @@ cont17v  lda zoom
 nozoom3  jsr totext
          lda #147
          jsr BSOUT
+         jsr curoff
          jmp cont17w
 
 cont17d  cmp #"+"
