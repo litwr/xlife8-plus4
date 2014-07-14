@@ -16,7 +16,8 @@
     the universe on the screen.
  \x%  Set a percentage density for a  ran-
     domly filled area.  Default  is 42%.
- \x+  Zoom the view in.
+ \x+  Zoom the view in.  This mode  is  a
+    bit faster.
  \x-  Zoom the view out.
  \x.  Place cursor to the center  of  uni-
     verse.
@@ -70,7 +71,7 @@
     correct to save to the existed  file
     but no warning message is provided.
  \xT  Set up the topology.  It is possible
-    to use  the  rectangular  area  with
+    to use the rectangular area with the
     connected edges (anchor ring,  tore)
     or the rectangular plain.
  \xv  View current pattern information.

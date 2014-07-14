@@ -84,6 +84,7 @@ fixcnt1e lda tab13,x
          dey
          adc (adjcell),y
          sta (adjcell),y
+         clc              ;it is only required for the plain topology
          rts
 
 fixcnt1  lda tab13,x

@@ -175,7 +175,7 @@ irqcnt   .byte 0,0,0,0,0,0,".", 0,0,")",0
 vptilecx .byte 0
 vptilecy .byte 0
 borderpc .byte $28    ;plain
-bordertc .byte $25    ;torus
+bordertc .byte $45    ;torus
 crsrc    .byte $6b
 crsrocc  .byte $e3    ;over cell
 livcellc .byte $25
