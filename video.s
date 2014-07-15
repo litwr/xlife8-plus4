@@ -801,20 +801,22 @@ exit     rts
          .bend
 
 loadmenu .block
-scrfn    = $c00+163
+scrfn    = $c00+123
          jsr JPRIMM
          .byte 147,30
          .text "input filename, an empty string means toshow directory. press "
          .byte 28
          .text "run/stop"
          .byte 30
-         .text " to use ramdisk or "
+         .text " to use ramdisk, "
+         .byte 28
+         .text "*"
+         .byte 30
+         .text " to change unit, "
          .byte 28
          .text "esc"
          .byte 30
-         .text " to exit.  press "
-         .byte 28,"*",30
-         .text " to changeunit"
+         .text " to exit"
          .byte $d,144
          .null "u0 "
          lda curdev
