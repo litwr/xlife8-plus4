@@ -534,6 +534,10 @@ showtxt  .block
          lda #8
          ora ntscmask
          sta $ff07
+         jsr $dd27   ;to smalls & caps
+         ;jsr PRIMM
+         ;db 9,$e,0
+
 loop6    jsr READSS
          bne checkst
 

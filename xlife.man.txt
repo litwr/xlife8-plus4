@@ -22,8 +22,6 @@
  \x.  Place cursor to the center  of  uni-
     verse.
  \x?  Help for xlife.
- \x@  Toggle disk drive unit # at the load
-    menu.
  \xB  Benchmark. Enter number  of  genera-
     tions and get time. This is also the
     fastest  mode of the evolution.

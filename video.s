@@ -339,11 +339,9 @@ help     jsr JPRIMM
          .byte $d,28,146,"v",18,30
          .text " show comments to the pattern"
          .byte $d,28,146,"x",30,"/",28,"z",18,30
-         .text " reload/set&save palette"
-         .byte $d,28,"@",18,30
-         .null " toggle device #"
+         .null " reload/set&save palette"
          jsr JPRIMM
-         .byte $d,144,146,"u",18
+         .byte $d,$d,144,146,"u",18
          .text "se "
          .byte 28
          .text "cursor keys "
@@ -804,10 +802,10 @@ exit     rts
          .bend
 
 loadmenu .block
-scrfn    = $c00+120
+scrfn    = $c00+163
          jsr JPRIMM
          .byte 147,30
-         .text "input filename, an empty string means toshow directory, press "
+         .text "input filename, an empty string means toshow directory. press "
          .byte 28
          .text "run/stop"
          .byte 30
@@ -815,8 +813,12 @@ scrfn    = $c00+120
          .byte 28
          .text "esc"
          .byte 30
-         .text " to exit"
-         .byte 144,$d,0
+         .text " to exit.  press "
+         .byte 28,"*",30
+         .text " to changeunit #"
+         .byte $d,144
+         .text "u8 "
+         .byte 0
 loop3    ldy #0
          sty $ff0c
 loop1    tya
@@ -831,7 +833,17 @@ exit     jsr curoff
          lda #0
          rts
 
-cont7    cmp #$d
+cont7    cmp #"*"
+         bne cont11
+
+         lda curdev
+         eor #1
+         sta curdev
+         eor #$30
+         sta scrfn-2
+         bne loop1
+
+cont11   cmp #$d
          beq cont1
 
          cmp #$14   ;backspace
@@ -847,7 +859,7 @@ cont7    cmp #$d
 cont8    cmp #32
          bcc loop1
 
-         cpy #15    ;fn length limit
+         cpy #16    ;fn length limit
          beq loop1
 
          ldx #0
@@ -1608,23 +1620,14 @@ crsrset0 jsr crsrset1
 
 setdirmsk
          .block
-         lda curdev
-         eor #$30
-         sta devtxt+1
          jsr JPRIMM
          .byte 147
 msglen   = 40
-devtxt   .text "u0"
-         .byte 30
-         .text ": set directory mask ("
+         .text "set directory mask ("
          .byte 28
          .text "enter"
          .byte 30
-         .text " = *, "
-         .byte 28
-         .text "@"
-         .byte 30
-         .text ")"
+         .text " = *)"
          .byte $d,144,0
 loop3    ldy #0
          sty $ff0c
@@ -1636,15 +1639,7 @@ loop1    tya
          cmp #$d
          beq cont1
 
-         cmp #$40	;@
-         bne cont7
-
-         lda curdev
-         eor #1
-         sta curdev
-         bcs setdirmsk
-
-cont7    tax
+         tax
          cmp #27
          beq cont4
 
@@ -1654,7 +1649,7 @@ cont7    tax
          cmp #32
          bcc loop1
 
-         cpy #15     ;max mask length
+         cpy #16     ;max mask length
          beq loop1
 
          sta dirname+3,y
