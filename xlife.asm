@@ -204,6 +204,8 @@ tab3     .byte 0, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2, 3, 2, 3, 3, 4
          .byte 3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7
          .byte 3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7
          .byte 4, 5, 5, 6, 5, 6, 6, 7, 5, 6, 6, 7, 6, 7, 7, 8
+curdev   .byte 8
+ppmode   .byte 1    ;putpixel mode: 0 - tentative, 1 - active
 
 crsrclr  .block
 ;removes cursor from graph screen
@@ -362,8 +364,7 @@ io1      ldx curdev
          jmp SETLFS
 
 tograph0 lda #$18
-         ora ntscmask
-         sta $ff07
+         jsr set_ntsc
          lda #$3b
          sta $ff06
          lda #$18
@@ -404,11 +405,11 @@ start    lda $ff07
          jsr loadcf
          jsr copyr
          lda #$88
-         ora ntscmask
-         sta $ff07
+         jsr set_ntsc
          jsr help
          lda #147
          jsr BSOUT
+         jsr $dd3e   ;to caps & graphs
          #iniram
          sei
          sta $ff3f
@@ -418,8 +419,7 @@ start    lda $ff07
          lda #$3b
          sta $ff06
          lda #$18
-         ora ntscmask
-         sta $ff07
+         jsr set_ntsc
          lda #$c8
          sta $ff12
          lda #<irq194
@@ -477,8 +477,7 @@ mainloop jsr dispatcher
          lda #$71
          sta $ff15
          lda #8
-         ora ntscmask
-         sta $ff07
+         jsr set_ntsc
          jsr JPRIMM
          .byte 147
          .text "welcome to basic!"
@@ -1069,8 +1068,10 @@ del1st   #assign16 startp,i1
          jmp loop
          .bend
 
-curdev   .byte 8
-ppmode   .byte 1    ;putpixel mode: 0 - tentative, 1 - active
+set_ntsc ora ntscmask
+         sta $ff07
+         rts
+
 vistab   .byte 0,1,4,5,$10,$11,$14,$15
          .byte $40,$41,$44,$45,$50,$51,$54,$55
 bittab   .byte 1,2,4,8,16,32,64,128

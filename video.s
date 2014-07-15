@@ -19,8 +19,7 @@ l1       jsr BSOUT
 
 totext   sta $ff3e
 totext0  lda #$88
-         ora ntscmask
-         sta $ff07
+         jsr set_ntsc
          lda #8
          sta $ff14
          lda #$1b
@@ -815,10 +814,12 @@ scrfn    = $c00+163
          .byte 30
          .text " to exit.  press "
          .byte 28,"*",30
-         .text " to changeunit #"
+         .text " to changeunit"
          .byte $d,144
-         .text "u8 "
-         .byte 0
+         .null "u0 "
+         lda curdev
+         eor #$30
+         sta scrfn-2
 loop3    ldy #0
          sty $ff0c
 loop1    tya
@@ -977,15 +978,21 @@ cont2a   dey
          .bend
 
 getsvfn  .block
-scrfn    = $c00+40
+scrfn    = $c00+43
          jsr JPRIMM
          .byte 147,30
-         .text "enter filename or press "
+         .text "enter filename ("
          .byte 28
          .text "esc"
          .byte 30
-         .text " to exit"
-         .byte 144,$d,0
+         .text " - exit, "
+         .byte 28, "*", 30
+         .text " - unit)"
+         .byte 144,$d
+         .null "u0 "
+         lda curdev
+         eor #$30
+         sta scrfn-2
 loop3    ldy #0
          sty $ff0c
 loop1    tya
@@ -1001,7 +1008,17 @@ loop1    tya
          sta svfnlen
          rts
 
-cont7    cmp #$d
+cont7    cmp #"*"
+         bne cont11
+
+         lda curdev
+         eor #1
+         sta curdev
+         eor #$30
+         sta scrfn-2
+         bne loop1
+
+cont11   cmp #$d
          beq cont1
 
          cmp #$14   ;backspace
@@ -1010,7 +1027,7 @@ cont7    cmp #$d
          cmp #32
          bcc loop1
 
-         cpy #15    ;fn length limit
+         cpy #16    ;fn length limit
          beq loop1
 
          sta svfn+3,y

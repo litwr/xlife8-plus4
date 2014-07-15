@@ -499,13 +499,9 @@ showcomm .block
          ldx fnlen
          bne cont2
 
-exit1    rts
+         rts
 
-cont2    lda fn-1,x
-         cmp #"*"
-         beq exit1
-
-         lda #"#"
+cont2    lda #"#"
          cpx #16
          beq cont1
 
@@ -532,8 +528,7 @@ showtxt  .block
          bcs error
 
          lda #8
-         ora ntscmask
-         sta $ff07
+         jsr set_ntsc
          jsr $dd27   ;to smalls & caps
          ;jsr PRIMM
          ;db 9,$e,0
@@ -558,8 +553,7 @@ error    jsr showds
          bne endio
 
 eof      jsr getkey
-         lda #$8e
-         jsr BSOUT
+         jsr $dd3e   ;to caps & graphs
          .bend
 
 endio    jsr CLRCH      ;must be after showcomm!
