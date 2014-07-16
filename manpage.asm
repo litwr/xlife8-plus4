@@ -160,7 +160,7 @@ cud    CMP #$FD
        EOR #1
        STA pali
        BPL l16
-      
+
 l41    CMP #$FE
        BNE l3
 

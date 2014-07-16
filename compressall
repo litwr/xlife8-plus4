@@ -1,0 +1,4 @@
+p4compress -m1 -start 0x3e00 xlife.prg xlifec.prg
+p4compress -m1 -start 0x1800 manpage.prg manpagec.prg
+p4compress -m1 -start 0x101c notepad+4-c.prg notepad+4-cc.prg
+#p4compress -m1 cat.prg catc.prg

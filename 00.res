@@ -11,3 +11,4 @@
 +status bar special color for zoom in mode
 +better randomization
 +better patterns collection - removed duplicated
++better @-command logic

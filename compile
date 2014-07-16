@@ -2,14 +2,13 @@ rm '(c).s00' xlife.prg cat.prg seqreader.prg
 petcat -w3 cat.bas >cat.prg
 petcat -w3 seqreader.bas >seqreader.prg
 petcat -w3 notepad+4.bas >notepad+4-s.prg
+petcat -w3 default-colors.bas >default-colors.prg
 txt2seq '(c).txt' u
 
 tmpx -i xlife.asm -l xlife.lst
-#p4compress -m1 -start 0x3e00 xlife.prg xlifec.prg
 
 tr '\n' '\r' < xlife.man.txt | awk -f xlife.man.awk | sed 's/,$//' >txtl.inc
 sed 's/,$//' < attr.inc >attl.inc
 tmpx -i manpage.asm -l manpage.lst
-#p4compress -m1 -start 0x1800 manpage.prg manpagec.prg
 
-#rm attr.inc attl.inc txtl.inc
+rm attr.inc attl.inc txtl.inc

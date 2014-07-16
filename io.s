@@ -168,9 +168,9 @@ skip6    JSR getbyte    ; get a byte from dir and ignore it
          jsr BSOUT
 loop1    jsr getbyte
          beq cont5
-         
+
          jsr BSOUT
-         jmp loop1 
+         jmp loop1
 
 cont5    lda #$d
          jsr BSOUT
@@ -195,7 +195,7 @@ skip2    JSR getbyte    ; get a byte from dir and ignore it
          LDA #$20       ;print a space first
 char     cmp #$22       ;quote
          bne cont1
- 
+
          dec quotest
          beq cont4
 
@@ -241,7 +241,7 @@ prfree   jsr JPRIMM
 
 menucnt  = $ffb
 quotest  = $ffe
-fileszhi = $ffd  
+fileszhi = $ffd
 fileszlo = $ffc
 
 printmi  .block

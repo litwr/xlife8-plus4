@@ -300,7 +300,7 @@ help     jsr JPRIMM
          .byte $d,18,28,"!",30
          .text " randomize screen"
          .byte $d,18,28,"%",30
-         .text " set random density - default 59%"
+         .text " set random density - default 54%"
          .byte $d,18,28,"+",30,"/",28,"-",30
          .null " zoom in/out"
          jsr JPRIMM

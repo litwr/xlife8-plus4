@@ -8,14 +8,14 @@
 \bDESCRIPTION
 
 \g The program helps the  user  play  with
- John Horton Conway's 'Life' game.
+ John Horton Conway's "Life" game.
 
 \bCOMMANDS
 
  \x!  Place random cells on  the  area  of
     the universe on the screen.
  \x%  Set a percentage density for a  ran-
-    domly filled area.  Default  is 42%.
+    domly filled area.  Default is 42%.
  \x+  Zoom the view in.  This mode  is  a
     bit faster.
  \x-  Zoom the view out.
@@ -53,8 +53,7 @@
     scratch.  It is possible  either  to
     select pattern at the directory list
     directly or  to  enter  the  pattern
-    name.  At  the  latter  case  it  is
-    possible to use wild cards.
+    name.
  \xL  Immediately reload, at  the  cursor,
     a copy of the last  pattern  loaded.
     It doesn't work for ramdisk pattern.
@@ -135,12 +134,12 @@
  is the sign # at its end.  This sign is
  added to  the  pattern's  filename.  If
  this filename has  the  maximum  length
- then '#' replaces the last character of
+ then "#" replaces the last character of
  the pattern's filename.  The  comments'
  file is a common text  file  with  type
  SEQ.  It maybe edited by any editor.
 
-\bUsing the 'lifeconv' utility
+\bUsing the "lifeconv" utility
 
 \g This utility  from Xlife  main  sources
  may convert CELLS,  LIF,  L,  RLE,  and
@@ -155,7 +154,7 @@
 \p   lifeconv pattern -4 >destination
 
 \g where destination  is  any  valid  file
- name.  The '-4' option sets the  format
+ name.  The "-4" option sets the  format
  for 8-bit  Xlife  for  the  destination
  file is written.  At Microsoft  Windows
  environment (Mingw Xlife port) the sign
