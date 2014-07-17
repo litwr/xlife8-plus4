@@ -529,7 +529,7 @@ showtxt  .block
 
          lda #8
          jsr set_ntsc
-         jsr $dd27   ;to smalls & caps
+         jsr TOCHARSET2  ;to smalls & caps
          ;jsr PRIMM
          ;db 9,$e,0
 
@@ -553,7 +553,7 @@ error    jsr showds
          bne endio
 
 eof      jsr getkey
-         jsr $dd3e   ;to caps & graphs
+         jsr TOCHARSET1   ;to caps & graphs
          .bend
 
 endio    jsr CLRCH      ;must be after showcomm!

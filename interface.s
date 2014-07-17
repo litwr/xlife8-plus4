@@ -388,8 +388,9 @@ cont17c  cmp #"."
          lda #1
          sta crsrbyte
 cont17t  sta crsrbit
+         jsr cont17u
          lda zoom
-         beq cont17u
+         beq exit0
 
          jsr setviewport
          jsr showscnpg
@@ -427,7 +428,7 @@ exitload jsr finish
          pla
          bne zoomin
 
-         rts
+exit0    rts
 
 cont17b  cmp #"L"-"A"+$c1
          bne cont17d

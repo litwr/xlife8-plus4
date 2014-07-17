@@ -745,7 +745,7 @@ loop     lda $fc0,y
          sta $1fc0,y
          dey
          bpl loop
-         rts            ;YR=255
+         rts            ;YR=255 - Y must be not equal to 0
          .bend
 
 restbl   .block
@@ -1700,7 +1700,7 @@ cont2    dey
          .bend
 
 setviewport
-         .block
+         .block    ;in: cursor coordinates at the status line!
          #assign16 viewport,crsrtile
          ldx #2
          stx vptilecx
@@ -1871,7 +1871,7 @@ crsrset  jsr crsrset1
 
          jmp pixel11
 
-crsrcalc .block
+crsrcalc .block      ;its call should be after crsrset!
          lda i1+1    ;start of coorditates calculation
          sec
          sbc #$20

@@ -402,6 +402,11 @@ copyr    lda #3
 start    lda $ff07
          and #$40
          sta ntscmask
+         lda $ae     ;current device #
+         bne nochg
+
+         lda curdev
+nochg    sta curdev
          jsr loadcf
          jsr copyr
          lda #$88
@@ -409,7 +414,7 @@ start    lda $ff07
          jsr help
          lda #147
          jsr BSOUT
-         jsr $dd3e   ;to caps & graphs
+         jsr TOCHARSET1   ;to caps & graphs
          #iniram
          sei
          sta $ff3f

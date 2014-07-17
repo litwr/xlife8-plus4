@@ -1,4 +1,4 @@
-rm '(c).s00' xlife.prg cat.prg seqreader.prg
+rm '(c).s00' xlife.prg cat.prg notepad+4-s.prg
 petcat -w3 cat.bas >cat.prg
 #petcat -w3 seqreader.bas >seqreader.prg
 petcat -w3 notepad+4.bas >notepad+4-s.prg

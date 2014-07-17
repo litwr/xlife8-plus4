@@ -465,6 +465,6 @@
  10150 if n<>k then mid$(s$,i,1)=chr$(n)
  10160 next i
  10170 return
- 
+
  20000 poke2024,39:print "an error's occured or run/stop's pressed at line"el
 
