@@ -4,6 +4,7 @@ bugs
 * dir"*=s" does not work for working directory
 * sometimes debugger shows incorrect (disp =1) address
 * the screenshot resolution is always the same 768x576 regardless of display mode
+* read status word after error during load with IEC emulation only drives
 
 missed
 * return & 'step to' buttons at debugger

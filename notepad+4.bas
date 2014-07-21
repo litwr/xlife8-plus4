@@ -1,8 +1,6 @@
-
-
-;edx.prg ==1001==
-    0 rem *** notepad+4, the sequential files editor, v1
+    0 rem *** notepad+4, the sequential files editor, v1 rev.2
     4 rem *** by litwr, 2014, (C) GNU GPL
+    6 rem *** the initial banner was made by Text Resizer by MIRKOSOFT
     8 cx=0:cy=0:ty=0:cc$=chr$(233):mc=40:cf$=chr$(230):mo$="owr":u=8:un$="u8":q=0
    10 ml=700:dima$(ml)
 
@@ -26,14 +24,13 @@
   120 for i=0 to 3:for k=0 to 35
   130 readl:iflthenpoke3354+i*40+k,l
   140 nextk:nexti
-  150 char1,10,11,"v1, by litwr, (c) 2014 gnu gpl"
+  150 char1,8,11,"v1r2, by litwr, (c) 2014 gnu gpl"
   160 i=ti
   170 if ti-i<150 then170
   180 getc$:if c$<>"" then 180
   190 return
 
- 2000 printchr$(9)chr$(14)chr$(147)"            Notepad+4":print
- 2005 print"Commands list:":print
+ 2000 printchr$(9)chr$(14)chr$(147)tab(8)"Notepad+4 commands list":print
  2010 print"C=H - help          C=N - new"
  2020 print"C=L - load          C=S - save"
  2030 print"C=U - page up       C=D - page down"
@@ -47,7 +44,7 @@
  2110 gosub2900:getkeyc$
 
  2200 rem show screen
- 2205 if fo then return:else:fo=1
+ 2205 if fo then 2230:else:fo=1
  2210 i=ty:scnclr
  2220 if i<lc and i-ty<24 then print a$(i):i=i+1:goto2220
  2230 gosub2400
@@ -106,7 +103,7 @@
  2900 poke65292,255:poke65293,255:return
 
  3000 rem load
- 3010 scnclr:s$="":print"device"u:print"enter file name to load":input s$:if s$=""goto3100
+ 3010 scnclr:s$="":print"unit"u:print"enter file name to load":input s$:if s$=""goto3100
  3014 f$=s$:gosub5900
  3020 open8,u,8,f$+",s,r":scnclr
  3030 get#8,c$:if st<>0 and st<>64 then3120
@@ -136,8 +133,8 @@
  3270 if l>1 then print#8,left$(s$,l-1);:s$=right$(s$,1)
  3275 if st<>0 then3370
  3280 if s$=cf$ goto3310
- 3290 if s$=cc$ then print#8:goto3310
- 3300 print#8,s$;:printchr$(27)"j"i;
+ 3290 printchr$(27)"j"i;:if s$=cc$ then print#8:goto3310
+ 3300 print#8,s$;
  3310 next i
  3320 if st<>0 then3370
  3330 goto3090
@@ -247,7 +244,7 @@
  4800 rem shift+backspace
  4810 c$=" "
  4820 a$(cy)=left$(a$(cy),cx)+c$+right$(a$(cy),len(a$(cy))-cx)
- 4830 if len(a$(cy))>mc then goto5500
+ 4830 if len(a$(cy))>mc then 5500
  4840 i=cy:goto2500
 
  4900 rem return
@@ -299,9 +296,7 @@
  5640 gosub7100
  5650 goto2200
 
- 5900 if lc=0 then lc=1
- 5910 cx=0:cy=0:ty=0
- 5920 lc=lc-1:a$(lc)="":if lc>0 goto5920:else:return
+ 5900 lc=0:cx=0:cy=0:ty=0:a$(0)="":return
 
  6000 cy=cy+1
  6010 if cy-ty>23 then ty=ty+1
@@ -314,8 +309,11 @@
  7000 rem input line after eol
  7010 if len(a$(lc))<mc then a$(lc)=a$(lc)+cc$:else:gosub7100:a$(lc)=cc$
 
- 7100 if lc<ml-1 then lc=lc+1:else:print"file too big":end
- 7110 return
+ 7100 if lc<ml-1 then lc=lc+1:else:goto7130
+ 7110 a$(lc)="":return
+
+ 7130 print"file too big, a line skipped":lc=lc-1
+ 7140 return
 
  7200 rem add input char
  7210 if len(a$(lc))=mc thengosub7100
@@ -450,7 +448,7 @@
 
  10000 for j=cy to lc-1
  10010 s$=a$(j):gosub10100:printchr$(27)"j"j+1;
- 10020 fi=instr(s$,fs$,l2)
+ 10020 fi=instr(s$,fs$,l2):if fi=0 and len(s$)=mc then gosub 10200
  10030 if fi then return
  10040 l2=1
  10050 next j
@@ -465,6 +463,16 @@
  10150 if n<>k then mid$(s$,i,1)=chr$(n)
  10160 next i
  10170 return
+
+ 10200 l3=len(fs$):if l3=1 then return
+ 10205 d$=s$:s$=a$(j+1):gosub10100:g$=s$:s$=d$:l4=len(g$)
+ 10210 for i=l3-1 to 1 step -1
+ 10220 if l4<l3-i then return
+ 10225 if l2>mc-i+1 then 10240
+ 10230 c$=left$(fs$,i):d$=right$(fs$,l3-i)
+ 10235 if c$=right$(s$,i) and d$=left$(g$,l3-i) then fi=mc-i+1:return
+ 10240 next i
+ 10250 return
 
  20000 poke2024,39:print "an error's occured or run/stop's pressed at line"el
 
