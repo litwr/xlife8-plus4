@@ -57,14 +57,11 @@
  2290 goto2400
 
  2300 rem show coors
- 2310 c$=str$(cx+1):d$=str$(cy+1)
- 2320 c$=right$(c$,len(c$)-1):d$=right$(d$,len(d$)-1)
- 2330 c$="x"+c$+" y"+d$
- 2340 d$=str$(lc):c$=c$+"/"+right$(d$,len(d$)-1):l=mc-len(c$)
- 2350 char1,l-3,24,"   ":poke2024,40:printc$;
- 2360 return
+ 2310 c$=str$(cx+1):d$=str$(cy+1)::mid$(c$,1,1)="x":mid$(d$,1,1)="y"
+ 2330 c$=c$+" "+d$:d$=str$(lc):mid$(d$,1,1)="/":l=mc-len(c$)
+ 2350 char1,l-3,24,"   ":poke2024,40:printc$;:return
 
- 2400 i=40*(cy-ty)+cx:poke65292,i/256:poke65293,iand255:goto2300
+ 2400 i=40*(cy-ty)+cx:poke65292,i/256:poke65293,iand255:goto2310
 
  2500 rem show line #i
  2510 char1,0,i-ty,chr$(27)+"q":poke2024,40:printa$(i);
