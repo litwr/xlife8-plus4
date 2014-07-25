@@ -46,9 +46,10 @@
 
 2200 rem show screen
 2205 fo=1:return
-2210 i=ty:scnclr
+2210 if q then print chr$(27)"o";:q=0
+2215 i=ty:scnclr
 2220 if i<lc and i-ty<24 then print a$(i):i=i+1:goto2220
-2230 gosub2400
+2230 print chr$(27)"o";:gosub2400
 
 2250 char1,0,24,f$:char1,17,24,mo$
 2260 char1,22,24,un$:return
@@ -110,7 +111,7 @@
 3060 ifi=13thengosub7000:else:ifi>31thengosub7200
 3065 if ol<lc then print chr$(19)lc;
 3070 if st=0 goto3030
-3080 if lc<ml then a$(lc)=a$(lc)+cf$:gosub 7100:else:a$(lc-1)=cf$:a$(lc)=""
+3080 a$(lc)=a$(lc)+cf$:gosub 7100
 3090 close8:s$=ds$
 3100 gosub2200:goto2400
 
@@ -133,7 +134,7 @@
 3280 if s$=cf$ goto3310
 3290 printchr$(27)"j"i;:if s$=cc$ then print#8:goto3310
 3300 print#8,s$;
-3310 next i
+3310 next
 3320 if st<>0 then3370
 3330 goto3090
 
@@ -183,7 +184,7 @@
 3800 rem delete char
 3810 if mid$(a$(cy),cx+1,1)=cf$ then return
 3820 if cx<len(a$(cy))-1 then cx=cx+1:goto4700
-3830 k=cy:ifcy<lc-1thengosub6000
+3830 k=cy:ifcy<lc-1thengosub4200
 3840 gosub4150
 3850 if k<>cy then cx=0
 3860 goto4700
@@ -267,7 +268,7 @@
 
 5200 for k=i to lc-2
 5210 a$(k)=a$(k+1)
-5220 nextk
+5220 next
 5230 lc=lc-1
 5240 return
 
@@ -289,16 +290,12 @@
 
 5600 for k=lc to i+1 step -1
 5610 a$(k)=a$(k-1)
-5620 nextk
+5620 next
 5630 a$(i)=d$
 5640 gosub7100
 5650 goto2200
 
 5900 lc=0:cx=0:cy=0:ty=0:a$(0)="":return
-
-6000 cy=cy+1
-6010 if cy-ty>23 then ty=ty+1
-6020 return
 
 6100 cy=cy-1
 6110 if ty>cy then ty=cy
@@ -307,7 +304,7 @@
 7000 rem input line after eol
 7010 if len(a$(lc))<mc then a$(lc)=a$(lc)+cc$:else:gosub7100:a$(lc)=cc$
 
-7100 if lc<ml then lc=lc+1:else:print"file too big, a line skipped":return
+7100 if lc<ml then lc=lc+1:else:print chr$(18)"file too big, a line skipped"chr$(146);:a$(lc-1)=cf$
 7110 a$(lc)="":return
 
 7200 rem add input char
@@ -318,21 +315,20 @@
 7300 if right$(a$(cy),1)=cf$ then7600
 
 7400 gosub7500
-7410 c$=a$(cy):a$(cy)=left$(c$,cx)+cc$
-7420 a$(cy+1)=right$(c$,len(c$)-cx):cx=0
-7430 c$=right$(a$(cy+1),1)
+7410 if cy+2>ml then 7450:else:c$=a$(cy):a$(cy)=left$(c$,cx)+cc$
+7415 if cy+3>ml then 7450
+7420 a$(cy+1)=right$(c$,len(c$)-cx):cx=0:c$=right$(a$(cy+1),1)
 7440 if c$<>cc$ and c$<>cf$ then gosub4200:goto5100
-7450 goto4200
+7450 cx=0:goto4200
 
 7500 for k=lc-1 to cy+1 step -1
 7510 a$(k+1)=a$(k)
-7520 next k
+7520 next
 7530 goto7100
 
-7600 a$(cy)=left$(a$(cy),len(a$(cy))-1)+cc$
-7610 gosub6000:cx=0
-7620 a$(cy)=cf$
-7630 goto7100
+7600 a$(cy)=left$(a$(cy),cx)+cc$:a$(cy+1)=cf$
+7610 cx=0:gosub7100
+7630 goto4200
 
 8000 rem esc
 8010 getc$:ifc$=""goto8010
@@ -355,13 +351,13 @@
 8220 if cy=lc-1 then a$(cy)=cf$:i=cy:gosub2500:goto2400
 8230 for k=cy to lc-2
 8240 a$(k)=a$(k+1)
-8250 next k
+8250 next
 8260 lc=lc-1:goto2200
 
 8300 rem esc+i
 8310 for k=lc-1 to cy step -1
 8320 a$(k+1)=a$(k)
-8330 next k
+8330 next
 8340 cx=0:a$(cy)=cc$:gosub7100:goto2200
 
 8400 rem esc+j
@@ -446,7 +442,7 @@
 10020 fi=instr(s$,fs$,l2):if fi=0 and len(s$)=mc then gosub 10200
 10030 if fi then return
 10040 l2=1
-10050 next j
+10050 next
 10060 goto180
 
 10100 if s$="" then return
@@ -456,7 +452,7 @@
 10130 if k>96 and k<123 then n=k-32:goto10150
 10140 if k>192 and k<219 then n=k-128
 10150 if n<>k then mid$(s$,i,1)=chr$(n)
-10160 next i
+10160 next
 10170 return
 
 10200 l3=len(fs$):if l3=1 then return
@@ -466,7 +462,7 @@
 10225 if l2>mc-i+1 then 10240
 10230 c$=left$(fs$,i):d$=right$(fs$,l3-i)
 10235 if c$=right$(s$,i) and d$=left$(g$,l3-i) then fi=mc-i+1:return
-10240 next i
+10240 next
 10250 return
 
 20000 poke2024,39:print "an error's occured or run/stop's pressed at line"el
