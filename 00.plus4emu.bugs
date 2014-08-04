@@ -12,6 +12,7 @@ missed
 * no flash screen at debugger step
 * cpc6128emu is 2-3 times faster
 * CPU flags
+* set 1581 when d81 image?
 
 question
 * mouse-cursor interface
