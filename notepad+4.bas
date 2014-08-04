@@ -1,4 +1,4 @@
- 0 rem *** notepad+4, the sequential files editor, v1 rev.2
+ 0 rem *** notepad+4, the sequential files editor, v1 rev.3
  4 rem *** by litwr, 2014, (C) GNU GPL
  6 rem *** the initial banner was made by Text Resizer by MIRKOSOFT
  8 cc$=chr$(233):mc=40:cf$=chr$(230):mo$="owr":u=8:un$="u8":q=0
@@ -25,7 +25,7 @@
 120 for i=0 to 3:for k=0 to 35
 130 readl:iflthenpoke3354+i*40+k,l
 140 nextk:nexti
-150 char1,8,11,"v1r2, by litwr, (c) 2014 gnu gpl"
+150 char1,8,11,"v1r3, by litwr, (c) 2014 gnu gpl"
 160 i=ti
 170 if ti-i<150 then170
 180 getc$:if c$<>"" then 180
@@ -60,7 +60,7 @@
 
 2300 rem show coors
 2310 c$=str$(cx+1):d$=str$(cy+1)::mid$(c$,1,1)="x":mid$(d$,1,1)="y"
-2330 c$=c$+" "+d$:d$=str$(lc):mid$(d$,1,1)="/":l=mc-len(c$)
+2330 c$=c$+" "+d$:d$=str$(lc):mid$(d$,1,1)="/":c$=c$+d$:l=mc-len(c$)
 2350 char1,l-3,24,"   ":poke2024,40:printc$;:return
 
 2400 i=40*(cy-ty)+cx:poke65292,i/256:poke65293,iand255:goto2310
