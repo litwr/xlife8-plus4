@@ -84,7 +84,7 @@ testlf   .macro
          sta t1
          ora (adjcell),y
          sta (adjcell),y
-finish       
+finish
          .endm
 
 testrt   .macro
@@ -96,7 +96,7 @@ testrt   .macro
          sta t1
          ora (adjcell),y
          sta (adjcell),y
-finish       
+finish
          .endm
 
 assign16 .macro  ;\1 <- \2

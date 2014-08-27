@@ -142,7 +142,7 @@ addnode2 .block
          iny
          lda startp+1
          sta (adjcell2),y
-         ;#assign16 startp,adjcell2
+         #assign16 startp,adjcell2
          inc tilecnt
          bne exit
 

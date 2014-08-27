@@ -569,8 +569,7 @@ lleft    ldy #left
          ldy #0
          sty t1   ;change indicator
          lda (currp),y
-         and #$80
-         beq ll1
+         bpl ll1
 
          sta t1
          ldy #count+3
@@ -585,8 +584,7 @@ lleft    ldy #left
 
 ll1      ldy #1
          lda (currp),y
-         and #$80
-         beq ll2
+         bpl ll2
 
          sta t1
          ldy #count+3
@@ -597,8 +595,7 @@ ll1      ldy #1
          #ispyr adjcell
 ll2      ldy #2
          lda (currp),y
-         and #$80
-         beq ll3
+         bpl ll3
 
          sta t1
          ldy #count+7
@@ -609,8 +606,7 @@ ll2      ldy #2
          #ispyr adjcell
 ll3      ldy #3
          lda (currp),y
-         and #$80
-         beq ll4
+         bpl ll4
 
          sta t1
          ldy #count+11
@@ -621,8 +617,7 @@ ll3      ldy #3
          #ispyr adjcell
 ll4      ldy #4
          lda (currp),y
-         and #$80
-         beq ll5
+         bpl ll5
 
          sta t1
          ldy #count+15
@@ -633,8 +628,7 @@ ll4      ldy #4
          #ispyr adjcell
 ll5      ldy #5
          lda (currp),y
-         and #$80
-         beq ll6
+         bpl ll6
 
          sta t1
          ldy #count+19
@@ -645,8 +639,7 @@ ll5      ldy #5
          #ispyr adjcell
 ll6      ldy #6
          lda (currp),y
-         and #$80
-         beq ll7
+         bpl ll7
 
          sta t1
          ldy #count+23
@@ -657,8 +650,7 @@ ll6      ldy #6
          #ispyr adjcell
 ll7      ldy #7
          lda (currp),y
-         and #$80
-         beq lexit
+         bpl lexit
 
          sta t1
          ldy #count+27
