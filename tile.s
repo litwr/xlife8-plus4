@@ -133,9 +133,7 @@ chkadd2  ldy #next
          lda (adjcell2),y
          iny
          ora (adjcell2),y
-         beq addnode2
-
-         rts
+         bne exit2
 
 addnode2 .block
          dey

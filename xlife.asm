@@ -161,7 +161,7 @@ ctab     .byte 0,8,$16,$24,$32,$40,$48,$56,$64,$72,$80,$88,$96
          .byte 4,$12,$20,$28,$36,$44,$52,$60,$68,$76,$84
 zoom     .byte 0
 fnlen    .byte 0
-dirnlen  .byte 0 
+dirnlen  .byte 0
 dirname  .TEXT "$0:"      ;filename used to access directory
          .repeat 17,0
 cfnlen   = live-cfn-3

@@ -2,15 +2,15 @@ chgtopology .macro
          lda topology
          beq l2
 
-         dec topology
+         jsr torus
          lda bordertc
-         sta $ff19
-         jmp torus
+         dec topology
+         beq l1
 
 l2       jsr plain
          inc topology
          lda borderpc
-         sta $ff19
+l1       sta $ff19
          rts
          .endm
 
