@@ -58,11 +58,11 @@ fixcnt2  lda tab20,x
          lda tab21,x
          iny
          adc (currp),y
-         sta (currp),y  
+         sta (currp),y
          lda tab22,x
          iny
          adc (currp),y
-         sta (currp),y 
+         sta (currp),y
          lda tab23,x
          iny
          adc (currp),y
