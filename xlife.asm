@@ -168,11 +168,23 @@ crsrclr  .block
          #vidmac1
 exit     rts
 
-cont2    lda #pc
+cont2    lda (currp),y
+         lsr
+         lsr
+         lsr
+         lsr
+         sta 7
+         lda #pc
          clc
          adc crsrbyte
-         sta t1
-         #vidmac1p
+         tay
+         lda (currp),y
+         and #$f0
+cont4    ora 7
+         tay
+         lda vistabpc,y
+         ldy crsrbyte
+         sta (i1),y
          rts
 
 cont1    lda #8
@@ -184,28 +196,20 @@ cont1    lda #8
          #vidmac2
          rts
 
-cont3    lda #pc
+cont3    lda (currp),y
+         and #$f
+         sta 7
+         lda #pc
          clc
          adc crsrbyte
-         sta t1
-         lda (currp),y
-         sty 7
-         sta i2
-         ldy t1
-         lda (currp),y
          tay
-         and i2
-         ldx 7
-         sta pctemp1,x   ;old
-         tya
-         ldy crsrbyte
+         lda (currp),y
+         asl
+         asl
+         asl
+         asl
+         jmp cont4
          .bend
-
-xcont7   eor #$ff
-         and i2
-         sta pctemp2,x   ;new
-         #vidmac2p
-         rts
 
 iniadjc  lda (currp),y
          sta adjcell
@@ -224,7 +228,25 @@ copyr    lda #3
          ldy #>copyleft
          jmp showtxt
 
-         * = $1300    ;must be page aligned
+         * = $1200    ;must be page aligned
+vistabpc
+   .byte 0, 2, 8, $a, $20, $22, $28, $2a, $80, $82, $88, $8a, $a0, $a2, $a8, $aa
+   .byte 0, 1, 8, 9, $20, $21, $28, $29, $80, $81, $88, $89, $a0, $a1, $a8, $a9
+   .byte 0, 2, 4, 6, $20, $22, $24, $26, $80, $82, $84, $86, $a0, $a2, $a4, $a6
+   .byte 0, 1, 4, 5, $20, $21, $24, $25, $80, $81, $84, $85, $a0, $a1, $a4, $a5
+   .byte 0, 2, 8, $a, $10, $12, $18, $1a, $80, $82, $88, $8a, $90, $92, $98, $9a
+   .byte 0, 1, 8, 9, $10, $11, $18, $19, $80, $81, $88, $89, $90, $91, $98, $99
+   .byte 0, 2, 4, 6, $10, $12, $14, $16, $80, $82, $84, $86, $90, $92, $94, $96
+   .byte 0, 1, 4, 5, $10, $11, $14, $15, $80, $81, $84, $85, $90, $91, $94, $95
+   .byte 0, 2, 8, $a, $20, $22, $28, $2a, $40, $42, $48, $4a, $60, $62, $68, $6a
+   .byte 0, 1, 8, 9, $20, $21, $28, $29, $40, $41, $48, $49, $60, $61, $68, $69
+   .byte 0, 2, 4, 6, $20, $22, $24, $26, $40, $42, $44, $46, $60, $62, $64, $66
+   .byte 0, 1, 4, 5, $20, $21, $24, $25, $40, $41, $44, $45, $60, $61, $64, $65
+   .byte 0, 2, 8, $a, $10, $12, $18, $1a, $40, $42, $48, $4a, $50, $52, $58, $5a
+   .byte 0, 1, 8, 9, $10, $11, $18, $19, $40, $41, $48, $49, $50, $51, $58, $59
+   .byte 0, 2, 4, 6, $10, $12, $14, $16, $40, $42, $44, $46, $50, $52, $54, $56
+   .byte 0, 1, 4, 5, $10, $11, $14, $15, $40, $41, $44, $45, $50, $51, $54, $55
+
 tab3     .byte 0, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2, 3, 2, 3, 3, 4
          .byte 1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5
          .byte 1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5

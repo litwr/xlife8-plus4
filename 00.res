@@ -18,3 +18,4 @@ v4
 +small speed gain
 +memory reorganization
 *renamed colors-cf to colors.cf due to incompatibility, add note about the conversion
++faster pseudocolor

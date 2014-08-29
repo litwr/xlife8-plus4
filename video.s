@@ -603,50 +603,22 @@ loop     ldy #video
          iny
          lda (currp),y
          sta i1+1
-         ldy #pc
-         sty t1
          ldy #0
-         #vidmac1p
-         iny
-         inc t1
-         #vidmac1p
-         iny
-         inc t1
-         #vidmac1p
-         iny
-         inc t1
-         #vidmac1p
-         iny
-         inc t1
-         #vidmac1p
-         iny
-         inc t1
-         #vidmac1p
-         iny
-         inc t1
-         #vidmac1p
-         iny
-         inc t1
-         #vidmac1p
-         lda #8
-         eor i1
-         sta i1
-         ldy #0
-         #vidmac2p
-         iny
-         #vidmac2p
-         iny
-         #vidmac2p
-         iny
-         #vidmac2p
-         iny
-         #vidmac2p
-         iny
-         #vidmac2p
-         iny
-         #vidmac2p
-         iny
-         #vidmac2p
+         clc
+         lda currp
+         adc #pc
+         sta adjcell
+         lda currp+1
+         adc #0
+         sta adjcell+1
+         #vidmacp
+         #vidmacp
+         #vidmacp
+         #vidmacp
+         #vidmacp
+         #vidmacp
+         #vidmacp
+         #vidmacp
          ldy #next
          lda (currp),y
          tax
@@ -1541,11 +1513,23 @@ clrect2  lda x8bit
          #vidmac1
          rts
 
-cont2    lda #pc
+cont2    lda (currp),y
+         lsr
+         lsr
+         lsr
+         lsr
+         sta 7
+         lda #pc
          clc
          adc y8byte
-         sta t1
-         #vidmac1p
+         tay
+         lda (currp),y
+         and #$f0
+cont4    ora 7
+         tay
+         lda vistabpc,y
+         ldy y8byte
+         sta (i1),y
          rts
 
 cont1    lda pseudoc
@@ -1554,24 +1538,20 @@ cont1    lda pseudoc
          #vidmac2
          rts
 
-cont3    lda #pc
+cont3    lda (currp),y
+         and #$f
+         sta 7
+         lda #pc
          clc
          adc y8byte
-         sta t1
-         lda (currp),y
-         sty 7
-         sta i2
-         ldy t1
-         lda (currp),y
          tay
-         and i2
-         ldx 7
-         sta pctemp1,x   ;old
-         tya
-         ldy y8byte
+         lda (currp),y
+         asl
+         asl
+         asl
+         asl
+         jmp cont4
          .bend
-
-         jmp xcont7
 
 seti1    .block
 y8byte   = $fd

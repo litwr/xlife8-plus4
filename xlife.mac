@@ -1,5 +1,5 @@
 ;used zp: 3-7, $14, $8e-8f, $92, $9b-$9c, $b6-b7, $a7-a8, $b8-bb, $d0-e7, $f1-f8, $fc-fd
-;free zp: $9f-a2
+;free zp: $9f-a2, $f1-$f8 (frormer pctemp)
 viewport = $8e    ;+$8f
 startp   = $D4    ;+$D5
 currp    = $D8    ;+$D9
@@ -29,8 +29,6 @@ ycrsr    = $fe5   ; .. $fe7
 fn       = $1bc0  ; .. $1bd1
 svfnlen  = $1bd2
 temp     = $b6    ; .. $b7
-pctemp1  = $f1    ; .. $f8
-pctemp2  = $1ff8  ; .. $1fff
 
 hormax   = 20     ;160
 vermax   = 24     ;192
@@ -117,38 +115,41 @@ vidmac1  .macro
          sta (i1),y
          .endm
 
-vidmac1p .macro
+vidmacp  .macro
          lda (currp),y
-         sty 7
-         sta i2
-         ldy t1
-         lda (currp),y
-         tay
-         and i2
-         ldx 7
-         sta pctemp1,x   ;old
-         tya
-         eor #$ff
-         and i2
-         sta pctemp2,x   ;new
          lsr
          lsr
          lsr
          lsr
+         sta 7
+         lda (adjcell),y
+         and #$f0
+         ora 7
          tax
-         lda vistab,x
+         lda vistabpc,x
+         ldx #0
+         sta (i1,x)
+         lda #8
+         eor i1
+         sta i1
+         lda (currp),y
+         and #$f
+         sta 7
+         lda (adjcell),y
          asl
-         ldy 7
-         sta (i1),y
-         lda pctemp1,y
-         lsr
-         lsr
-         lsr
-         lsr
+         asl
+         asl
+         asl
+         ora 7
          tax
-         lda vistab,x
-         ora (i1),y
-         sta (i1),y
+         lda vistabpc,x
+         ldx #0
+         sta (i1,x)
+         sec
+         lda i1
+         sbc #7
+         sta i1
+         iny
          .endm
 
 vidmac2  .macro
@@ -156,21 +157,6 @@ vidmac2  .macro
          and #$f
          tax
          lda vistab,x
-         sta (i1),y
-         .endm
-
-vidmac2p .macro
-         lda pctemp2,y
-         and #$f
-         tax
-         lda vistab,x
-         asl
-         sta (i1),y
-         lda pctemp1,y
-         and #$f
-         tax
-         lda vistab,x
-         ora (i1),y
          sta (i1),y
          .endm
 
