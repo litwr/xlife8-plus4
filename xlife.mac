@@ -319,3 +319,39 @@ ispyr    .segment
 dcpyr    .segment
          .byte $d3,\1     ;deccmp
          .endm
+
+printhex .macro
+         and #$7f       ;print hex number in AC
+         pha
+         lsr
+         lsr
+         lsr
+         lsr
+         eor #$30
+         jsr BSOUT
+         pla
+         and #$f
+         eor #$30
+         cmp #"9"+1
+         bcc l1
+
+         adc #6     ;CY=1
+l1       jsr BSOUT
+         .endm
+
+chgtopology .macro
+         lda topology
+         beq l2
+
+         jsr torus
+         lda bordertc
+         dec topology
+         beq l1
+
+l2       jsr plain
+         inc topology
+         lda borderpc
+l1       sta $ff19
+         rts
+         .endm
+

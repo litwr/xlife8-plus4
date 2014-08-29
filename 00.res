@@ -1,3 +1,4 @@
+v3
 +0.3-0.4% speed up
 +up to 20% for visual - no cursor position calculations
 +inilinks,inivideo removed
@@ -12,3 +13,8 @@
 +better randomization
 +better patterns collection - removed duplicated
 +better @-command logic
+
+v4
++small speed gain
++memory reorganization
+*renamed colors-cf to colors.cf due to incompatibility, add note about the conversion

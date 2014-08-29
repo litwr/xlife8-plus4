@@ -1,10 +1,3 @@
-;calcspd
-;zerocnt
-;zerocc
-
-zerocc   #inibcd cellcnt,4
-         rts
-
 calcspd .block
         lda #<eval1
         sta $3b

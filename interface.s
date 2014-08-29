@@ -1,35 +1,3 @@
-chgtopology .macro
-         lda topology
-         beq l2
-
-         jsr torus
-         lda bordertc
-         dec topology
-         beq l1
-
-l2       jsr plain
-         inc topology
-         lda borderpc
-l1       sta $ff19
-         rts
-         .endm
-
-getkey   .block
-loop     ldx $ef
-         beq loop
-
-         dec $ef
-         lda $526,x
-         rts
-         .bend
-
-scrnorm  lda #$1b
-         bne scrblnk1
-
-scrblnk  lda #$b
-scrblnk1 sta $ff06
-         rts
-
 dispatcher
          ldx $ef
          bne ldisp1
@@ -628,5 +596,20 @@ exitbench
          lda temp
          sta pseudoc
          rts         
+         .bend
+
+zerocnt  .block
+;prepares/zeros benchmark counters
+         lda #$30
+         ldy #5
+loop1    sta irqcnt,y
+         sta bencnt,y
+         dey
+         bpl loop1
+
+         sta irqcnt+7
+         sta irqcnt+8
+         sta bencnt+6
+         rts
          .bend
 

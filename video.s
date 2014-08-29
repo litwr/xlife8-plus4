@@ -1,21 +1,19 @@
-printhex .macro
-         and #$7f       ;print hex number in AC
-         pha
-         lsr
-         lsr
-         lsr
-         lsr
-         eor #$30
-         jsr BSOUT
-         pla
-         and #$f
-         eor #$30
-         cmp #"9"+1
-         bcc l1
-
-         adc #6     ;CY=1
-l1       jsr BSOUT
-         .endm
+tograph0 lda #$18
+         jsr set_ntsc
+         lda #$3b
+         sta $ff06
+         lda #$18
+         sta $ff14
+         lda #$c8
+         sta $ff12
+         sei
+         sta $ff3f
+         lda #<irq194
+         sta $fffe
+         lda #194
+         sta $ff0b
+         cli
+         rts
 
 totext   sta $ff3e
 totext0  lda #$88
@@ -2350,5 +2348,15 @@ exit     pla
          sta x0
          inc ppmode
          rts
+         .bend
+
+infoout  .block
+         ldy #4
+loop2    lda cellcnt,y
+         sta $fc9,y
+         dey
+         bpl loop2
+
+         jmp showtinfo
          .bend
 

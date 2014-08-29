@@ -143,128 +143,6 @@ irqbench .block       ;timer interrupt
          beq irqe
          .bend
 
-         * = $1200    ;must be page aligned
-gentab   .byte 0,0,0,1,0,0,0,0,0               ;block 0 - page aligned
-
-crsrbit  .byte $80    ;x bit position
-crsrbyte .byte 0      ;y%8
-crsrx    .byte 0      ;x/4 -  not at pseudographics
-crsry    .byte 0      ;y/8
-zoom     .byte 0
-fnlen    .byte 0
-dirnlen  .byte 0
-
-         .byte 0,0,0,1,0,0,0,0,0,7,7,7,7,7,7,7  ;all 7s are free
-         .byte 0,0,0,1,0,0,0,0,0,7,7,7,7,7,7,7
-         .byte 2,2,2,3,2,2,2,2,2,7,7,7,7,7,7,7
-         .byte 0,0,0,1,0,0,0,0,0,7,7,7,7,7,7,7
-         .byte 0,0,0,1,0,0,0,0,0,7,7,7,7,7,7,7
-         .byte 0,0,0,1,0,0,0,0,0,7,7,7,7,7,7,7
-         .byte 0,0,0,1,0,0,0,0,0,7,7,7,7,7,7,7
-         .byte 0,0,0,1,0,0,0,0  ;last byte is equal to 1st of ttab
-
-ttab     .byte 0,1,2,3,3,4,5,6,7,8,8,9,$10,$11,$12,$13,$13,$14
-         .byte $15,$16,$17,$18,$18,$19,$20,$21,$22,$23,$23,$24
-         .byte $25,$26,$27,$28,$28,$29,$30,$31,$32,$33,$33,$34
-         .byte $35,$36,$37,$38,$38,$39,$40,$41,$42,$43,$43,$44
-         .byte $45,$46,$47,$48,$48,$49,$50,$51,$52,$53,$53,$54
-         .byte $55,$56,$57,$58,$58,$59,$60,$61,$62,$63,$63,$64
-         .byte $65,$66,$67,$68,$68,$69,$70,$71,$72,$73,$73,$74
-         .byte $75,$76,$77,$78,$78,$79,$80,$81,$82,$83,$83,$84
-         .byte $85,$86,$87,$88,$88,$89,$90,$91,$92,$93,$93,$94
-         .byte $95,$96,$97,$98,$98,$99
-
-         .byte 0,0,1,1,0,0,0,0,0,7,7,7,7,7,7,7 ;block 1 - page aligned
-         .byte 0,0,1,1,0,0,0,0,0,7,7,7,7,7,7,7
-         .byte 0,0,1,1,0,0,0,0,0,7,7,7,7,7,7,7
-         .byte 2,2,3,3,2,2,2,2,2,7,7,7,7,7,7,7
-         .byte 0,0,1,1,0,0,0,0,0,7,7,7,7,7,7,7
-         .byte 0,0,1,1,0,0,0,0,0,7,7,7,7,7,7,7
-         .byte 0,0,1,1,0,0,0,0,0,7,7,7,7,7,7,7
-         .byte 0,0,1,1,0,0,0,0,0,7,7,7,7,7,7,7
-         .byte 0,0,1,1,0,0,0,0  ;last byte is equal to 1st of ctab
-
-ctab     .byte 0,8,$16,$24,$32,$40,$48,$56,$64,$72,$80,$88,$96
-         .byte 4,$12,$20,$28,$36,$44,$52,$60,$68,$76,$84
-
-bittab   .byte 1,2,4,8,16,32,64,128
-svfn     .text "@0:"
-         .repeat 20,0
-dirname  .TEXT "$0:"      ;filename used to access directory
-         .repeat 17,0
-cfnlen   = live-cfn-3
-cfn      .text "@0:colors-cf"
-live     .byte 12,0
-born     .byte 8,0
-density  .byte 3          ;maybe linked to live-born
-
-eval1    .byte $c4,"("              ;str$(ddddddd/dddddd.dd)
-bencnt   .byte 0,0,0,0,0,0,0,$ad
-irqcnt   .byte 0,0,0,0,0,0,".", 0,0,")",0
-vptilecx .byte 0
-vptilecy .byte 0
-copyleft .text "(c)"
-curdev   .byte 8
-ppmode   .byte 1    ;putpixel mode: 0 - tentative, 1 - active
-
-         .byte 0,0,0,1,0,0,0,0,0,7,7,7,7,7,7,7  ;block 2 - page aligned
-         .byte 0,0,0,1,0,0,0,0,0,7,7,7,7,7,7,7
-         .byte 2,2,2,3,2,2,2,2,2,7,7,7,7,7,7,7
-         .byte 2,2,2,3,2,2,2,2,2,7,7,7,7,7,7,7
-         .byte 0,0,0,1,0,0,0,0,0,7,7,7,7,7,7,7
-         .byte 0,0,0,1,0,0,0,0,0,7,7,7,7,7,7,7
-         .byte 0,0,0,1,0,0,0,0,0,7,7,7,7,7,7,7
-         .byte 0,0,0,1,0,0,0,0,0,7,7,7,7,7,7,7
-         .byte 0,0,0,1,0,0,0,0  ;last byte is equal to 1st of vistab
-
-vistab   .byte 0,1,4,5,$10,$11,$14,$15
-         .byte $40,$41,$44,$45,$50,$51,$54,$55
-
-borderpc .byte $28    ;plain
-bordertc .byte $45    ;torus
-crsrc    .byte $6b
-crsrocc  .byte $e3    ;over cell
-livcellc .byte $25
-newcellc .byte $1d
-bgedit   .byte $71
-bggo     .byte $75
-bgbl     .byte $76
-topology .byte 0      ;0 - torus, linked to previous colors
-
-         .byte 0,1,0,0,0,0,0,7,7,7,7,7,7,7   ;free - 94
-         .byte 0,0,0,1,0,0,0,0,0,7,7,7,7,7,7,7
-         .byte 0,0,0,1,0,0,0,0,0,7,7,7,7,7,7,7
-         .byte 0,0,0,1,0,0,0,0,0,7,7,7,7,7,7,7
-         .byte 0,0,0,1,0,0,0,0,0,7,7,7,7,7,7,7
-         .byte 0,0,0,1,0,0,0,0,0,7,7,7,7,7,7,7
-
-         .byte 0,0,1,1,0,0,0,0,0,7,7,7,7,7,7,7  ;block 3 - page aligned
-         .byte 0,0,1,1,0,0,0,0,0,7,7,7,7,7,7,7
-         .byte 2,2,3,3,2,2,2,2,2,7,7,7,7,7,7,7
-         .byte 2,2,3,3,2,2,2,2,2,7,7,7,7,7,7,7
-         .byte 0,0,1,1,0,0,0,0,0,7,7,7,7,7,7,7
-         .byte 0,0,1,1,0,0,0,0,0,7,7,7,7,7,7,7
-         .byte 0,0,1,1,0,0,0,0,0,7,7,7,7,7,7,7
-         .byte 0,0,1,1,0,0,0,0,0,7,7,7,7,7,7,7
-         .byte 0,0,1,1,0,0,0,0,0
-
-tab3     .byte 0, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2, 3, 2, 3, 3, 4
-         .byte 1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5
-         .byte 1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5
-         .byte 2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6
-         .byte 1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5
-         .byte 2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6
-         .byte 2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6
-         .byte 3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7
-         .byte 1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5
-         .byte 2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6
-         .byte 2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6
-         .byte 3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7
-         .byte 2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6
-         .byte 3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7
-         .byte 3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7
-         .byte 4, 5, 5, 6, 5, 6, 6, 7, 5, 6, 6, 7, 6, 7, 7, 8
-
 crsrclr  .block
 ;removes cursor from graph screen
 ;in: zoom, crsrtile, crsrbyte, crsrbit, pseudoc
@@ -328,6 +206,167 @@ xcont7   eor #$ff
          sta pctemp2,x   ;new
          #vidmac2p
          rts
+
+iniadjc  lda (currp),y
+         sta adjcell
+         iny
+         lda (currp),y
+         sta adjcell+1
+         rts
+
+curoff   lda #$ff
+         sta $ff0c
+         sta $ff0d
+         rts       ;AC =/= 0!
+
+copyr    lda #3
+         ldx #<copyleft
+         ldy #>copyleft
+         jmp showtxt
+
+         * = $1300    ;must be page aligned
+tab3     .byte 0, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2, 3, 2, 3, 3, 4
+         .byte 1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5
+         .byte 1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5
+         .byte 2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6
+         .byte 1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5
+         .byte 2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6
+         .byte 2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6
+         .byte 3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7
+         .byte 1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5
+         .byte 2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6
+         .byte 2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6
+         .byte 3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7
+         .byte 2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6
+         .byte 3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7
+         .byte 3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7
+         .byte 4, 5, 5, 6, 5, 6, 6, 7, 5, 6, 6, 7, 6, 7, 7, 8
+
+gentab   .byte 0,0,0,1,0,0,0,0,0               ;block 0 - page aligned
+
+crsrbit  .byte $80    ;x bit position
+crsrbyte .byte 0      ;y%8
+crsrx    .byte 0      ;x/4 -  not at pseudographics
+crsry    .byte 0      ;y/8
+zoom     .byte 0
+fnlen    .byte 0
+dirnlen  .byte 0
+
+         .byte 0,0,0,1,0,0,0,0,0              
+
+io2      tay
+io1      ldx curdev
+         jmp SETLFS
+
+         .byte 0,0,0,1,0,0,0,0,0,7            ;all 7s are free
+
+set_ntsc ora ntscmask
+         sta $ff07
+         rts
+
+         .byte 2,2,2,3,2,2,2,2,2,7,7,7,7,7,7,7
+         .byte 0,0,0,1,0,0,0,0,0,7,7,7,7,7,7,7
+         .byte 0,0,0,1,0,0,0,0,0,7,7,7,7,7,7,7
+         .byte 0,0,0,1,0,0,0,0,0,7,7,7,7,7,7,7
+         .byte 0,0,0,1,0,0,0,0,0,7,7,7,7,7,7,7
+         .byte 0,0,0,1,0,0,0,0  ;last byte is equal to 1st of ttab
+
+ttab     .byte 0,1,2,3,3,4,5,6,7,8,8,9,$10,$11,$12,$13,$13,$14
+         .byte $15,$16,$17,$18,$18,$19,$20,$21,$22,$23,$23,$24
+         .byte $25,$26,$27,$28,$28,$29,$30,$31,$32,$33,$33,$34
+         .byte $35,$36,$37,$38,$38,$39,$40,$41,$42,$43,$43,$44
+         .byte $45,$46,$47,$48,$48,$49,$50,$51,$52,$53,$53,$54
+         .byte $55,$56,$57,$58,$58,$59,$60,$61,$62,$63,$63,$64
+         .byte $65,$66,$67,$68,$68,$69,$70,$71,$72,$73,$73,$74
+         .byte $75,$76,$77,$78,$78,$79,$80,$81,$82,$83,$83,$84
+         .byte $85,$86,$87,$88,$88,$89,$90,$91,$92,$93,$93,$94
+         .byte $95,$96,$97,$98,$98,$99
+
+         .byte 0,0,1,1,0,0,0,0,0,7,7,7,7,7,7,7 ;block 1 - page aligned
+         .byte 0,0,1,1,0,0,0,0,0,7,7,7,7,7,7,7
+         .byte 0,0,1,1,0,0,0,0,0,7,7,7,7,7,7,7
+         .byte 2,2,3,3,2,2,2,2,2,7,7,7,7,7,7,7
+         .byte 0,0,1,1,0,0,0,0,0,7,7,7,7,7,7,7
+         .byte 0,0,1,1,0,0,0,0,0,7,7,7,7,7,7,7
+         .byte 0,0,1,1,0,0,0,0,0,7,7,7,7,7,7,7
+         .byte 0,0,1,1,0,0,0,0,0,7,7,7,7,7,7,7
+         .byte 0,0,1,1,0,0,0,0  ;last byte is equal to 1st of ctab
+
+ctab     .byte 0,8,$16,$24,$32,$40,$48,$56,$64,$72,$80,$88,$96
+         .byte 4,$12,$20,$28,$36,$44,$52,$60,$68,$76,$84
+
+bittab   .byte 1,2,4,8,16,32,64,128
+svfn     .text "@0:"
+         .repeat 20,0
+dirname  .TEXT "$0:"      ;filename used to access directory
+         .repeat 17,0
+cfnlen   = live-cfn-3
+cfn      .text "@0:colors.cf"
+live     .byte 12,0
+born     .byte 8,0
+density  .byte 3          ;maybe linked to live-born
+
+eval1    .byte $c4,"("              ;str$(ddddddd/dddddd.dd)
+bencnt   .byte 0,0,0,0,0,0,0,$ad
+irqcnt   .byte 0,0,0,0,0,0,".", 0,0,")",0
+vptilecx .byte 0
+vptilecy .byte 0
+copyleft .text "(c)"
+curdev   .byte 8
+ppmode   .byte 1    ;putpixel mode: 0 - tentative, 1 - active
+
+         .byte 0,0,0,1,0,0,0,0,0,7,7,7,7,7,7,7  ;block 2 - page aligned
+         .byte 0,0,0,1,0,0,0,0,0,7,7,7,7,7,7,7
+         .byte 2,2,2,3,2,2,2,2,2,7,7,7,7,7,7,7
+         .byte 2,2,2,3,2,2,2,2,2,7,7,7,7,7,7,7
+         .byte 0,0,0,1,0,0,0,0,0,7,7,7,7,7,7,7
+         .byte 0,0,0,1,0,0,0,0,0,7,7,7,7,7,7,7
+         .byte 0,0,0,1,0,0,0,0,0,7,7,7,7,7,7,7
+         .byte 0,0,0,1,0,0,0,0,0,7,7,7,7,7,7,7
+         .byte 0,0,0,1,0,0,0,0  ;last byte is equal to 1st of vistab
+
+vistab   .byte 0,1,4,5,$10,$11,$14,$15
+         .byte $40,$41,$44,$45,$50,$51,$54,$55
+
+borderpc .byte $28    ;plain
+bordertc .byte $45    ;torus
+crsrc    .byte $6b
+crsrocc  .byte $e3    ;over cell
+livcellc .byte $25
+newcellc .byte $1d
+bgedit   .byte $71
+bggo     .byte $75
+bgbl     .byte $76
+topology .byte 0      ;0 - torus, linked to previous colors
+
+incgen   .block
+         ldy #$30
+         #incbcd gencnt+6
+         sty gencnt+6
+         #incbcd gencnt+5
+         sty gencnt+5
+         #incbcd gencnt+4
+         sty gencnt+4
+         #incbcd gencnt+3
+         sty gencnt+3
+         #incbcd gencnt+2
+         sty gencnt+2
+         #incbcd gencnt+1
+         sty gencnt+1
+         #incbcd gencnt
+         sty gencnt
+cont2    rts
+         .bend         
+
+         .byte 0,0,1,1,0,0,0,0,0,7,7,7,7,7,7,7  ;block 3 - page aligned
+         .byte 0,0,1,1,0,0,0,0,0,7,7,7,7,7,7,7
+         .byte 2,2,3,3,2,2,2,2,2,7,7,7,7,7,7,7
+         .byte 2,2,3,3,2,2,2,2,2,7,7,7,7,7,7,7
+         .byte 0,0,1,1,0,0,0,0,0,7,7,7,7,7,7,7
+         .byte 0,0,1,1,0,0,0,0,0,7,7,7,7,7,7,7
+         .byte 0,0,1,1,0,0,0,0,0,7,7,7,7,7,7,7
+         .byte 0,0,1,1,0,0,0,0,0,7,7,7,7,7,7,7
+         .byte 0,0,1,1,0,0,0,0,0
 
 inccurrp .block
 ;increases currp
@@ -397,61 +436,31 @@ cont2    dey
          jmp loop8
          .bend
 
-zerocnt  .block
-;prepares/zeros benchmark counters
-         lda #$30
-         ldy #5
-loop1    sta irqcnt,y
-         sta bencnt,y
-         dey
-         bpl loop1
-
-         sta irqcnt+7
-         sta irqcnt+8
-         sta bencnt+6
-         rts
-         .bend
-
-curoff   lda #$ff
-         sta $ff0c
-         sta $ff0d
-         rts       ;AC =/= 0!
-
-io2      tay
-io1      ldx curdev
-         jmp SETLFS
-
-tograph0 lda #$18
-         jsr set_ntsc
-         lda #$3b
-         sta $ff06
-         lda #$18
-         sta $ff14
-         lda #$c8
-         sta $ff12
-         sei
-         sta $ff3f
-         lda #<irq194
-         sta $fffe
-         lda #194
-         sta $ff0b
-         cli
+iniadjc2 lda (currp),y
+         sta adjcell2
+         iny
+         lda (currp),y
+         sta adjcell2+1
          rts
 
-infoout  .block
-         ldy #4
-loop2    lda cellcnt,y
-         sta $fc9,y
-         dey
-         bpl loop2
+zerocc   #inibcd cellcnt,4
+         rts
 
-         jmp showtinfo
+scrnorm  lda #$1b
+         bne scrblnk1
+
+scrblnk  lda #$b
+scrblnk1 sta $ff06
+         rts
+
+getkey   .block
+loop     ldx $ef
+         beq loop
+
+         dec $ef
+         lda $526,x
+         rts
          .bend
-
-copyr    lda #3
-         ldx #<copyleft
-         ldy #>copyleft
-         jmp showtxt
 
          * = $1800
          .include "ramdata.s"
@@ -1026,25 +1035,6 @@ gencont1 sta currp+1
          stx currp
          jmp genloop2
 
-incgen   .block
-         ldy #$30
-         #incbcd gencnt+6
-         sty gencnt+6
-         #incbcd gencnt+5
-         sty gencnt+5
-         #incbcd gencnt+4
-         sty gencnt+4
-         #incbcd gencnt+3
-         sty gencnt+3
-         #incbcd gencnt+2
-         sty gencnt+2
-         #incbcd gencnt+1
-         sty gencnt+1
-         #incbcd gencnt
-         sty gencnt
-cont2    rts
-         .bend
-
 cleanup  .block
          jsr incgen
          inc clncnt
@@ -1122,10 +1112,6 @@ del1st   #assign16 startp,i1
 
          jmp loop
          .bend
-
-set_ntsc ora ntscmask
-         sta $ff07
-         rts
 
          .include "video.s"
 

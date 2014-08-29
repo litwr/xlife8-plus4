@@ -38,20 +38,6 @@ cont2    jsr showscn
          jmp infoout
          .bend
 
-iniadjc  lda (currp),y
-         sta adjcell
-         iny
-         lda (currp),y
-         sta adjcell+1
-         rts
-
-iniadjc2 lda (currp),y
-         sta adjcell2
-         iny
-         lda (currp),y
-         sta adjcell2+1
-         rts
-
 fixcnt2  lda tab20,x
          adc (currp),y
          sta (currp),y
