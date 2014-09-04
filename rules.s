@@ -2,6 +2,21 @@
 ;fillrt
 ;setrconst
 
+setrtc   .block
+         pha
+         lda adjcell
+         cmp #$90
+         bcs l2
+
+         and #$f
+         cmp #9
+l2       pla
+         bcs l1
+
+         sta (adjcell),y
+l1       rts
+         .bend
+
 fillrt   .block
          ldy #0
          lda #$f0   ;beq
@@ -21,7 +36,7 @@ fillrta  sta m1
 loop0    lda t1
          bne l5
 
-         sta (adjcell),y
+         jsr setrtc
 l5       lda i1+1
          and #1
 m1       beq lnext
@@ -49,7 +64,7 @@ l2       ldy t1
 l3       ldy #0
          lda (adjcell),y
          ora #1
-         sta (adjcell),y
+         jsr setrtc
 lnext    lda i1+1
          and #2
 m2       beq lnext2
@@ -80,7 +95,7 @@ l22      ldy t1
 l32      ldy #0
          lda (adjcell),y
          ora #2
-         sta (adjcell),y
+         jsr setrtc
 lnext2   inc i1
          inc adjcell
          bne l4

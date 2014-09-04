@@ -274,7 +274,7 @@ zoom     .byte 0
 fnlen    .byte 0
 dirnlen  .byte 0
 
-         .byte 0,0,0,1,0,0,0,0,0              
+         .byte 0,0,0,1,0,0,0,0,0
 
 io2      tay
 io1      ldx curdev
