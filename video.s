@@ -1,56 +1,3 @@
-tograph0 lda #$18
-         jsr set_ntsc
-         lda #$3b
-         sta $ff06
-         lda #$18
-         sta $ff14
-         lda #$c8
-         sta $ff12
-         sei
-         sta $ff3f
-         lda #<irq194
-         sta $fffe
-         lda #194
-         sta $ff0b
-         cli
-         rts
-
-totext   sta $ff3e
-totext0  lda #$88
-         jsr set_ntsc
-         lda #8
-         sta $ff14
-         lda #$1b
-         sta $ff06
-         lda #$c4
-         sta $ff12
-         lda #$71
-         sta $ff15
-         jmp savebl
-
-tograph  lda zoom
-         beq tographx
-
-         jsr restbl
-         lda livcellc
-         ldy #0
-s1loop   sta $800,y
-         sta $900,y
-         sta $a00,y
-         sta $ac0,y
-         iny
-         bne s1loop
-
-         sei
-         sta $ff3f
-         lda #<irq210x
-         sta $fffe
-         cli
-         bne totext0
-
-tographx jsr tograph0
-         jmp restbl
-
 showbench
          .block
          jsr JPRIMM
@@ -2328,6 +2275,74 @@ exit     pla
          sta x0
          inc ppmode
          rts
+         .bend
+
+crsrclr  .block
+;removes cursor from graph screen
+;in: zoom, crsrtile, crsrbyte, crsrbit, pseudoc
+;change: 7, currp:2, i1:2, pctemp1:8, pctemp2:8, t1
+         lda zoom
+         bne exit
+
+         #assign16 currp,crsrtile
+         ldy #video
+         lda (currp),y
+         sta i1
+         iny
+         lda (currp),y
+         sta i1+1
+         ldy crsrbyte
+         lda crsrbit
+         and #$f0
+         beq cont1
+
+         lda pseudoc
+         bne cont2
+
+         #vidmac1
+exit     rts
+
+cont2    lda (currp),y
+         lsr
+         lsr
+         lsr
+         lsr
+         sta 7
+         lda #pc
+         clc
+         adc crsrbyte
+         tay
+         lda (currp),y
+         and #$f0
+cont4    ora 7
+         tay
+         lda vistabpc,y
+         ldy crsrbyte
+         sta (i1),y
+         rts
+
+cont1    lda #8
+         eor i1
+         sta i1
+         lda pseudoc
+         bne cont3
+
+         #vidmac2
+         rts
+
+cont3    lda (currp),y
+         and #$f
+         sta 7
+         lda #pc
+         clc
+         adc crsrbyte
+         tay
+         lda (currp),y
+         asl
+         asl
+         asl
+         asl
+         jmp cont4
          .bend
 
 infoout  .block
