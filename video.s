@@ -993,7 +993,6 @@ showrect .block
          jsr showscn0
 loop0    jsr drawrect
          jsr showtent
-         jsr crsrset0
 loop1    jsr getkey
          cmp #$9d   ;cursor left
          beq lselect
@@ -1552,13 +1551,6 @@ pixel11  lda vistab,x
          asl
          ora vistab,x
          ora (i1),y
-         sta (i1),y
-         rts
-
-crsrset0 jsr crsrset1
-         lda vistab,x
-         asl
-         eor (i1),y
          sta (i1),y
          rts
 

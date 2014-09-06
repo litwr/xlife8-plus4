@@ -77,7 +77,12 @@ irq210   pha
          sta $ff3e
          jsr KBDREAD
          sta $ff3f
-         pla
+         lda $ff1f
+         and #$78
+         bne irqi
+
+         jsr crsrseti
+irqi     pla
          tay
          lda #194
 irqe1    sta $ff0b
@@ -169,6 +174,33 @@ loop     ldx $ef
          rts
          .bend
 
+crsrseti .block
+         lda i1
+         pha
+         lda i1+1
+         pha
+         jsr crsrset1
+         inc crsrsw
+         lda crsrsw
+         lsr
+         bcc l1
+
+         jsr pixel11  ;do not set CY
+         bcc l2
+
+l1       lda vistab,x
+         asl
+         ora vistab,x
+         eor #$ff
+         and (i1),y
+         sta (i1),y
+l2       pla
+         sta i1+1
+         pla
+         sta i1
+exit     rts
+         .bend
+
 ttab     .byte 0,1,2,3,3,4,5,6,7,8,8,9,$10,$11,$12,$13,$13,$14
          .byte $15,$16,$17,$18,$18,$19,$20,$21,$22,$23,$23,$24
          .byte $25,$26,$27,$28,$28,$29,$30,$31,$32,$33,$33,$34
@@ -243,7 +275,8 @@ set_ntsc ora ntscmask
          .byte 0,0,0,1,0,0,0,0,0,7,7,7,7,7,7,7
          .byte 0,0,0,1,0,0,0,0,0,7,7,7,7,7,7,7
          .byte 0,0,0,1,0,0,0,0,0,7,7,7,7,7,7,7
-         .byte 0,0,0,1,0,0,0,0,0,7,7,7,7,7,7,7
+         .byte 0,0,0,1,0,0,0,0,0,7,7,7,7,7,7
+crsrsw   .byte 0
          .byte 0,0,0,1,0,0,0,0,0
 
 vistab   .byte 0,1,4,5,$10,$11,$14,$15
