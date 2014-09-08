@@ -78,7 +78,7 @@ irq210   pha
          jsr KBDREAD
          sta $ff3f
          lda $ff1f
-         and #$78
+         and #$38
          bne irqi
 
          jsr crsrseti
