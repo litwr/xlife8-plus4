@@ -248,7 +248,23 @@ tab3     .byte 0, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2, 3, 2, 3, 3, 4
          .byte 3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7
          .byte 4, 5, 5, 6, 5, 6, 6, 7, 5, 6, 6, 7, 6, 7, 7, 8
 
-gentab   .byte 0,0,0,1,0,0,0,0,0               ;block 0 - page aligned
+gentab
+    .byte $00,$00,$00,$54,$00,$00,$00,$01,$00,$01,$15,$55,$01,$01,$00,$00
+    .byte $00,$00,$14,$40,$00,$00,$00,$00,$80,$94,$94,$c0,$80,$80,$80,$80
+    .byte $00,$00,$00,$56,$00,$00,$00,$03,$00,$01,$15,$57,$01,$01,$00,$02
+    .byte $00,$00,$14,$42,$00,$00,$00,$02,$28,$3c,$3c,$6a,$28,$28,$28,$2a
+    .byte $00,$02,$42,$56,$00,$02,$02,$03,$28,$2b,$7f,$7f,$29,$2b,$2a,$2a
+    .byte $a8,$aa,$fe,$ea,$a8,$aa,$aa,$aa,$28,$3e,$7e,$6a,$28,$2a,$2a,$2a
+    .byte $2a,$28,$6a,$7c,$2a,$28,$2a,$29,$02,$01,$57,$55,$03,$01,$02,$00
+    .byte $2a,$28,$7e,$68,$2a,$28,$2a,$28,$02,$14,$56,$40,$02,$00,$02,$00
+    .byte $00,$00,$40,$14,$00,$00,$00,$01,$00,$01,$55,$15,$01,$01,$00,$00
+    .byte $80,$80,$d4,$80,$80,$80,$80,$80,$80,$94,$d4,$80,$80,$80,$80,$80
+    .byte $00,$00,$40,$14,$00,$00,$00,$01,$00,$01,$55,$15,$01,$01,$00,$00
+    .byte $00,$00,$54,$00,$00,$00,$00,$00,$00,$14,$54,$00,$00,$00,$00,$00
+    .byte $00,$40,$40,$14,$00,$00,$00,$01,$80,$c1,$d5,$95,$81,$81,$80,$80
+    .byte $80,$c0,$d4,$80,$80,$80,$80,$80,$00,$54,$54,$00,$00,$00,$00,$00
+    .byte $00,$40,$40,$14,$00,$00,$00,$01,$00,$41,$55,$15,$01,$01,$00,$00
+    .byte $00,$40,$54,$00,$00,$00,$00,$00,$00,$54,$54,$00,$00,$00,$00,$00
 
 crsrbit  .byte $80    ;x bit position
 crsrbyte .byte 0      ;y%8
@@ -257,30 +273,49 @@ crsry    .byte 0      ;y/8
 zoom     .byte 0
 fnlen    .byte 0
 dirnlen  .byte 0
+ppmode   .byte 1    ;putpixel mode: 0 - tentative, 1 - active
+crsrsw   .byte 0
+vistab   .byte 0,1,4,5,$10,$11,$14,$15
+         .byte $40,$41,$44,$45,$50,$51,$54,$55
+ctab     .byte 0,8,$16,$24,$32,$40,$48,$56,$64,$72,$80,$88,$96
+         .byte 4,$12,$20,$28,$36,$44,$52,$60,$68,$76,$84
 
-         .byte 0,0,0,1,0,0,0,0,0
+bittab   .byte 1,2,4,8,16,32,64,128
+svfn     .text "@0:"
+         .repeat 20,0
+dirname  .TEXT "$0:"      ;filename used to access directory
+         .repeat 17,0
+cfnlen   = live-cfn-3
+cfn      .text "@0:colors.cf"
+live     .byte 12,0
+born     .byte 8,0
+density  .byte 3          ;maybe linked to live-born
+
+eval1    .byte $c4,"("              ;str$(ddddddd/dddddd.dd)
+bencnt   .byte 0,0,0,0,0,0,0,$ad
+irqcnt   .byte 0,0,0,0,0,0,".", 0,0,")",0
+vptilecx .byte 0
+vptilecy .byte 0
+copyleft .text "(c)"
+curdev   .byte 8
+borderpc .byte $28    ;plain
+bordertc .byte $45    ;torus
+crsrc    .byte $6b
+crsrocc  .byte $e3    ;over cell
+livcellc .byte $25
+newcellc .byte $1d
+bgedit   .byte $71
+bggo     .byte $75
+bgbl     .byte $76
+topology .byte 0      ;0 - torus, linked to previous colors
 
 io2      tay
 io1      ldx curdev
          jmp SETLFS
 
-         .byte 0,0,0,1,0,0,0,0,0
-
-ppmode   .byte 1    ;putpixel mode: 0 - tentative, 1 - active
 set_ntsc ora ntscmask
          sta $ff07
          rts
-
-         .byte 2,2,2,3,2,2,2,2,2,7,7,7,7,7,7,7       ;all 7s are free
-         .byte 0,0,0,1,0,0,0,0,0,7,7,7,7,7,7,7
-         .byte 0,0,0,1,0,0,0,0,0,7,7,7,7,7,7,7
-         .byte 0,0,0,1,0,0,0,0,0,7,7,7,7,7,7,7
-         .byte 0,0,0,1,0,0,0,0,0,7,7,7,7,7,7
-crsrsw   .byte 0
-         .byte 0,0,0,1,0,0,0,0,0
-
-vistab   .byte 0,1,4,5,$10,$11,$14,$15
-         .byte $40,$41,$44,$45,$50,$51,$54,$55
 
 inputhex .block
 ;gets 2 hex digits and prints them
@@ -360,69 +395,12 @@ iniadjc2 lda (currp),y
 zerocc   #inibcd cellcnt,4
          rts
 
-         .byte 7,7,7,7
-
-         .byte 0,0,1,1,0,0,0,0,0,7,7,7,7,7,7,7 ;block 1 - page aligned
-         .byte 0,0,1,1,0,0,0,0,0,7,7,7,7,7,7,7
-         .byte 0,0,1,1,0,0,0,0,0,7,7,7,7,7,7,7
-         .byte 2,2,3,3,2,2,2,2,2,7,7,7,7,7,7,7
-         .byte 0,0,1,1,0,0,0,0,0,7,7,7,7,7,7,7
-         .byte 0,0,1,1,0,0,0,0,0,7,7,7,7,7,7,7
-         .byte 0,0,1,1,0,0,0,0,0,7,7,7,7,7,7,7
-         .byte 0,0,1,1,0,0,0,0,0,7,7,7,7,7,7,7
-         .byte 0,0,1,1,0,0,0,0,0 
-
-ctab     .byte 0,8,$16,$24,$32,$40,$48,$56,$64,$72,$80,$88,$96
-         .byte 4,$12,$20,$28,$36,$44,$52,$60,$68,$76,$84
-
-bittab   .byte 1,2,4,8,16,32,64,128
-svfn     .text "@0:"
-         .repeat 20,0
-dirname  .TEXT "$0:"      ;filename used to access directory
-         .repeat 17,0
-cfnlen   = live-cfn-3
-cfn      .text "@0:colors.cf"
-live     .byte 12,0
-born     .byte 8,0
-density  .byte 3          ;maybe linked to live-born
-
-eval1    .byte $c4,"("              ;str$(ddddddd/dddddd.dd)
-bencnt   .byte 0,0,0,0,0,0,0,$ad
-irqcnt   .byte 0,0,0,0,0,0,".", 0,0,")",0
-vptilecx .byte 0
-vptilecy .byte 0
-copyleft .text "(c)"
-curdev   .byte 8
-
-         .byte 0,0,0,1,0,0,0,0,0,7,7,7,7,7,7,7  ;block 2 - page aligned
-         .byte 0,0,0,1,0,0,0,0,0,7,7,7,7,7,7,7
-         .byte 2,2,2,3,2,2,2,2,2,7,7,7,7,7,7,7
-         .byte 2,2,2,3,2,2,2,2,2,7,7,7,7,7,7,7
-         .byte 0,0,0,1,0,0,0,0,0,7,7,7,7,7,7,7
-         .byte 0,0,0,1,0,0,0,0,0,7,7,7,7,7,7,7
-         .byte 0,0,0,1,0,0,0,0,0,7,7,7,7,7,7,7
-         .byte 0,0,0,1,0,0,0,0,0,7,7,7,7,7,7,7
-         .byte 0,0,0,1,0,0,0,0,0
-
 scrnorm  lda #$1b
          bne scrblnk1
 
 scrblnk  lda #$b
 scrblnk1 sta $ff06
          rts
-
-         .byte 7,7,7,7,7
-
-borderpc .byte $28    ;plain
-bordertc .byte $45    ;torus
-crsrc    .byte $6b
-crsrocc  .byte $e3    ;over cell
-livcellc .byte $25
-newcellc .byte $1d
-bgedit   .byte $71
-bggo     .byte $75
-bgbl     .byte $76
-topology .byte 0      ;0 - torus, linked to previous colors
 
 incgen   .block
          ldy #$30
@@ -442,16 +420,6 @@ incgen   .block
          sty gencnt
 cont2    rts
          .bend         
-
-         .byte 0,0,1,1,0,0,0,0,0,7,7,7,7,7,7,7  ;block 3 - page aligned
-         .byte 0,0,1,1,0,0,0,0,0,7,7,7,7,7,7,7
-         .byte 2,2,3,3,2,2,2,2,2,7,7,7,7,7,7,7
-         .byte 2,2,3,3,2,2,2,2,2,7,7,7,7,7,7,7
-         .byte 0,0,1,1,0,0,0,0,0,7,7,7,7,7,7,7
-         .byte 0,0,1,1,0,0,0,0,0,7,7,7,7,7,7,7
-         .byte 0,0,1,1,0,0,0,0,0,7,7,7,7,7,7,7
-         .byte 0,0,1,1,0,0,0,0,0,7,7,7,7,7,7,7
-         .byte 0,0,1,1,0,0,0,0,0
 
 tograph0 lda #$18
          jsr set_ntsc
@@ -632,6 +600,7 @@ cont5    jsr zerocc
          .include "ramdisk.s"
 
 generate .block
+         clc
          #assign16 currp,startp
 loop     ldy #sum
          lda (currp),y
@@ -646,14 +615,13 @@ cont3    ldy #0		;up
          tax
          ldy #up
          jsr iniadjc
-         clc
-         ldy #count+31
+         ldy #count7+3
          jsr fixcnt1e
 
-         ldy #count+7
+         ldy #count1+3
          jsr fixcnt1
 
-         ldy #count
+         ldy #count0
          jsr fixcnt2
          jsr chkadd
 
@@ -664,14 +632,13 @@ ldown    ldy #7
          tax
          ldy #down
          jsr iniadjc
-         clc
-         ldy #count+3
+         ldy #count0+3
          jsr fixcnt1e
 
-         ldy #count+27
+         ldy #count6+3
          jsr fixcnt1
 
-         ldy #count+28
+         ldy #count7
          jsr fixcnt2
          jsr chkadd
 
@@ -683,14 +650,14 @@ lleft    ldy #left
          bpl ll1
 
          sta t1
-         ldy #count+3
-         #ispyr adjcell
-         ldy #count+7
-         #ispyr adjcell
+         ldy #count0+3
+         #ispyr4 adjcell
+         ldy #count1+3
+         #ispyr4 adjcell
          ldy #ul
          jsr iniadjc2
-         ldy #count+31
-         #ispyr adjcell2
+         ldy #count7+3
+         #ispyr4 adjcell2
          jsr chkadd2
 
 ll1      ldy #1
@@ -698,80 +665,80 @@ ll1      ldy #1
          bpl ll2
 
          sta t1
-         ldy #count+3
-         #ispyr adjcell
-         ldy #count+7
-         #ispyr adjcell
-         ldy #count+11
-         #ispyr adjcell
+         ldy #count0+3
+         #ispyr4 adjcell
+         ldy #count1+3
+         #ispyr4 adjcell
+         ldy #count2+3
+         #ispyr4 adjcell
 ll2      ldy #2
          lda (currp),y
          bpl ll3
 
          sta t1
-         ldy #count+7
-         #ispyr adjcell
-         ldy #count+11
-         #ispyr adjcell
-         ldy #count+15
-         #ispyr adjcell
+         ldy #count1+3
+         #ispyr4 adjcell
+         ldy #count2+3
+         #ispyr4 adjcell
+         ldy #count3+3
+         #ispyr4 adjcell
 ll3      ldy #3
          lda (currp),y
          bpl ll4
 
          sta t1
-         ldy #count+11
-         #ispyr adjcell
-         ldy #count+15
-         #ispyr adjcell
-         ldy #count+19
-         #ispyr adjcell
+         ldy #count2+3
+         #ispyr4 adjcell
+         ldy #count3+3
+         #ispyr4 adjcell
+         ldy #count4+3
+         #ispyr4 adjcell
 ll4      ldy #4
          lda (currp),y
          bpl ll5
 
          sta t1
-         ldy #count+15
-         #ispyr adjcell
-         ldy #count+19
-         #ispyr adjcell
-         ldy #count+23
-         #ispyr adjcell
+         ldy #count3+3
+         #ispyr4 adjcell
+         ldy #count4+3
+         #ispyr4 adjcell
+         ldy #count5+3
+         #ispyr4 adjcell
 ll5      ldy #5
          lda (currp),y
          bpl ll6
 
          sta t1
-         ldy #count+19
-         #ispyr adjcell
-         ldy #count+23
-         #ispyr adjcell
-         ldy #count+27
-         #ispyr adjcell
+         ldy #count4+3
+         #ispyr4 adjcell
+         ldy #count5+3
+         #ispyr4 adjcell
+         ldy #count6+3
+         #ispyr4 adjcell
 ll6      ldy #6
          lda (currp),y
          bpl ll7
 
          sta t1
-         ldy #count+23
-         #ispyr adjcell
-         ldy #count+27
-         #ispyr adjcell
-         ldy #count+31
-         #ispyr adjcell
+         ldy #count5+3
+         #ispyr4 adjcell
+         ldy #count6+3
+         #ispyr4 adjcell
+         ldy #count7+3
+         #ispyr4 adjcell
 ll7      ldy #7
          lda (currp),y
          bpl lexit
 
          sta t1
-         ldy #count+27
-         #ispyr adjcell
-         ldy #count+31
-         #ispyr adjcell
+         ldy #count6+3
+         #ispyr4 adjcell
+         ldy #count7+3
+         #ispyr4 adjcell
          ldy #dl
          jsr iniadjc2
-         ldy #count+3
-         #ispyr adjcell2
+         ldy #count0+3
+         #ispyr4 adjcell2
          jsr chkadd2
 lexit    jsr chkaddt
          ldy #right
@@ -783,21 +750,14 @@ lexit    jsr chkaddt
          beq lr1
 
          sta t1
-         ldy #count
-         lda #$10
-         clc
-         adc (adjcell),y
-         sta (adjcell),y
-         lda #$10
-         ldy #count+4
-         adc (adjcell),y
-         sta (adjcell),y
+         ldy #count0
+         #ispyr8 adjcell
+         ldy #count1
+         #ispyr8 adjcell
          ldy #ur
          jsr iniadjc2
-         lda #$10
-         ldy #count+28
-         adc (adjcell2),y
-         sta (adjcell2),y
+         ldy #count7
+         #ispyr8 adjcell2
          jsr chkadd2
 lr1      ldy #1
          lda (currp),y
@@ -805,135 +765,86 @@ lr1      ldy #1
          beq lr2
 
          sta t1
-         ldy #count
-         lda #$10
-         clc
-         adc (adjcell),y
-         sta (adjcell),y
-         lda #$10
-         ldy #count+4
-         adc (adjcell),y
-         sta (adjcell),y
-         lda #$10
-         ldy #count+8
-         adc (adjcell),y
-         sta (adjcell),y
+         ldy #count0
+         #ispyr8 adjcell
+         ldy #count1
+         #ispyr8 adjcell
+         ldy #count2
+         #ispyr8 adjcell
 lr2      ldy #2
          lda (currp),y
          and #1
          beq lr3
 
          sta t1
-         ldy #count+4
-         lda #$10
-         clc
-         adc (adjcell),y
-         sta (adjcell),y
-         lda #$10
-         ldy #count+8
-         adc (adjcell),y
-         sta (adjcell),y
-         lda #$10
-         ldy #count+12
-         adc (adjcell),y
-         sta (adjcell),y
+         ldy #count1
+         #ispyr8 adjcell
+         ldy #count2
+         #ispyr8 adjcell
+         ldy #count3
+         #ispyr8 adjcell
 lr3      ldy #3
          lda (currp),y
          and #1
          beq lr4
 
          sta t1
-         ldy #count+8
-         lda #$10
-         clc
-         adc (adjcell),y
-         sta (adjcell),y
-         lda #$10
-         ldy #count+12
-         adc (adjcell),y
-         sta (adjcell),y
-         lda #$10
-         ldy #count+16
-         adc (adjcell),y
-         sta (adjcell),y 
+         ldy #count2
+         #ispyr8 adjcell
+         ldy #count3
+         #ispyr8 adjcell
+         ldy #count4
+         #ispyr8 adjcell
 lr4      ldy #4
          lda (currp),y
          and #1
          beq lr5
 
          sta t1
-         ldy #count+12
-         lda #$10
-         clc
-         adc (adjcell),y
-         sta (adjcell),y
-         lda #$10
-         ldy #count+16
-         adc (adjcell),y
-         sta (adjcell),y
-         lda #$10
-         ldy #count+20
-         adc (adjcell),y
-         sta (adjcell),y
+         ldy #count3
+         #ispyr8 adjcell
+         ldy #count4
+         #ispyr8 adjcell
+         ldy #count5
+         #ispyr8 adjcell
 lr5      ldy #5
          lda (currp),y
          and #1
          beq lr6
 
          sta t1
-         ldy #count+16
-         lda #$10
-         clc
-         adc (adjcell),y
-         sta (adjcell),y
-         lda #$10
-         ldy #count+20
-         adc (adjcell),y
-         sta (adjcell),y
-         lda #$10
-         ldy #count+24
-         adc (adjcell),y
-         sta (adjcell),y
+         ldy #count4
+         #ispyr8 adjcell
+         ldy #count5
+         #ispyr8 adjcell
+         ldy #count6
+         #ispyr8 adjcell
 lr6      ldy #6
          lda (currp),y
          and #1
          beq lr7
 
          sta t1
-         ldy #count+20
-         lda #$10
-         clc
-         adc (adjcell),y
-         sta (adjcell),y
-         lda #$10
-         ldy #count+24
-         adc (adjcell),y
-         sta (adjcell),y
-         lda #$10
-         ldy #count+28
-         adc (adjcell),y
-         sta (adjcell),y
+         ldy #count5
+         #ispyr8 adjcell
+         ldy #count6
+         #ispyr8 adjcell
+         ldy #count7
+         #ispyr8 adjcell
 lr7      ldy #7
          lda (currp),y
          and #1
          beq rexit
 
          sta t1
-         ldy #count+24
-         lda #$10
-         clc
-         adc (adjcell),y
-         sta (adjcell),y
-         lda #$10
-         ldy #count+28
-         adc (adjcell),y
-         sta (adjcell),y
+         ldy #count6
+         #ispyr8 adjcell
+         ldy #count7
+         #ispyr8 adjcell
          ldy #dr
          jsr iniadjc2
-         lda #$10
-         ldy #count
-         adc (adjcell2),y
-         sta (adjcell2),y
+         ldy #count0
+         #ispyr8 adjcell2
          jsr chkadd2
 rexit    jsr chkaddt
 
@@ -942,72 +853,66 @@ rexit    jsr chkaddt
          beq l2
 
          tax
-         clc
-         ldy #count+3
+         ldy #count0+3
          jsr fixcnt1
-         ldy #count+4
+         ldy #count1
          jsr fixcnt2
-         ldy #count+11
+         ldy #count2+3
          jsr fixcnt1
 l2       ldy #2
          lda (currp),y
          beq l3
 
          tax
-         clc
-         ldy #count+7
+         ldy #count1+3
          jsr fixcnt1
-         ldy #count+8
+         ldy #count2
          jsr fixcnt2
-         ldy #count+15
+         ldy #count3+3
          jsr fixcnt1
 l3       ldy #3
          lda (currp),y
          beq l4
 
          tax
-         clc
-         ldy #count+11
+         ldy #count2+3
          jsr fixcnt1
-         ldy #count+12
+         ldy #count3
          jsr fixcnt2
-         ldy #count+19
+         ldy #count4+3
          jsr fixcnt1
 l4       ldy #4
          lda (currp),y
          beq l5
 
          tax
-         clc
-         ldy #count+15
+         ldy #count3+3
          jsr fixcnt1
-         ldy #count+16
+         ldy #count4
          jsr fixcnt2
-         ldy #count+23
+         ldy #count5+3
          jsr fixcnt1
 l5       ldy #5
          lda (currp),y
          beq l6
 
          tax
-         clc
-         ldy #count+19
+         ldy #count4+3
          jsr fixcnt1
-         ldy #count+20
+         ldy #count5
          jsr fixcnt2
-         ldy #count+27
+         ldy #count6+3
          jsr fixcnt1
 l6       ldy #6
          lda (currp),y
          beq lnext
 
          tax
-         clc
-         ldy #count+23
+         ldy #count5+3
          jsr fixcnt1
-         ldy #count+24
+         ldy #count6
          jsr fixcnt2
-         ldy #count+31
+         ldy #count7+3
          jsr fixcnt1
 lnext    ldy #next
          lda (currp),y
@@ -1047,19 +952,19 @@ mpc      ldy #pc
          dex
          bne loop8
 
-cont4    #genmac count,0
-         #genmac count+4,1
-         #genmac count+8,2
-         #genmac count+12,3
-         #genmac count+16,4
-         #genmac count+20,5
-         #genmac count+24,6
-         #genmac count+28,7
-         ldy #count
+cont4    #genmac count0,0
+         #genmac count1,1
+         #genmac count2,2
+         #genmac count3,3
+         #genmac count4,4
+         #genmac count5,5
+         #genmac count6,6
+         #genmac count7,7
+         ldy #count0
          lda #0
 loop3    sta (currp),y
          iny
-         cpy #count+32
+         cpy #count7+4
          bne loop3
 
          ldy #next

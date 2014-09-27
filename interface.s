@@ -330,19 +330,18 @@ cont17   cmp #$20   ;space
          and crsrbit
          beq lsp1
 
-         #ispyr crsrtile
          clc
          lda #1
          jsr inctsum
-lsp2     lda zoom
+lsp2     sta (crsrtile),y  ;must be AC != 0
+         lda zoom
          beq lsp3
 
          jsr showscnpg
 lsp3     jsr infoout
          jmp cont17u
 
-lsp1     #dcpyr crsrtile
-         jsr dectsum
+lsp1     jsr dectsum
          bne lsp2
 
 cont17c  cmp #"."

@@ -516,14 +516,12 @@ loop2    ldy #sum
          ldy #0
 loop4    lda (currp),y
          tax
-         lda tab3,x
-         pha
          sty t1
-         ldy #sum
-         clc
-         adc (currp),y
+         ldy #sum       ;sum!=0
+         tya
          sta (currp),y
-         pla
+         lda tab3,x
+         clc
          jsr inctsum
          ldy t1
          iny
