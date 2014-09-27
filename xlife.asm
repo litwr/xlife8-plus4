@@ -919,9 +919,9 @@ lnext    ldy #next
          tax
          iny
          lda (currp),y
-         bne cont2
+         ;bne cont2
 
-         cpx #1
+         ;cpx #1
          beq stage2
 
 cont2    sta currp+1
@@ -974,8 +974,8 @@ loop3    sta (currp),y
          lda (currp),y
          bne gencont1
 
-         cpx #1
-         bne gencont1
+         ;cpx #1
+         ;bne gencont1
          .bend
 
 rts2     rts
@@ -1006,8 +1006,8 @@ loop     ldy #sum
          lda (currp),y
          bne cont2
 
-         cpx #1
-         bne cont2
+         ;cpx #1
+         ;bne cont2
 
          rts
 

@@ -24,9 +24,9 @@ lnext    ldy #next
          tax
          iny
          lda (currp),y
-         bne cont1
+         ;bne cont1
 
-         cpx #1
+         ;cpx #1
          beq cont2
 
 cont1    sta currp+1
@@ -535,8 +535,8 @@ loop4    lda (currp),y
          lda (currp),y
          bne cont1
 
-         cpx #1
-         bne cont1
+         ;cpx #1
+         ;bne cont1
 
          jmp infoout
 

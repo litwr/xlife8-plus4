@@ -533,8 +533,8 @@ loop     ldy #video
          lda (currp),y
          bne cont
 
-         cpx #1
-         bne cont
+         ;cpx #1
+         ;bne cont
          jmp crsrset
 
 cont     sta currp+1
@@ -573,8 +573,8 @@ loop     ldy #video
          lda (currp),y
          bne cont
 
-         cpx #1
-         bne cont
+         ;cpx #1
+         ;bne cont
          jmp crsrset
 
 cont     sta currp+1
@@ -646,8 +646,8 @@ lnext    ldy #next
          lda (currp),y
          bne cont
 
-         cpx #1
-         bne cont
+         ;cpx #1
+         ;bne cont
 
          rts
 
