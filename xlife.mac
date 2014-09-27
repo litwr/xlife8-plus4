@@ -175,53 +175,41 @@ vidmac2  .macro
          .endm
 
 genmac   .macro
-         ldy #\2
-         lda (currp),y
-         tax
-         and #3
          ldy #\1+3 
-         ora (currp),y
+         lda (currp),y
          beq l1
 
-         tay
-         lda gentab,y
+         tax
+         lda gentab,x
          and #3
 l1       sta i2
 
-         txa
-         and #$c
-         asl
-         ldy #\1+2
-         ora (currp),y
+         dey
+         lda (currp),y
          beq l2
 
-         tay
-         lda gentab,y
+         tax
+         lda gentab,x
          and #$c
          ora i2
          sta i2
 
-l2       txa
-         and #$30
-         lsr
-         ldy #\1+1
-         ora (currp),y
+l2       dey
+         lda (currp),y
          beq l3
 
-         tay
-         lda gentab,y
+         tax
+         lda gentab,x
          and #$30
          ora i2
          sta i2
 
-l3       txa
-         and #$c0
-         ldy #\1
-         ora (currp),y
+l3       dey
+         lda (currp),y
          beq l4
 
-         tay
-         lda gentab,y
+         tax
+         lda gentab,x
          and #$c0
 l4       ora i2
          ldy #\2
@@ -262,6 +250,29 @@ l1       sbc #$a
          #incbcd cellcnt
          sty cellcnt
 cont2
+         .endm
+
+setcount .macro
+         tax
+         and #$c0
+         sta (currp),y
+
+         txa
+         and #$30
+         lsr
+         iny
+         sta (currp),y
+
+         txa
+         and #$c
+         asl
+         iny
+         sta (currp),y
+
+         txa
+         and #$3
+         iny
+         sta (currp),y
          .endm
 
 zero16   .macro

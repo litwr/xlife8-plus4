@@ -602,6 +602,58 @@ cont5    jsr zerocc
 generate .block
          clc
          #assign16 currp,startp
+loop3    ldy #0
+         lda (currp),y
+         ldy #count0
+         #setcount
+
+         ldy #1
+         lda (currp),y
+         ldy #count1
+         #setcount
+
+         ldy #2
+         lda (currp),y
+         ldy #count2
+         #setcount
+
+         ldy #3
+         lda (currp),y
+         ldy #count3
+         #setcount
+
+         ldy #4
+         lda (currp),y
+         ldy #count4
+         #setcount
+
+         ldy #5
+         lda (currp),y
+         ldy #count5
+         #setcount
+
+         ldy #6
+         lda (currp),y
+         ldy #count6
+         #setcount
+
+         ldy #7
+         lda (currp),y
+         ldy #count7
+         #setcount
+
+         ldy #next
+         lda (currp),y
+         tax
+         iny
+         lda (currp),y
+         beq cont10
+
+         sta currp+1
+         stx currp
+         jmp loop3
+
+cont10   #assign16 currp,startp
 loop     ldy #sum
          lda (currp),y
          bne cont3
@@ -960,12 +1012,6 @@ cont4    #genmac count0,0
          #genmac count5,5
          #genmac count6,6
          #genmac count7,7
-         ldy #count0
-         lda #0
-loop3    sta (currp),y
-         iny
-         cpy #count7+4
-         bne loop3
 
          ldy #next
          lda (currp),y
@@ -1024,6 +1070,73 @@ delel    lda tilecnt
 
          dec tilecnt+1
 l2       dec tilecnt
+
+         ldy #count0
+         lda #0
+         sta (currp),y
+         iny
+         sta (currp),y
+         iny
+         sta (currp),y
+         iny
+         sta (currp),y
+         iny
+         sta (currp),y
+         iny
+         sta (currp),y
+         iny
+         sta (currp),y
+         iny
+         sta (currp),y
+         iny
+         sta (currp),y
+         iny
+         sta (currp),y
+         iny
+         sta (currp),y
+         iny
+         sta (currp),y
+         iny
+         sta (currp),y
+         iny
+         sta (currp),y
+         iny
+         sta (currp),y
+         iny
+         sta (currp),y
+         iny
+         sta (currp),y
+         iny
+         sta (currp),y
+         iny
+         sta (currp),y
+         iny
+         sta (currp),y
+         iny
+         sta (currp),y
+         iny
+         sta (currp),y
+         iny
+         sta (currp),y
+         iny
+         sta (currp),y
+         iny
+         sta (currp),y
+         iny
+         sta (currp),y
+         iny
+         sta (currp),y
+         iny
+         sta (currp),y
+         iny
+         sta (currp),y
+         iny
+         sta (currp),y
+         iny
+         sta (currp),y
+         iny
+         sta (currp),y
+
          ldy #next
          lda (currp),y
          sta i1
@@ -1044,17 +1157,22 @@ l2       dec tilecnt
          iny
          lda i1+1
          sta (adjcell),y
-         bne loop
+         ;bne loop
 
-         lda #1
-         cmp i1
-         bne loop
+         beq exit
+         jmp loop
+
+         ;lda #1
+         ;cmp i1
+         ;bne loop
 
 exit     rts
 
 del1st   #assign16 startp,i1
          lda tilecnt
-         bne loop
+         ;bne loop
+         beq exit
+         jmp loop
 
          lda tilecnt+1
          beq exit
