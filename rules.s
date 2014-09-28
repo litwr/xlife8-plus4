@@ -1,130 +1,179 @@
 ;live, born - word
 ;fillrt
 ;setrconst
+fillrt1  .block
+         tay
+         php
+         lda #1
+         plp
+         beq l1
 
-setrtc   .block
-         pha
-         lda adjcell
-         cmp #$90
-         bcs l2
+l2       asl
+         dey
+         bne l2
 
-         and #$f
-         cmp #9
-l2       pla
-         bcs l1
-
-         sta (adjcell),y
 l1       rts
          .bend
 
-fillrt   .block
-         ldy #0
-         lda #$f0   ;beq
-         jsr fillrta
-         ldy #2
-         lda #$d0   ;bne
-fillrta  sta m1
-         sta m2
-         sty t1
-         lda #<gentab
+fillrtsl .block
+         adc i1
+         jsr fillrt1
          sta adjcell
-         lda #>gentab
-         sta adjcell+1
          lda #0
-         sta i1
-         sta i1+1
-loop0    lda t1
-         bne l5
+         adc #0
+         sta adjcell+1
+         txa
+         rts
+        .bend
 
-         jsr setrtc
-l5       lda i1+1
-         and #1
-m1       beq lnext
+fillrtsr .block
+         adc #0
+         jsr fillrt1
+         sta adjcell2
+         lda #0
+         adc #0
+         sta adjcell2+1
+         rts
+         .bend
 
-         lda i1
-         and #$f
-         cmp #8
-         beq l1
+fillrt2  .block
+         bcc l1
 
-         bcs lnext
+         lda live
+         and adjcell
+         bne l2
 
-         tay
-         lda #1
-         cpy #0
-         beq l2
+         lda live+1
+         and adjcell+1
+         beq l3
 
-loop1    asl
-         dey
-         bne loop1
-
-l2       ldy t1
-         and live,y
-         beq lnext
-
-l3       ldy #0
-         lda (adjcell),y
-         ora #1
-         jsr setrtc
-lnext    lda i1+1
-         and #2
-m2       beq lnext2
-
-         lda i1
-         lsr
-         lsr
-         lsr
-         lsr
-         cmp #8
-         beq l12
-
-         bcs lnext2
-
-         tay
-         lda #1
-         cpy #0
-         beq l22
-
-loop12   asl
-         dey
-         bne loop12
-
-l22      ldy t1
-         and live,y
-         beq lnext2
-
-l32      ldy #0
-         lda (adjcell),y
-         ora #2
-         jsr setrtc
-lnext2   inc i1
-         inc adjcell
-         bne l4
-
-         inc i1+1
-         inc adjcell+1
-         bne loop0
-
-l4       lda i1
-         cmp #$89
-         bne loop0
-
-         lda i1+1
-         cmp #3
-         bne loop0
- 
-         rts       ;ZF=1 required for loadpat
-
-l1       lda #1
-         ldy t1
-         and live+1,y
-         beq lnext
+l2       asl t1
+         lda gentab,x
+         ora t1
+         sta gentab,x
+         lsr t1
          bne l3
 
-l12      lda #1
-         ldy t1
-         and live+1,y
-         beq lnext2
-         bne l32
+l1       lda born
+         and adjcell
+         bne l2
+
+         lda born+1
+         and adjcell+1
+         bne l2
+
+l3       .bend
+
+         .block
+         lda i1  ;test r
+         beq l1
+
+         lda live
+         and adjcell2
+         bne l2
+
+         lda live+1
+         and adjcell2+1
+         beq l3
+
+l2       lda gentab,x
+         ora t1
+         sta gentab,x
+         bne l3
+
+l1       lda born
+         and adjcell2
+         bne l2
+
+         lda born+1
+         and adjcell2+1
+         bne l2
+ 
+l3       .bend
+         rts
+
+fillrt   .block
+         ldx #0
+l0       lda #1
+         sta t1
+         lda #0
+         sta gentab,x
+         txa
+         and #1
+         sta i1  ;r - see gengentab.c
+         txa
+         lsr
+         lsr
+         lsr
+         lsr
+         lsr
+         pha
+         clc
+         jsr fillrtsl
+         and #$1e
+         lsr
+         lsr
+         php
+         jsr fillrtsr
+         plp
+         jsr fillrt2
+
+         lda #4
+         sta t1
+         txa
+         and #8
+         lsr
+         lsr
+         lsr
+         sta i1 ;r
+         pla
+         jsr fillrtsl
+         and #$10
+         asl
+         asl
+         asl
+         sta i1+1
+         asl
+         php
+         txa
+         and #7
+         jsr fillrtsr
+         plp
+         php
+         jsr fillrt2
+         
+         lda #16
+         sta t1
+         plp
+         jsr fillrt2
+
+         lda #64
+         sta t1
+         txa
+         and #$40
+         asl
+         asl
+         adc #0
+         sta i1
+         txa
+         and #$38
+         lsr
+         lsr
+         lsr
+         jsr fillrtsl
+         asl
+         php
+         txa
+         and #7
+         jsr fillrtsr
+         plp
+         jsr fillrt2
+         
+         inx
+         bne l0
+
+         rts       ;ZF=1 required for loadpat
+
          .bend
 
 setrconst
