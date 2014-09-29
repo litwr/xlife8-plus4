@@ -54,7 +54,6 @@ count6   = 50
 count7   = 54
 video    = 58
 sum      = 60       ;sum != 0, see calccells
-pc       = 61
 tile     .macro
 l0       .byte 0
 l1       .byte 0
@@ -83,9 +82,8 @@ count6   .repeat 4,0    ;+50
 count7   .repeat 4,0    ;+54
 video    .word 0        ;+58
 sum      .byte 0        ;+60
-pc       .repeat 8,0    ;+61
          .endm
-tilesize = 69
+tilesize = 61
 
 testlf   .macro
          lda (currp),y
@@ -131,38 +129,63 @@ vidmac1  .macro
 
 vidmacp  .macro
          lda (currp),y
-         lsr
-         lsr
-         lsr
-         lsr
-         sta 7
-         lda (adjcell),y
-         and #$f0
-         ora 7
          tax
-         lda vistabpc,x
-         ldx #0
-         sta (i1,x)
+         sty adjcell2
+         tya
+         asl
+         asl
+         tay
+         lda (adjcell),y
+         and #$c0
+         sta 7
+         iny
+         sty adjcell2+1
+         lda (adjcell),y
+         asl
+         and #$30
+         ora 7
+         sta 7
+         txa
+         lsr
+         lsr
+         lsr
+         lsr
+         ora 7
+         tay
+         lda vistabpc,y
+         ldy #0
+         sta (i1),y
          lda #8
          eor i1
          sta i1
+
+         ldy adjcell2+1
+         iny
          lda (currp),y
-         and #$f
+         lsr
+         and #$c
          sta 7
+         iny
          lda (adjcell),y
-         asl
-         asl
-         asl
-         asl
+         and #3
          ora 7
-         tax
-         lda vistabpc,x
-         ldx #0
-         sta (i1,x)
-         sec
+         asl
+         asl
+         asl
+         asl
+         sta 7
+         txa
+         and #$f
+         ora 7
+         tay
+         lda vistabpc,y
+         ldy #0
+         sta (i1),y
          lda i1
-         sbc #7
+         ora #7
          sta i1
+
+         ldy adjcell2
          iny
          .endm
 

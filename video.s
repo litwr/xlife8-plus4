@@ -353,8 +353,7 @@ loop     lda i1
          rts        ;ZF=1
          .bend
 
-showscnpg
-         .block
+showscnpg .block
 xlimit   = $14
 ylimit   = $15
          #assign16 i1,viewport
@@ -368,12 +367,40 @@ ylimit   = $15
 loop3    lda #3
          sta ylimit
 loop4    ldy #0
-loop2    lda (adjcell),y    ;pseudocolor
-         sta t1             ;pseudocolor
-         lda (i1),y
+loop2    lda pseudoc
+         beq cont11
+
+         sty 7
+         tya
+         asl
+         asl
+         tay
+         lda (adjcell),y    ;pseudocolor
+         and #$c0
+         sta t1
+         iny
+         lda (adjcell),y    ;pseudocolor
+         and #$18
+         asl
+         ora t1
+         sta t1
+         iny
+         lda (adjcell),y    ;pseudocolor
+         and #$18
+         lsr
+         ora t1
+         sta t1
+         iny
+         lda (adjcell),y    ;pseudocolor
+         and #3
+         ora t1
+         sta t1
+         ldy 7
+         
+cont11   lda (i1),y
          ldx #0
 loop1    asl t1             ;pseudocolor
-         rol adjcell2       ;pseudocolor
+         rol adjcell2       ;pseudocolor, save a bit
          asl
          bcc cont1
 
@@ -445,7 +472,7 @@ updatepc .block
          lda pseudoc
          beq rts1
 
-         lda #pc
+         lda #count0
          clc
          adc i1
          sta adjcell
@@ -532,9 +559,6 @@ loop     ldy #video
          iny
          lda (currp),y
          bne cont
-
-         ;cpx #1
-         ;bne cont
          jmp crsrset
 
 cont     sta currp+1
@@ -542,7 +566,7 @@ cont     sta currp+1
          jmp loop
          .bend
 
-showscnp .block
+showscnp .block    ;uses: 7(vidmacp), i1(2), adjcell(2), adjcell2(2)
          #assign16 currp,startp
 loop     ldy #video
          lda (currp),y
@@ -553,7 +577,7 @@ loop     ldy #video
          ldy #0
          clc
          lda currp
-         adc #pc
+         adc #count0
          sta adjcell
          lda currp+1
          adc #0
@@ -572,9 +596,6 @@ loop     ldy #video
          iny
          lda (currp),y
          bne cont
-
-         ;cpx #1
-         ;bne cont
          jmp crsrset
 
 cont     sta currp+1
@@ -645,10 +666,6 @@ lnext    ldy #next
          iny
          lda (currp),y
          bne cont
-
-         ;cpx #1
-         ;bne cont
-
          rts
 
 cont     sta currp+1
@@ -673,7 +690,6 @@ loop     lda $1fc0,y
          sta $bc0,y
          dey
          bpl loop
-
          rts
          .bend
 
@@ -1465,7 +1481,7 @@ cont2    lda (currp),y
          lsr
          lsr
          sta 7
-         lda #pc
+         ;lda #pc
          clc
          adc y8byte
          tay
@@ -1487,7 +1503,7 @@ cont1    lda pseudoc
 cont3    lda (currp),y
          and #$f
          sta 7
-         lda #pc
+         ;lda #pc
          clc
          adc y8byte
          tay
@@ -2300,12 +2316,20 @@ cont2    lda (currp),y
          lsr
          lsr
          sta 7
-         lda #pc
-         clc
-         adc crsrbyte
+
+         lda crsrbyte
+         asl
+         asl
+         adc #count0
          tay
          lda (currp),y
          and #$f0
+         ora 7
+         sta 7
+         iny
+         lda (currp),y
+         asl
+         and #$30
 cont4    ora 7
          tay
          lda vistabpc,y
@@ -2324,17 +2348,25 @@ cont1    lda #8
 
 cont3    lda (currp),y
          and #$f
-         sta 7
-         lda #pc
-         clc
-         adc crsrbyte
+         pha
+
+         lda crsrbyte
+         asl
+         asl
+         adc #count0
          tay
          lda (currp),y
-         asl
-         asl
-         asl
-         asl
-         jmp cont4
+         and #$18
+         lsr
+         sta 7
+         iny
+         lda (currp),y
+         and #3
+         ora 7
+         sta 7
+         pla
+         ora 7
+         bcc cont4
          .bend
 
 infoout  .block

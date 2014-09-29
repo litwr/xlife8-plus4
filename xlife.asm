@@ -971,9 +971,6 @@ lnext    ldy #next
          tax
          iny
          lda (currp),y
-         ;bne cont2
-
-         ;cpx #1
          beq stage2
 
 cont2    sta currp+1
@@ -987,24 +984,7 @@ genloop2 ldy #sum
          .block
          lda #0
          sta (currp),y
-         lda pseudoc   ;commented = 5% slower
-         beq cont4     ;with no pseudocolor
-
-         ldx #8
-         lda #0
-         sta loop8+1
-         lda #pc
-         sta mpc+1
-loop8    ldy #0
-         lda (currp),y
-mpc      ldy #pc
-         sta (currp),y
-         inc loop8+1
-         inc mpc+1
-         dex
-         bne loop8
-
-cont4    #genmac count0,0
+         #genmac count0,0
          #genmac count1,1
          #genmac count2,2
          #genmac count3,3
@@ -1019,9 +999,6 @@ cont4    #genmac count0,0
          iny
          lda (currp),y
          bne gencont1
-
-         ;cpx #1
-         ;bne gencont1
          .bend
 
 rts2     rts
@@ -1051,9 +1028,6 @@ loop     ldy #sum
          iny
          lda (currp),y
          bne cont2
-
-         ;cpx #1
-         ;bne cont2
 
          rts
 
@@ -1157,14 +1131,8 @@ l2       dec tilecnt
          iny
          lda i1+1
          sta (adjcell),y
-         ;bne loop
-
          beq exit
          jmp loop
-
-         ;lda #1
-         ;cmp i1
-         ;bne loop
 
 exit     rts
 
@@ -1182,7 +1150,7 @@ del1st   #assign16 startp,i1
 
          .include "video.s"
 
-         * = $7300   ;no page alignement required
+         * = $7500   ;no page alignement required
 tiles    .include "initiles.s"
          .include "tab12.s"
 

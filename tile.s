@@ -13,12 +13,6 @@ loop0    sta (currp),y
          dey
          bpl loop0
 
-         ldy #pc
-loop1    sta (currp),y
-         iny
-         cpy #pc+8
-         bne loop1
-
 lnext    ldy #next
          lda (currp),y
          tax

@@ -17,7 +17,7 @@ Vladimir Lidovski at 2011
 http://freecode.com/projects/xlife
 
 This program creation was inspired by
-Luca, Mkarcz, and Gaia.  Thanks to
+Luca, Mkarcz, Gaia, and Opqa. Thanks to
 makers of 'tmpx' assembler, 'CBM-
 Command' file manager, 'plus4emu'
 emulator, the original 'xlife', SVS
