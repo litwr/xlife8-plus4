@@ -1312,14 +1312,14 @@ cont14   lda x8bit
          jmp xcont3
          .bend
 
-calcx    .block        ;$80 -> 0, $40 -> 1, ...
+calcx    .block        ;in: AC, $80 -> 0, $40 -> 1, ...
          ldx #$ff
 cl2      inx
          asl
          bcc cl2
 
          txa
-         rts
+         rts       ;CY=1
          .bend
 
 clrrect  .block   ;in: x8poscp, y8poscp
@@ -1339,7 +1339,7 @@ rectuly  = adjcell2+1
          sta y8byte
          lda crsrbit
          sta x8bit
-         jsr calcx
+         jsr calcx        ;sets CY=1
          and #3
          ldx xdir
          beq cl3
@@ -1481,12 +1481,20 @@ cont2    lda (currp),y
          lsr
          lsr
          sta 7
-         ;lda #pc
-         clc
-         adc y8byte
+
+         lda y8byte
+         asl
+         asl
+         adc #count0
          tay
          lda (currp),y
-         and #$f0
+         and #$c0
+         ora 7
+         sta 7
+         iny
+         lda (currp),y
+         and #$18
+         asl
 cont4    ora 7
          tay
          lda vistabpc,y
@@ -1500,19 +1508,27 @@ cont1    lda pseudoc
          #vidmac2
          rts
 
-cont3    lda (currp),y
-         and #$f
-         sta 7
-         ;lda #pc
-         clc
-         adc y8byte
+cont3    lda y8byte
+         asl
+         asl
+         adc #count0+2
          tay
          lda (currp),y
+         and #$18
+         lsr
+         sta 7
+         iny
+         lda (currp),y
+         and #3
+         ora 7
          asl
          asl
          asl
          asl
-         jmp cont4
+         sta 7
+         lda (currp),y
+         and #$f
+         bpl cont4
          .bend
 
 seti1    .block

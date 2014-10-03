@@ -1,5 +1,5 @@
 ;used zp: 3-7, $14, $8e-8f, $92, $9b-$9c, $b6-b7, $a7-a8, $b8-bb, $d0-e7, $f1-f8, $fc-fd
-;free zp: $9f-a2, $f1-$f8 (frormer pctemp)
+;free zp: $9f-a2, $f1-$f8 (former pctemp)
 viewport = $8e    ;+$8f
 startp   = $D4    ;+$D5
 currp    = $D8    ;+$D9
@@ -26,8 +26,9 @@ xchgdir  = $92
 tcscr    = $fcf   ; .. $fd1
 xcrsr    = $fe0   ; .. $fe2
 ycrsr    = $fe5   ; .. $fe7
-fn       = $1bc0  ; .. $1bd1
-svfnlen  = $1bd2
+;$fe8-feb are used by io to keep live/born info
+fn       = $fed   ; .. $ffe
+svfnlen  = $fec
 temp     = $b6    ; .. $b7
 
 hormax   = 20     ;160
@@ -127,6 +128,14 @@ vidmac1  .macro
          sta (i1),y
          .endm
 
+vidmac2  .macro
+         lda (currp),y
+         and #$f
+         tax
+         lda vistab,x
+         sta (i1),y
+         .endm
+
 vidmacp  .macro
          lda (currp),y
          tax
@@ -153,7 +162,7 @@ vidmacp  .macro
          ora 7
          tay
          lda vistabpc,y
-         ldy #0
+         ldy adjcell2
          sta (i1),y
          lda #8
          eor i1
@@ -161,7 +170,7 @@ vidmacp  .macro
 
          ldy adjcell2+1
          iny
-         lda (currp),y
+         lda (adjcell),y
          lsr
          and #$c
          sta 7
@@ -179,22 +188,12 @@ vidmacp  .macro
          ora 7
          tay
          lda vistabpc,y
-         ldy #0
+         ldy adjcell2
          sta (i1),y
          lda i1
-         ora #7
+         eor #8
          sta i1
-
-         ldy adjcell2
          iny
-         .endm
-
-vidmac2  .macro
-         lda (currp),y
-         and #$f
-         tax
-         lda vistab,x
-         sta (i1),y
          .endm
 
 genmac   .macro

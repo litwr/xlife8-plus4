@@ -1,7 +1,7 @@
-//do not form plainbox - add it manually
 #include <stdio.h>
 
 #define PLUS4
+//#define BK0011
 
 #ifdef PLUS4
 #define TILESIZE 61
@@ -12,6 +12,41 @@
 #define VIDEOXINC 16
 #define VIDEOSTART 0x2000
 #endif
+
+#ifdef BK0011
+#define TILESIZE 62
+#define TILESTART 15482  //??
+#define XMAX 24
+#define YMAX 20
+#define VIDEOYINC 40
+#define VIDEOXINC 1
+#define VIDEOSTART 4
+#endif
+
+void printtile(unsigned short *b) {
+   int i;
+   printf("    .byte ");
+#ifdef PLUS4
+   for (i = 0; i < 7; i++) printf("0, ");
+   printf("0\n    .word ");
+   for (i = 4; i < 12; i++) printf("$%x, ", b[i]);
+   printf("0\n    .byte ");
+   for (i = 0; i < 15; i++) printf("0, ");
+   printf("0\n    .byte ", b[i]);
+   for (i = 0; i < 15; i++) printf("0, ");
+   printf("0\n    .word $%x\n    .byte 0\n", b[29]);
+#elif defined(BK0011)
+   printf("    .byte ");
+   for (i = 0; i < 7; i++) printf("0, ");
+   printf("0\n    .word ");
+   for (i = 4; i < 12; i++) printf("%u, ", b[i]);
+   printf("0\n    .byte ");
+   for (i = 0; i < 15; i++) printf("0, ");
+   printf("0\n    .byte ", b[i]);
+   for (i = 0; i < 15; i++) printf("0, ");
+   printf("0\n    .word %u, 0\n", b[29]);
+#endif
+}
 
 main() {
    int i, x, y, cur, video = VIDEOSTART;
@@ -68,28 +103,12 @@ main() {
              b[9] = cur + TILESIZE;
           }
           b[29] = video;
-#ifdef PLUS4
-          printf("    .byte ");
-          for (i = 0; i < 7; i++) printf("0, ");
-          printf("0\n    .word ", b[i]);
-          for (i = 4; i < 12; i++) printf("$%x, ", b[i]);
-          printf("0\n    .byte ");
-          for (i = 0; i < 15; i++) printf("0, ");
-          printf("0\n    .byte ", b[i]);
-          for (i = 0; i < 15; i++) printf("0, ");
-          printf("0\n    .word $%x\n    .byte 0\n", b[29]);
-#endif
-#if 0
-          printf("    .word ");
-          for (i = 0; i < 9; i++) printf("%u, ", b[i]);
-          printf("%u\n    .word ", b[i]);
-          for (i = 10; i < 19; i++) printf("%u, ", b[i]);
-          printf("%u\n    .word ", b[i]);
-          for (i = 20; i < 29; i++) printf("%u, ", b[i]);
-          printf("%u\n    .word ", b[i]);
-          for (i = 30; i < 34; i++) printf("%u, ", b[i]);
-          printf("%u\n", b[i]);
-#endif
+          printtile(b);
       }
+      cur = TILESTART + YMAX*XMAX*TILESIZE;
+      b[29] = 0;
+      for (i = 4; i <= 11; i++)
+        b[i] = cur;
+      printtile(b);
 }
 
