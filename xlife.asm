@@ -308,6 +308,8 @@ bgedit   .byte $71
 bggo     .byte $75
 bgbl     .byte $76
 topology .byte 0      ;0 - torus, linked to previous colors
+fn       .repeat 18,0
+svfnlen  .byte 0
 
 io2      tay
 io1      ldx curdev

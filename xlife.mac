@@ -27,8 +27,6 @@ tcscr    = $fcf   ; .. $fd1
 xcrsr    = $fe0   ; .. $fe2
 ycrsr    = $fe5   ; .. $fe7
 ;$fe8-feb are used by io to keep live/born info
-fn       = $fed   ; .. $ffe
-svfnlen  = $fec
 temp     = $b6    ; .. $b7
 
 hormax   = 20     ;160
