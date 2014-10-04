@@ -515,45 +515,29 @@ showscn2 .block
 loop     ldy #video
          lda (currp),y
          sta i1
+         eor #8
+         sta temp
          iny
          lda (currp),y
          sta i1+1
+         sta temp+1
          ldy #0
-         #vidmac1
+         #vidmac12
          iny
-         #vidmac1
+         #vidmac12
          iny
-         #vidmac1
+         #vidmac12
          iny
-         #vidmac1
+         #vidmac12
          iny
-         #vidmac1
+         #vidmac12
          iny
-         #vidmac1
+         #vidmac12
          iny
-         #vidmac1
+         #vidmac12
          iny
-         #vidmac1
-         lda #8
-         eor i1
-         sta i1
-         ldy #0
-         #vidmac2
-         iny
-         #vidmac2
-         iny
-         #vidmac2
-         iny
-         #vidmac2
-         iny
-         #vidmac2
-         iny
-         #vidmac2
-         iny
-         #vidmac2
-         iny
-         #vidmac2
-         ldy #next
+         #vidmac12
+l2       ldy #next
          lda (currp),y
          tax
          iny
@@ -586,12 +570,19 @@ loop     ldy #video
          adc #0
          sta adjcell+1
          #vidmacp
+         iny
          #vidmacp
+         iny
          #vidmacp
+         iny
          #vidmacp
+         iny
          #vidmacp
+         iny
          #vidmacp
+         iny
          #vidmacp
+         iny
          #vidmacp
          ldy #next
          lda (currp),y

@@ -117,8 +117,20 @@ assign16 .macro  ;\1 <- \2
          sta \1+1
          .endm
 
-vidmac1  .macro
+vidmac12 .macro
          lda (currp),y
+         bne l1
+
+         sta (i1),y
+         beq l2
+
+l1
+         #vidmac1x
+         #vidmac2x
+l2       sta (temp),y
+         .endm
+
+vidmac1x .macro
          lsr
          lsr
          lsr
@@ -128,11 +140,20 @@ vidmac1  .macro
          sta (i1),y
          .endm
 
-vidmac2  .macro
+vidmac2x .macro
          lda (currp),y
          and #$f
          tax
          lda vistab,x
+         .endm
+
+vidmac1  .macro
+         lda (currp),y
+         #vidmac1x
+         .endm
+
+vidmac2  .macro
+         #vidmac2x
          sta (i1),y
          .endm
 
@@ -191,7 +212,6 @@ l1       tax
          lda vistabpc,y
          ldy adjcell2
 l2       sta (temp),y
-         iny
          .endm
 
 genmac   .macro
