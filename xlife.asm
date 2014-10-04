@@ -5,7 +5,7 @@
          .include "xlife.mac"
          * = $1001
         .BYTE $16,$10,0,0,$9E
-        .null "16192:litwr-2014"
+        .null "16128:litwr-2014"
         .BYTE 0,0
 
 irq210x  pha         ;for zoom in - text mode
@@ -419,7 +419,7 @@ incgen   .block
          #incbcd gencnt
          sty gencnt
 cont2    rts
-         .bend         
+         .bend
 
 tograph0 lda #$18
          sta $ff14
@@ -476,7 +476,7 @@ tographx jsr tograph0
          * = $1800
          .include "ramdata.s"
 
-         * = $3f40   ;maybe lower, to the start of setcolor call
+         * = $3f00   ;maybe lower, to the start of setcolor call ($3ef9?)
 start    lda $ff07
          and #$40
          sta ntscmask

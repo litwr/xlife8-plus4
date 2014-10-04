@@ -2307,7 +2307,7 @@ exit     pla
 crsrclr  .block
 ;removes cursor from graph screen
 ;in: zoom, crsrtile, crsrbyte, crsrbit, pseudoc
-;change: 7, currp:2, i1:2, pctemp1:8, pctemp2:8, t1
+;change: 7, currp:2, i1:2, t1
          lda zoom
          bne exit
 
@@ -2342,7 +2342,7 @@ cont2    lda (currp),y
          adc #count0
          tay
          lda (currp),y
-         and #$f0
+         and #$c0
          ora 7
          sta 7
          iny
@@ -2367,24 +2367,24 @@ cont1    lda #8
 
 cont3    lda (currp),y
          and #$f
-         pha
+         sta 7
 
          lda crsrbyte
          asl
          asl
-         adc #count0
+         adc #count0+2
          tay
          lda (currp),y
          and #$18
-         lsr
-         sta 7
+         sta t1
          iny
          lda (currp),y
          and #3
-         ora 7
-         sta 7
-         pla
-         ora 7
+         asl
+         ora t1
+         asl
+         asl
+         asl
          bcc cont4
          .bend
 
