@@ -422,11 +422,10 @@ cont2    rts
          .bend         
 
 tograph0 lda #$18
+         sta $ff14
          jsr set_ntsc
          lda #$3b
          sta $ff06
-         lda #$18
-         sta $ff14
          lda #$c8
          sta $ff12
          sei
@@ -477,7 +476,7 @@ tographx jsr tograph0
          * = $1800
          .include "ramdata.s"
 
-         * = $3f40
+         * = $3f40   ;maybe lower, to the start of setcolor call
 start    lda $ff07
          and #$40
          sta ntscmask
@@ -486,34 +485,30 @@ start    lda $ff07
 
          lda curdev
 nochg    sta curdev
+         ldy #1
+         sty startp
+         dey
+         sty startp+1
+         lda #<tiles
+         sta crsrtile
+         lda #>tiles
+         sta crsrtile+1
          jsr loadcf
          jsr copyr
          lda #$88
          jsr set_ntsc
+         jsr TOCHARSET1   ;to caps & graphs
+         #iniram
+         jsr setcolor
          jsr help
          lda #147
          jsr BSOUT
-         jsr TOCHARSET1   ;to caps & graphs
-         #iniram
          sei
-         sta $ff3f
-         jsr setcolor
-         lda #$18
-         sta $ff14
-         lda #$3b
-         sta $ff06
-         lda #$18
-         jsr set_ntsc
-         lda #$c8
-         sta $ff12
-         lda #<irq194
-         sta $fffe
          lda #>irq194
          sta $ffff
-         lda #194
-         sta $ff0b
          lda #$a2
          sta $ff0a
+         jsr tograph0
          lda #"G"-"A"+1
          sta $fc0
          lda #"%"
@@ -522,8 +517,6 @@ nochg    sta curdev
          sta $fdf
          lda #"Y"-"A"+1
          sta $fe4
-         cli
-
          #zero16 tilecnt
          sta mode
          sta pseudoc
@@ -535,14 +528,6 @@ nochg    sta curdev
          ;jsr torus
          ;jsr plain
 
-         ldy #1
-         sty startp
-         dey
-         sty startp+1
-         lda #<tiles
-         sta crsrtile
-         lda #>tiles
-         sta crsrtile+1
          jsr zerocc
          jsr infoout
          jsr showrules
