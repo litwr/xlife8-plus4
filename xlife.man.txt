@@ -28,7 +28,7 @@
  \xC  Clear the universe.
  \xE  Toggle pseudocolor display mode.  In
     this mode, the new cells  are  shown
-    in the extra color.  It is about 10%
+    in the extra color.  It is  slightly
     slower.
  \xg  Toggle running  the  game.   Evolve/
     Stop.  Then step through generations

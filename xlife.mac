@@ -138,7 +138,12 @@ vidmac2  .macro
 
 vidmacp  .macro
          lda (currp),y
-         tax
+         bne l1
+
+         sta (i1),y
+         beq l2
+
+l1       tax
          sty adjcell2
          tya
          asl
@@ -164,10 +169,6 @@ vidmacp  .macro
          lda vistabpc,y
          ldy adjcell2
          sta (i1),y
-         lda #8
-         eor i1
-         sta i1
-
          ldy adjcell2+1
          iny
          lda (adjcell),y
@@ -189,10 +190,7 @@ vidmacp  .macro
          tay
          lda vistabpc,y
          ldy adjcell2
-         sta (i1),y
-         lda i1
-         eor #8
-         sta i1
+l2       sta (temp),y
          iny
          .endm
 

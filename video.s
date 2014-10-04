@@ -342,12 +342,12 @@ loop     lda i1
          sta $1c00,y
          sta $1d00,y
          sta $1e00,y
-         sta $1ec0,y
+         sta $1ee8,y
          lda i2
          sta $1800,y
          sta $1900,y
          sta $1a00,y
-         sta $1ac0,y
+         sta $1ae8,y
          iny
          bne loop
          rts        ;ZF=1
@@ -566,14 +566,17 @@ cont     sta currp+1
          jmp loop
          .bend
 
-showscnp .block    ;uses: 7(vidmacp), i1(2), adjcell(2), adjcell2(2)
+showscnp .block    ;uses: 7(vidmacp), i1(2), adjcell(2), adjcell2(2), temp(2)
          #assign16 currp,startp
 loop     ldy #video
          lda (currp),y
          sta i1
+         eor #8
+         sta temp
          iny
          lda (currp),y
          sta i1+1
+         sta temp+1
          ldy #0
          clc
          lda currp

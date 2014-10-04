@@ -18,6 +18,6 @@ v4
 +small speed gain
 +memory reorganization
 +better (immediate, without 1 step delay) pseudocolor support
--pseudocolor/normal speed ratio 1:1.55 (was 1:1:44)
++faster pseudocolor mode
 +flashing cursor
 *renamed colors-cf to colors.cf due to incompatibility, add note about the conversion

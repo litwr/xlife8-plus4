@@ -5,7 +5,7 @@
 
 #ifdef PLUS4
 #define TILESIZE 61
-#define TILESTART 0x7500
+#define TILESTART 0x8800
 #define XMAX 20
 #define YMAX 24
 #define VIDEOYINC 0

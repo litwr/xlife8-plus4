@@ -5,7 +5,7 @@
          .include "xlife.mac"
          * = $1001
         .BYTE $16,$10,0,0,$9E
-        .null "15872:litwr-2014"
+        .null "16192:litwr-2014"
         .BYTE 0,0
 
 irq210x  pha         ;for zoom in - text mode
@@ -477,7 +477,7 @@ tographx jsr tograph0
          * = $1800
          .include "ramdata.s"
 
-         * = $3e00
+         * = $3f40
 start    lda $ff07
          and #$40
          sta ntscmask
@@ -1150,7 +1150,8 @@ del1st   #assign16 startp,i1
 
          .include "video.s"
 
-         * = $7500   ;no page alignement required
-tiles    .include "initiles.s"
+         * = $8000   ;no page alignement required
          .include "tab12.s"
+         ;$8000+$800=$8800
+tiles    .include "initiles.s"
 
