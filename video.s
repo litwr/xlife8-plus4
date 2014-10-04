@@ -353,24 +353,91 @@ loop     lda i1
          rts        ;ZF=1
          .bend
 
-showscnpg .block
+showscnz .block
 xlimit   = $14
 ylimit   = $15
          #assign16 i1,viewport
+         lda #5
+         sta xlimit
+         lda pseudoc
+         bne showscnzp
+
+         lda #$c
+         sta cont2+2
+         lda #0
+         sta cont2+1
+loop3    lda #3
+         sta ylimit
+loop4    ldy #0
+loop2    lda (i1),y
+         ldx #0
+loop1    asl
+         bcc cont1
+
+         sta 7
+         lda #81         ;live cell char
+cont2    sta $c00,x
+         lda 7
+         inx
+         cpx #8
+         bne loop1
+
+         lda #39    ;CY=1
+         adc cont2+1
+         sta cont2+1
+         bcc nocy1
+
+         inc cont2+2
+nocy1    iny
+         cpy #8
+         bne loop2
+
+         dec ylimit
+         beq cont3
+
+         lda #<tilesize*20-1 ;CY=1
+         adc i1
+         sta i1
+         lda i1+1
+         adc #>tilesize*20
+         sta i1+1
+         bcc loop4
+
+cont1    sta 7
+         lda #32
+         bne cont2
+
+cont3    dec xlimit
+         bne cont11
+         jmp gexit
+
+cont11   lda cont2+1    ;CY=1
+         sbc #<952
+         sta cont2+1
+         lda cont2+2
+         sbc #>952
+         sta cont2+2  
+         lda i1   ;CY=1
+         sbc #<tilesize*39
+         sta i1
+         lda i1+1
+         sbc #>tilesize*39
+         sta i1+1
+         bne loop3
+         .bend
+
+showscnzp .block
+xlimit   = $14
+ylimit   = $15
          jsr updatepc
          lda #$c
          sta cont2+2
          lda #0
          sta cont2+1
-         lda #5
-         sta xlimit
 loop3    lda #3
          sta ylimit
 loop4    ldy #0
-loop2    lda pseudoc
-         beq cont11
-
-         sty 7
+loop2    sty 7
          tya
          asl
          asl
@@ -379,44 +446,41 @@ loop2    lda pseudoc
          and #$c0
          sta t1
          iny
-         lda (adjcell),y    ;pseudocolor
+         lda (adjcell),y
          and #$18
          asl
          ora t1
          sta t1
          iny
-         lda (adjcell),y    ;pseudocolor
+         lda (adjcell),y
          and #$18
          lsr
          ora t1
          sta t1
          iny
-         lda (adjcell),y    ;pseudocolor
+         lda (adjcell),y
          and #3
          ora t1
          sta t1
          ldy 7
          
-cont11   lda (i1),y
+         lda (i1),y
          ldx #0
 loop1    asl t1             ;pseudocolor
-         rol adjcell2       ;pseudocolor, save a bit
+         ror adjcell2       ;pseudocolor, save a bit
          asl
          bcc cont1
 
-         pha
-         lda pseudoc
-         beq cont12
-
-         lsr adjcell2
-         bcs cont12
+         sta 7
+         lda adjcell2
+         bmi cont12
 
          lda #87         ;new cell char
          bne cont2
 
 cont12   lda #81         ;live cell char
 cont2    sta $c00,x
-         pla
+         lda 7
          inx
          cpx #8
          bne loop1
@@ -443,7 +507,7 @@ nocy1    iny
          jsr updatepc
          bcc loop4
 
-cont1    pha
+cont1    sta 7
          lda #32
          bne cont2
 
@@ -469,9 +533,6 @@ cont3    dec xlimit
 gexit    jmp crsrset
 
 updatepc .block
-         lda pseudoc
-         beq rts1
-
          lda #count0
          clc
          adc i1
@@ -479,15 +540,15 @@ updatepc .block
          lda #0
          adc i1+1
          sta adjcell+1
+         rts         ;CY is not changed or set to 0
          .bend
-rts1     rts         ;CY is not changed or set to 0
 
 showscn  .block
          jsr infoout
          lda zoom
          beq cont1
 
-         jmp showscnpg
+         jmp showscnz
 
 cont1    lda tilecnt
          bne xcont2
@@ -508,7 +569,7 @@ showscn0 lda zoom
 
          lda tilecnt+1
          bne xcont2
-         rts
+rts1     rts
 
 showscn2 .block
          #assign16 currp,startp
@@ -1958,7 +2019,7 @@ loopx    ldy #right
          beq cont0
 
 l7       jsr setviewport
-cont0    jsr showscnpg
+cont0    jsr showscnz
 cont2    lda #0
          sta t1
          lda vptilecy

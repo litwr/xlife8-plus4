@@ -1137,7 +1137,7 @@ del1st   #assign16 startp,i1
 
          .include "video.s"
 
-         * = $8000   ;no page alignement required
+         * = $8000
          .include "tab12.s"
          ;$8000+$800=$8800
 tiles    .include "initiles.s"

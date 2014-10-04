@@ -15,9 +15,10 @@ v3
 +better @-command logic
 
 v4
-+small speed gain
++12-100% speed gain
 +memory reorganization
 +better (immediate, without 1 step delay) pseudocolor support
 +faster pseudocolor mode
++faster zoom in mode
 +flashing cursor
 *renamed colors-cf to colors.cf due to incompatibility, add note about the conversion

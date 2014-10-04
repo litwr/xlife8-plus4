@@ -337,7 +337,7 @@ lsp2     sta (crsrtile),y  ;must be AC != 0
          lda zoom
          beq lsp3
 
-         jsr showscnpg
+         jsr showscnz
 lsp3     jsr infoout
          jmp cont17u
 
@@ -360,7 +360,7 @@ cont17t  sta crsrbit
          beq exit0
 
          jsr setviewport
-         jsr showscnpg
+         jsr showscnz
 cont17u  jsr crsrset
          jmp crsrcalc
 
