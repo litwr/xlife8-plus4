@@ -629,15 +629,15 @@ loop3    ldy #0
          ldy #count7
          #setcount
 
-         ldy #next
-         lda (currp),y
-         tax
-         iny
+         ldy #next+1
          lda (currp),y
          beq cont10
 
-         sta currp+1
-         stx currp
+         tax
+         dey
+         lda (currp),y
+         sta currp
+         stx currp+1
          jmp loop3
 
 cont10   #assign16 currp,startp
@@ -953,15 +953,15 @@ l6       ldy #6
          jsr fixcnt2
          ldy #count7+3
          jsr fixcnt1
-lnext    ldy #next
-         lda (currp),y
-         tax
-         iny
+lnext    ldy #next+1
          lda (currp),y
          beq stage2
 
-cont2    sta currp+1
-         stx currp
+cont2    tax
+         dey
+         lda (currp),y
+         sta currp
+         stx currp+1
          jmp loop
 
 stage2   #assign16 currp,startp
@@ -980,18 +980,18 @@ genloop2 ldy #sum
          #genmac count6,6
          #genmac count7,7
 
-         ldy #next
-         lda (currp),y
-         tax
-         iny
+         ldy #next+1
          lda (currp),y
          bne gencont1
          .bend
 
 rts2     rts
 
-gencont1 sta currp+1
-         stx currp
+gencont1 tax
+         dey
+         lda (currp),y
+         stx currp+1
+         sta currp
          jmp genloop2
 
 cleanup  .block
@@ -1009,21 +1009,21 @@ loop     ldy #sum
          lda (currp),y
          beq delel
 
-         ldy #next
-         lda (currp),y
-         tax
-         iny
+         ldy #next+1
          lda (currp),y
          bne cont2
 
          rts
 
-cont2    ldy currp    ;save pointer to previous
-         sty adjcell
-         ldy currp+1
-         sty adjcell+1
-         sta currp+1
-         stx currp
+cont2    ldx currp    ;save pointer to previous
+         stx adjcell
+         ldx currp+1
+         stx adjcell+1
+         tax
+         dey
+         lda (currp),y
+         sta currp
+         stx currp+1
          jmp loop
 
 delel    lda tilecnt

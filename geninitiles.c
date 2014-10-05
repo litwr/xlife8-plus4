@@ -12,6 +12,7 @@
 #define VIDEOYINC 0
 #define VIDEOXINC 16
 #define VIDEOSTART 0x2000
+#define OK
 #endif
 
 #ifdef CPC6128
@@ -22,6 +23,7 @@
 #define VIDEOYINC 0
 #define VIDEOXINC 4
 #define VIDEOSTART 0xc000
+#define OK
 #endif
 
 #ifdef BK0011
@@ -32,6 +34,11 @@
 #define VIDEOYINC 40
 #define VIDEOXINC 1
 #define VIDEOSTART 4
+#define OK
+#endif
+
+#ifndef OK
+#error The architecture is not defined!
 #endif
 
 void printtile(unsigned short *b) {
@@ -127,7 +134,7 @@ main() {
           printtile(b);
       }
       cur = TILESTART + YMAX*XMAX*TILESIZE;
-      b[29] = 0;
+      b[29] = VIDEOSTART;
       for (i = 4; i <= 11; i++)
         b[i] = cur;
       printtile(b);

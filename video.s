@@ -598,16 +598,16 @@ loop     ldy #video
          #vidmac12
          iny
          #vidmac12
-l2       ldy #next
-         lda (currp),y
-         tax
-         iny
+l2       ldy #next+1
          lda (currp),y
          bne cont
          jmp crsrset
 
-cont     sta currp+1
-         stx currp
+cont     tax
+         dey
+         lda (currp),y
+         sta currp
+         stx currp+1
          jmp loop
          .bend
 
@@ -645,16 +645,16 @@ loop     ldy #video
          #vidmacp
          iny
          #vidmacp
-         ldy #next
-         lda (currp),y
-         tax
-         iny
+         ldy #next+1
          lda (currp),y
          bne cont
          jmp crsrset
 
-cont     sta currp+1
-         stx currp
+cont     tax
+         dey
+         lda (currp),y
+         sta currp
+         stx currp+1
          jmp loop
          .bend
 
@@ -715,16 +715,16 @@ loop     ldy #sum
          sta (i1),y
          iny
          sta (i1),y
-lnext    ldy #next
-         lda (currp),y
-         tax
-         iny
+lnext    ldy #next+1
          lda (currp),y
          bne cont
          rts
 
-cont     sta currp+1
-         stx currp
+cont     tax
+         dey
+         lda (currp),y
+         sta currp
+         stx currp+1
          jmp loop
          .bend
 

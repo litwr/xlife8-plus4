@@ -13,18 +13,15 @@ loop0    sta (currp),y
          dey
          bpl loop0
 
-lnext    ldy #next
+lnext    ldy #next+1
          lda (currp),y
-         tax
-         iny
-         lda (currp),y
-         ;bne cont1
-
-         ;cpx #1
          beq cont2
 
-cont1    sta currp+1
-         stx currp
+cont1    tax
+         dey
+         lda (currp),y
+         sta currp
+         stx currp+1
          jmp loop
 
 cont2    jsr showscn
@@ -522,20 +519,16 @@ loop4    lda (currp),y
          cpy #8
          bne loop4
 
-         ldy #next
-         lda (currp),y
-         tax
-         iny
+         ldy #next+1
          lda (currp),y
          bne cont1
-
-         ;cpx #1
-         ;bne cont1
-
          jmp infoout
 
-cont1    sta currp+1
-         stx currp
+cont1    tax
+         dey
+         lda (currp),y
+         sta currp
+         stx currp+1
          jmp loop2
          .bend
 
