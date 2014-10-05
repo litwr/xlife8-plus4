@@ -3,6 +3,9 @@ similar environment.  The script `compile' makes all necessary steps to build
 all files of Xlife distribution.  The script `compressall' makes the optional
 compression of several executable prg-files.
 
+A file 'initiles.s' is generated during the compilation by c-program which
+requires the presence of the c-compiler (gcc or almost any other).
+
 The compilation requires presence of `tmpx' cross assembler -
 http://turbo.style64.org/.  It is theoretically possible to compile sources
 under Commodore 64 or Plus/4 with Turbo Assembler Macro.
@@ -17,9 +20,9 @@ The script `compile' also converts Basic programs from ASCII texts to C+4
 prg-format.  This requires the presence of `petcat' utility from VICE
 emulator distribution.
 
-There is one special case.  The text editor `Notepad+4' requires compilation.  
-So it should be made by the real or emulated C+4.  The recommended compiler is
-AustroSpeed.
+There is one special case.  The text editor `Notepad+4' is much better after the
+compilation.  So it should be made by the real or emulated C+4.  The recommended
+compiler is AustroSpeed.
 
 The optional compression is made by `p4compress' (a part of plus4emu emulator) -
 http://sourceforge.net/projects/plus4emu

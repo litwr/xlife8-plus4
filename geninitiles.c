@@ -1,16 +1,27 @@
 #include <stdio.h>
 
-#define PLUS4
+//#define CPC6128
+//#define PLUS4
 //#define BK0011
 
 #ifdef PLUS4
 #define TILESIZE 61
-#define TILESTART 0x8800
+#define TILESTART 0
 #define XMAX 20
 #define YMAX 24
 #define VIDEOYINC 0
 #define VIDEOXINC 16
 #define VIDEOSTART 0x2000
+#endif
+
+#ifdef CPC6128
+#define TILESIZE 61
+#define TILESTART 0
+#define XMAX 20
+#define YMAX 24
+#define VIDEOYINC 0
+#define VIDEOXINC 4
+#define VIDEOSTART 0xc000
 #endif
 
 #ifdef BK0011
@@ -25,16 +36,26 @@
 
 void printtile(unsigned short *b) {
    int i;
-   printf("    .byte ");
 #ifdef PLUS4
+   printf("    .byte ");
    for (i = 0; i < 7; i++) printf("0, ");
    printf("0\n    .word ");
-   for (i = 4; i < 12; i++) printf("$%x, ", b[i]);
+   for (i = 4; i < 12; i++) printf("tiles+$%x, ", b[i]);
    printf("0\n    .byte ");
    for (i = 0; i < 15; i++) printf("0, ");
    printf("0\n    .byte ", b[i]);
    for (i = 0; i < 15; i++) printf("0, ");
    printf("0\n    .word $%x\n    .byte 0\n", b[29]);
+#elif defined(CPC6128)
+   printf("    db ");
+   for (i = 0; i < 7; i++) printf("0, ");
+   printf("0\n    dw ");
+   for (i = 4; i < 12; i++) printf("tiles+$%x, ", b[i]);
+   printf("0\n    db ");
+   for (i = 0; i < 15; i++) printf("0, ");
+   printf("0\n    db ", b[i]);
+   for (i = 0; i < 15; i++) printf("0, ");
+   printf("0\n    dw $%x\n    db 0\n", b[29]);
 #elif defined(BK0011)
    printf("    .byte ");
    for (i = 0; i < 7; i++) printf("0, ");
