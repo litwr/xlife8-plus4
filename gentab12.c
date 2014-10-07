@@ -1,8 +1,13 @@
 #include <stdio.h>
-main() {
+#ifdef CPC6128
+#define BFMT "db"
+#else
+#define BFMT ".byte"
+#endif
+int main() {
    unsigned i, n, k, t20[256] = {0}, t21[256] = {0}, t22[256] = {0}, t23[256] = {0};
-   char *s[4] = {"tab20", "tab21", "tab22", "tab23"};
-   char *d[4] = {"tab10", "tab11", "tab12", "tab13"};
+   const char *s[4] = {"tab20", "tab21", "tab22", "tab23"};
+   const char *d[4] = {"tab10", "tab11", "tab12", "tab13"};
    unsigned *p[4] = {t20, t21, t22, t23};
    for (i = 0; i < 256; i++) {
       if (i&4) t23[i] += 0x10;
@@ -30,7 +35,7 @@ main() {
    for (k = 0; k < 4; k++) {
       printf("%s\n", s[k]);
       for (i = 0; i < 16; i++) {
-         printf("    .byte ");
+         printf("    %s ", BFMT);
          for (n = 0; n < 15; n++)
             printf("$%02x,", p[k][i*16 + n]);
          printf("$%02x\n", p[k][i*16 + n]);
@@ -67,11 +72,12 @@ main() {
    for (k = 0; k < 4; k++) {
       printf("%s\n", d[k]);
       for (i = 0; i < 16; i++) {
-         printf("    .byte ");
+         printf("    %s ", BFMT);
          for (n = 0; n < 15; n++)
             printf("$%02x,", p[k][i*16 + n]);
          printf("$%02x\n", p[k][i*16 + n]);
       }
    }
+   return 0;
 }
 

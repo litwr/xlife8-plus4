@@ -1,6 +1,11 @@
 #include <stdio.h>
 #include <string.h>
-main() {
+#ifdef CPC6128
+#define BFMT "db"
+#else
+#define BFMT ".byte"
+#endif
+int main() {
    unsigned i, n, t[256] = {0};
    char born[] = "3", live[] = "23";
    for (i = 0; i < 256; i++) {
@@ -26,12 +31,12 @@ main() {
       if (l && strchr(live, sl + '0') || l == 0 && strchr(born, sl + '0')) t[i] += 128;
       if (r && strchr(live, sr + '0') || r == 0 && strchr(born, sr + '0')) t[i] += 64;
    }
-   printf("gentab\n");
    for (i = 0; i < 16; i++) {
-      printf("    .byte ");
+      printf("    %s ", BFMT);
       for (n = 0; n < 15; n++)
          printf("$%02x,", t[i*16 + n]);
       printf("$%02x\n", t[i*16 + n]);
    }
+   return 0;
 }
 

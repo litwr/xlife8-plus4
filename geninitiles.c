@@ -76,7 +76,7 @@ void printtile(unsigned short *b) {
 #endif
 }
 
-main() {
+int main() {
    int i, x, y, cur, video = VIDEOSTART;
    unsigned short b[TILESIZE/2] = {0};
    for (y = 0; y < YMAX; y++, video += VIDEOYINC)
@@ -133,10 +133,11 @@ main() {
           b[29] = video;
           printtile(b);
       }
-      cur = TILESTART + YMAX*XMAX*TILESIZE;
-      b[29] = VIDEOSTART;
-      for (i = 4; i <= 11; i++)
-        b[i] = cur;
-      printtile(b);
+   cur = TILESTART + YMAX*XMAX*TILESIZE;
+   b[29] = VIDEOSTART;
+   for (i = 4; i <= 11; i++)
+      b[i] = cur;
+   printtile(b);
+   return 0;
 }
 

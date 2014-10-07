@@ -308,7 +308,7 @@ setcount .macro
          sta (currp),y
 
          txa
-         and #$3
+         and #3
          iny
          sta (currp),y
          .endm

@@ -532,9 +532,20 @@ cont1    tax
          jmp loop2
          .bend
 
-inctsum  ;in: AC, CY
-         #cellsum
-         rts
+inctsum  .block
+         ldx #4
+loop     inc cellcnt,x
+         lda cellcnt,x
+         cmp #$3a
+         bne exit
+
+         lda #$30
+         sta cellcnt,x
+         dex
+         bpl loop
+
+exit     rts         ;ZF=0
+         .bend
 
 dectsum  .block
          ldx #4

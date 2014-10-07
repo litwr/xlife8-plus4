@@ -3,8 +3,8 @@ similar environment.  The script `compile' makes all necessary steps to build
 all files of Xlife distribution.  The script `compressall' makes the optional
 compression of several executable prg-files.
 
-A file 'initiles.s' is generated during the compilation by c-program which
-requires the presence of the c-compiler (gcc or almost any other).
+The table files are generated during the compilation by c-programs which
+require the presence of the c-compiler (gcc or almost any other).
 
 The compilation requires presence of `tmpx' cross assembler -
 http://turbo.style64.org/.  It is theoretically possible to compile sources

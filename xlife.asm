@@ -249,22 +249,7 @@ tab3     .byte 0, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2, 3, 2, 3, 3, 4
          .byte 4, 5, 5, 6, 5, 6, 6, 7, 5, 6, 6, 7, 6, 7, 7, 8
 
 gentab
-    .byte $00,$00,$00,$54,$00,$00,$00,$01,$00,$01,$15,$55,$01,$01,$00,$00
-    .byte $00,$00,$14,$40,$00,$00,$00,$00,$80,$94,$94,$c0,$80,$80,$80,$80
-    .byte $00,$00,$00,$56,$00,$00,$00,$03,$00,$01,$15,$57,$01,$01,$00,$02
-    .byte $00,$00,$14,$42,$00,$00,$00,$02,$28,$3c,$3c,$6a,$28,$28,$28,$2a
-    .byte $00,$02,$42,$56,$00,$02,$02,$03,$28,$2b,$7f,$7f,$29,$2b,$2a,$2a
-    .byte $a8,$aa,$fe,$ea,$a8,$aa,$aa,$aa,$28,$3e,$7e,$6a,$28,$2a,$2a,$2a
-    .byte $2a,$28,$6a,$7c,$2a,$28,$2a,$29,$02,$01,$57,$55,$03,$01,$02,$00
-    .byte $2a,$28,$7e,$68,$2a,$28,$2a,$28,$02,$14,$56,$40,$02,$00,$02,$00
-    .byte $00,$00,$40,$14,$00,$00,$00,$01,$00,$01,$55,$15,$01,$01,$00,$00
-    .byte $80,$80,$d4,$80,$80,$80,$80,$80,$80,$94,$d4,$80,$80,$80,$80,$80
-    .byte $00,$00,$40,$14,$00,$00,$00,$01,$00,$01,$55,$15,$01,$01,$00,$00
-    .byte $00,$00,$54,$00,$00,$00,$00,$00,$00,$14,$54,$00,$00,$00,$00,$00
-    .byte $00,$40,$40,$14,$00,$00,$00,$01,$80,$c1,$d5,$95,$81,$81,$80,$80
-    .byte $80,$c0,$d4,$80,$80,$80,$80,$80,$00,$54,$54,$00,$00,$00,$00,$00
-    .byte $00,$40,$40,$14,$00,$00,$00,$01,$00,$41,$55,$15,$01,$01,$00,$00
-    .byte $00,$40,$54,$00,$00,$00,$00,$00,$00,$54,$54,$00,$00,$00,$00,$00
+         .include "gentab.s"
 
 crsrbit  .byte $80    ;x bit position
 crsrbyte .byte 0      ;y%8
@@ -403,25 +388,6 @@ scrnorm  lda #$1b
 scrblnk  lda #$b
 scrblnk1 sta $ff06
          rts
-
-incgen   .block
-         ldy #$30
-         #incbcd gencnt+6
-         sty gencnt+6
-         #incbcd gencnt+5
-         sty gencnt+5
-         #incbcd gencnt+4
-         sty gencnt+4
-         #incbcd gencnt+3
-         sty gencnt+3
-         #incbcd gencnt+2
-         sty gencnt+2
-         #incbcd gencnt+1
-         sty gencnt+1
-         #incbcd gencnt
-         sty gencnt
-cont2    rts
-         .bend
 
 tograph0 lda #$18
          sta $ff14
@@ -785,7 +751,7 @@ lexit    jsr chkaddt
          ldy #0
          sty t1   ;change indicator
          lda (currp),y
-         and #1
+         and #1      ;lsr?
          beq lr1
 
          sta t1
@@ -967,8 +933,8 @@ cont2    tax
 stage2   #assign16 currp,startp
          .bend
 
-genloop2 ldy #sum
-         .block
+genloop2 .block
+         ldy #sum
          lda #0
          sta (currp),y
          #genmac count0,0
@@ -979,23 +945,40 @@ genloop2 ldy #sum
          #genmac count5,5
          #genmac count6,6
          #genmac count7,7
-
          ldy #next+1
          lda (currp),y
-         bne gencont1
-         .bend
+         beq incgen
 
-rts2     rts
-
-gencont1 tax
+         tax
          dey
          lda (currp),y
          stx currp+1
          sta currp
          jmp genloop2
+         .bend
+
+incgen   .block
+         ldy #$30
+         #incbcd gencnt+6
+         sty gencnt+6
+         #incbcd gencnt+5
+         sty gencnt+5
+         #incbcd gencnt+4
+         sty gencnt+4
+         #incbcd gencnt+3
+         sty gencnt+3
+         #incbcd gencnt+2
+         sty gencnt+2
+         #incbcd gencnt+1
+         sty gencnt+1
+         #incbcd gencnt
+         sty gencnt
+cont2
+         .bend
+
+rts2     rts
 
 cleanup  .block
-         jsr incgen
          inc clncnt
          lda #$f
          and clncnt

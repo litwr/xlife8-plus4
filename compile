@@ -5,11 +5,13 @@ petcat -w3 notepad+4.bas >notepad+4-s.prg
 petcat -w3 default-colors.bas >default-colors.prg
 txt2seq '(c).txt' u
 
-gcc -DPLUS4 geninitiles.c && ./a.out > initiles.s && rm a.out
+gcc -DPLUS4 geninitiles.c && ./a.out > initiles.s
+gcc -DPLUS4 gentab12.c && ./a.out > tab12.s
+gcc -DPLUS4 gengentab.c && ./a.out > gentab.s
 tmpx -i xlife.asm -l xlife.lst
 
 tr '\n' '\r' < xlife.man.txt | awk -f xlife.man.awk | sed 's/,$//' >txtl.inc
 sed 's/,$//' < attr.inc >attl.inc
 tmpx -i manpage.asm -l manpage.lst
 
-rm attr.inc attl.inc txtl.inc initiles.s
+rm attr.inc attl.inc txtl.inc initiles.s tab12.s gentab.s a.out
