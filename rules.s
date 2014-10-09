@@ -20,18 +20,18 @@ fillrtsl .block
          jsr fillrt1
          sta adjcell
          lda #0
-         adc #0
+         rol
          sta adjcell+1
          txa
          rts
-        .bend
+         .bend
 
 fillrtsr .block
          adc #0
          jsr fillrt1
          sta adjcell2
          lda #0
-         adc #0
+         rol
          sta adjcell2+1
          rts
          .bend
@@ -132,7 +132,7 @@ l0       lda #1
          asl
          asl
          asl
-         sta i1+1
+         ;sta i1+1
          asl
          php
          txa

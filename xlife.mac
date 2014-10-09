@@ -213,7 +213,7 @@ l2       sta (temp),y
          .endm
 
 genmac   .macro
-         ldy #\1+3 
+         ldy #\1+3
          lda (currp),y
          beq l1
 
