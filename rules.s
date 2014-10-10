@@ -79,7 +79,7 @@ l3       .bend
 l2       lda gentab,x
          ora t1
          sta gentab,x
-         bne l3
+         rts
 
 l1       lda born
          and adjcell2
@@ -88,7 +88,7 @@ l1       lda born
          lda born+1
          and adjcell2+1
          bne l2
- 
+
 l3       .bend
          rts
 
@@ -141,7 +141,7 @@ l0       lda #1
          plp
          php
          jsr fillrt2
-         
+
          lda #16
          sta t1
          plp
@@ -168,7 +168,7 @@ l0       lda #1
          jsr fillrtsr
          plp
          jsr fillrt2
-         
+
          inx
          bne l0
 

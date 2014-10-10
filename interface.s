@@ -17,8 +17,7 @@ dispat0  .block
          dec mode
          beq l4
 
-l5       jsr scrnorm
-         bne l4
+l5       jmp scrnorm
 
 cont2    inc mode
 l4       rts
@@ -84,12 +83,9 @@ cont8    cmp #"C"-"A"+$c1
          bne cont10
 
          lda tilecnt
-         bne l10
-
-         lda tilecnt+1
+         ora tilecnt+1
          beq l1
-
-l10      jmp clear
+         jmp clear
 
 cont10   cmp #"E"-"A"+$c1
          bne cont11
@@ -401,7 +397,7 @@ cont17b  cmp #"L"-"A"+$c1
          lda fnlen
          bne cont17v
 
-exit     rts
+         rts
 
 cont17v  lda zoom
          pha

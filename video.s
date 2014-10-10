@@ -2036,7 +2036,7 @@ cont2    lda #0
          lda t1
          adc #0
          sta $ff0c
-exit     rts
+         rts
          .bend
 
 infov    .block

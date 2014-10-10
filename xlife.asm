@@ -198,7 +198,7 @@ l2       pla
          sta i1+1
          pla
          sta i1
-exit     rts
+         rts
          .bend
 
 ttab     .byte 0,1,2,3,3,4,5,6,7,8,8,9,$10,$11,$12,$13,$13,$14
@@ -1109,10 +1109,10 @@ exit     rts
 del1st   #assign16 startp,i1
          lda tilecnt
          ;bne loop
-         beq exit
+         beq l7
          jmp loop
 
-         lda tilecnt+1
+l7       lda tilecnt+1
          beq exit
 
          jmp loop

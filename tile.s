@@ -587,8 +587,8 @@ m1       adc #0
 
          sec
          sbc x0
-         bcc exit
          bcs cont2
+         rts
 
 cont4    adc x0
          bcs exit
@@ -607,8 +607,8 @@ cont2    sta x8pos
 
          sec
          sbc y0
-         bcc exit
          bcs cont1
+         rts
 
 cont3    adc y0
          bcs exit
