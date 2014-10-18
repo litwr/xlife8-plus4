@@ -291,6 +291,10 @@ cont2
          .endm
 
 setcount .macro
+         ldy #\1
+         lda (currp),y
+         ldy #\2
+
          tax
          and #$c0
          sta (currp),y

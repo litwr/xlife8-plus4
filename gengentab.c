@@ -5,6 +5,9 @@
 #else
 #define BFMT ".byte"
 #endif
+#ifdef BK0011
+int off = 128;
+#endif
 int main() {
    unsigned i, n, t[256] = {0};
    char born[] = "3", live[] = "23";
@@ -34,8 +37,14 @@ int main() {
    for (i = 0; i < 16; i++) {
       printf("    %s ", BFMT);
       for (n = 0; n < 15; n++)
+#ifdef BK0011
+          printf("%3d,", t[i*16 + n + off]);
+      printf("%3d\n", t[i*16 + n + off]);
+      if (i*16 + n == 127) {printf("gentab:\n"); off = -128;}
+#else
          printf("$%02x,", t[i*16 + n]);
       printf("$%02x\n", t[i*16 + n]);
+#endif
    }
    return 0;
 }

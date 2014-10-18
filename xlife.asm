@@ -555,45 +555,14 @@ cont5    jsr zerocc
 generate .block
          clc
          #assign16 currp,startp
-loop3    ldy #0
-         lda (currp),y
-         ldy #count0
-         #setcount
-
-         ldy #1
-         lda (currp),y
-         ldy #count1
-         #setcount
-
-         ldy #2
-         lda (currp),y
-         ldy #count2
-         #setcount
-
-         ldy #3
-         lda (currp),y
-         ldy #count3
-         #setcount
-
-         ldy #4
-         lda (currp),y
-         ldy #count4
-         #setcount
-
-         ldy #5
-         lda (currp),y
-         ldy #count5
-         #setcount
-
-         ldy #6
-         lda (currp),y
-         ldy #count6
-         #setcount
-
-         ldy #7
-         lda (currp),y
-         ldy #count7
-         #setcount
+loop3    #setcount 0,count0
+         #setcount 1,count1
+         #setcount 2,count2
+         #setcount 3,count3
+         #setcount 4,count4
+         #setcount 5,count5
+         #setcount 6,count6
+         #setcount 7,count7
 
          ldy #next+1
          lda (currp),y
@@ -751,7 +720,7 @@ lexit    jsr chkaddt
          ldy #0
          sty t1   ;change indicator
          lda (currp),y
-         and #1      ;lsr?
+         and #1  ;no lsr! CY is used by the next ADC
          beq lr1
 
          sta t1
@@ -994,9 +963,7 @@ loop     ldy #sum
 
          ldy #next+1
          lda (currp),y
-         bne cont2
-
-         rts
+         beq rts2
 
 cont2    ldx currp    ;save pointer to previous
          stx adjcell

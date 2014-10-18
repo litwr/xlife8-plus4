@@ -1,39 +1,32 @@
 #include <stdio.h>
 #ifdef CPC6128
 #define BFMT "db"
-#else
+#elif defined(PLUS4)
 #define BFMT ".byte"
+#elif defined(BK0011)
+#define BFMT ".word"
+#else
+#error The architecture is not defined!
 #endif
-int main() {
-   unsigned i, n, k, t20[256] = {0}, t21[256] = {0}, t22[256] = {0}, t23[256] = {0};
-   const char *s[4] = {"tab20", "tab21", "tab22", "tab23"};
-   const char *d[4] = {"tab10", "tab11", "tab12", "tab13"};
-   unsigned *p[4] = {t20, t21, t22, t23};
-   for (i = 0; i < 256; i++) {
-      if (i&4) t23[i] += 0x10;
-      if (i&2) t22[i]++;
-      if (i&16) t22[i] += 16;
-      if (i&8) t21[i]++;
-      if (i&64) t21[i] += 16;
-      if (i&32) t20[i]++;
+void print(unsigned *tn, unsigned *p[]) {
+   unsigned k, i, n;
+#ifdef BK0011
+   int off;
+   for (k = 0; k < 2; k++) {
+      off = 128;
+      for (i = 0; i < 16; i++) {
+         printf("    %s ", BFMT);
+         for (n = 0; n < 15; n++)
+            printf("%5d,", p[2*k][i*16 + n + off] 
+                + (p[2*k + 1][i*16 + n + off] << 8));
+         printf("%5d\n", p[2*k][i*16 + n + off]  + (p[2*k + 1][i*16 + n + off] << 8));
+         if (i*16 + n == 127) {printf("tab%d%d:\n", tn[2*k], tn[2*k + 1]); off = -128;}
+      }
+      printf("\n");
    }
-   for (i = 0; i < 256; i++) {
-      unsigned l, h;
-      l = t23[i] & 15;
-      h = t23[i] & 240;
-      t23[i] = h << 1 | l << 2;
-      l = t22[i] & 15;
-      h = t22[i] & 240;
-      t22[i] = h << 1 | l;
-      l = t21[i] & 15;
-      h = t21[i] & 240;
-      t21[i] = h << 1 | l;
-      l = t20[i] & 15;
-      h = t20[i] & 240;
-      t20[i] = h >> 1 | l;
-   }
+#else
    for (k = 0; k < 4; k++) {
-      printf("%s\n", s[k]);
+      printf("tab%d\n", tn[k]);
       for (i = 0; i < 16; i++) {
          printf("    %s ", BFMT);
          for (n = 0; n < 15; n++)
@@ -41,43 +34,67 @@ int main() {
          printf("$%02x\n", p[k][i*16 + n]);
       }
    }
-   for (k = 0; k < 4; k++)
+#endif
+}
+int main() {
+   unsigned i, n, k, t0[256] = {0}, t1[256] = {0}, t2[256] = {0}, t3[256] = {0};
+   unsigned tn[4] = {20, 21, 22, 23};
+   unsigned *p[4] = {t0, t1, t2, t3};
+   for (i = 0; i < 256; i++) {
+      if (i&4) t3[i] += 0x10;
+      if (i&2) t2[i]++;
+      if (i&16) t2[i] += 16;
+      if (i&8) t1[i]++;
+      if (i&64) t1[i] += 16;
+      if (i&32) t0[i]++;
+   }
+   for (i = 0; i < 256; i++) {
+      unsigned l, h;
+      l = t3[i] & 15;
+      h = t3[i] & 240;
+      t3[i] = h << 1 | l << 2;
+      l = t2[i] & 15;
+      h = t2[i] & 240;
+      t2[i] = h << 1 | l;
+      l = t1[i] & 15;
+      h = t1[i] & 240;
+      t1[i] = h << 1 | l;
+      l = t0[i] & 15;
+      h = t0[i] & 240;
+      t0[i] = h >> 1 | l;
+   }
+   print(tn, p);
+   for (k = 0; k < 4; k++) {
+      tn[k] -= 10;
       for (i = 0; i < 256; i++)
          p[k][i] = 0;
+   }
    for (i = 0; i < 256; i++) {
-      if (i&1) t23[i] += 17;
-      if (i&2) t22[i]++, t23[i] += 17;
-      if (i&4) t23[i] += 16, t22[i] += 17;
-      if (i&8) t22[i] += 17, t21[i]++;
-      if (i&16) t22[i] += 16, t21[i] += 17;
-      if (i&32) t20[i]++, t21[i] += 17;
-      if (i&64) t20[i] += 17, t21[i] += 16;
-      if (i&128) t20[i] += 17;
+      if (i&1) t3[i] += 17;
+      if (i&2) t2[i]++, t3[i] += 17;
+      if (i&4) t3[i] += 16, t2[i] += 17;
+      if (i&8) t2[i] += 17, t1[i]++;
+      if (i&16) t2[i] += 16, t1[i] += 17;
+      if (i&32) t0[i]++, t1[i] += 17;
+      if (i&64) t0[i] += 17, t1[i] += 16;
+      if (i&128) t0[i] += 17;
    }
    for (i = 0; i < 256; i++) {
       unsigned l, h;
-      l = t23[i] & 15;
-      h = t23[i] & 240;
-      t23[i] = h << 1 | l << 2;
-      l = t22[i] & 15;
-      h = t22[i] & 240;
-      t22[i] = h << 1 | l;
-      l = t21[i] & 15;
-      h = t21[i] & 240;
-      t21[i] = h << 1 | l;
-      l = t20[i] & 15;
-      h = t20[i] & 240;
-      t20[i] = h >> 1 | l;
+      l = t3[i] & 15;
+      h = t3[i] & 240;
+      t3[i] = h << 1 | l << 2;
+      l = t2[i] & 15;
+      h = t2[i] & 240;
+      t2[i] = h << 1 | l;
+      l = t1[i] & 15;
+      h = t1[i] & 240;
+      t1[i] = h << 1 | l;
+      l = t0[i] & 15;
+      h = t0[i] & 240;
+      t0[i] = h >> 1 | l;
    }
-   for (k = 0; k < 4; k++) {
-      printf("%s\n", d[k]);
-      for (i = 0; i < 16; i++) {
-         printf("    %s ", BFMT);
-         for (n = 0; n < 15; n++)
-            printf("$%02x,", p[k][i*16 + n]);
-         printf("$%02x\n", p[k][i*16 + n]);
-      }
-   }
+   print(tn, p);
    return 0;
 }
 

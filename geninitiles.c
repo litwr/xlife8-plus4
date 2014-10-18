@@ -12,10 +12,7 @@
 #define VIDEOYINC 0
 #define VIDEOXINC 16
 #define VIDEOSTART 0x2000
-#define OK
-#endif
-
-#ifdef CPC6128
+#elif defined(CPC6128)
 #define TILESIZE 61
 #define TILESTART 0
 #define XMAX 20
@@ -23,21 +20,15 @@
 #define VIDEOYINC 0
 #define VIDEOXINC 4
 #define VIDEOSTART 0xc000
-#define OK
-#endif
-
-#ifdef BK0011
+#elif defined(BK0011)
 #define TILESIZE 62
-#define TILESTART 15482  //??
+#define TILESTART 19330
 #define XMAX 24
 #define YMAX 20
-#define VIDEOYINC 40
-#define VIDEOXINC 1
+#define VIDEOYINC (64*8-48)
+#define VIDEOXINC 2
 #define VIDEOSTART 4
-#define OK
-#endif
-
-#ifndef OK
+#else
 #error The architecture is not defined!
 #endif
 
