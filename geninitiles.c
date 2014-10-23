@@ -27,7 +27,7 @@
 #define YMAX 20
 #define VIDEOYINC (64*8-48)
 #define VIDEOXINC 2
-#define VIDEOSTART 4
+#define VIDEOSTART (0x4000+4)
 #else
 #error The architecture is not defined!
 #endif

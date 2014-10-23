@@ -748,46 +748,6 @@ loop     lda $1fc0,y
          rts
          .bend
 
-showtinfo
-         .block
-         lda tilecnt
-         sta t1
-         lda tilecnt+1
-         lsr
-         ror t1
-         lsr
-         ror t1
-         ldx t1
-         cpx #120
-         bne cont1
-
-         ldx #$31
-         stx tcscr
-         dex
-         stx tcscr+1
-         stx tcscr+2
-         rts
-
-cont1    lda #$20
-         sta tcscr
-         sta tcscr+1
-         lda ttab,x
-         tax
-         and #$f
-         eor #$30
-         sta tcscr+2
-         txa
-         lsr
-         lsr
-         lsr
-         lsr
-         beq exit
-
-         eor #$30
-         sta tcscr+1
-exit     rts
-         .bend
-
 loadmenu .block
 scrfn    = $c00+123
          jsr JPRIMM
@@ -2440,13 +2400,51 @@ cont3    lda (currp),y
          bcc cont4
          .bend
 
-infoout  .block
+infoout  .block  ;should be before showtinfo
          ldy #4
 loop2    lda cellcnt,y
          sta $fc9,y
          dey
          bpl loop2
+         .bend
 
-         jmp showtinfo
+showtinfo     ;should be after infoout
+         .block
+         lda tilecnt
+         sta t1
+         lda tilecnt+1
+         lsr
+         ror t1
+         lsr
+         ror t1
+         ldx t1
+         cpx #120
+         bne cont1
+
+         ldx #$31
+         stx tcscr
+         dex
+         stx tcscr+1
+         stx tcscr+2
+         rts
+
+cont1    lda #$20
+         sta tcscr
+         sta tcscr+1
+         lda ttab,x
+         tax
+         and #$f
+         eor #$30
+         sta tcscr+2
+         txa
+         lsr
+         lsr
+         lsr
+         lsr
+         beq exit
+
+         eor #$30
+         sta tcscr+1
+exit     rts
          .bend
 
