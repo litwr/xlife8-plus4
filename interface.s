@@ -551,10 +551,6 @@ setbench .block
          sta temp+1
          lda #2
          sta mode
-         lda pseudoc
-         sta temp
-         lda #0
-         sta pseudoc
          lda #$b
          sta $ff06
          sei
@@ -586,8 +582,6 @@ exitbench
          sta $ff3e
          lda temp+1
          sta mode
-         lda temp
-         sta pseudoc
          rts         
          .bend
 
