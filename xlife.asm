@@ -488,7 +488,7 @@ nochg    sta curdev
          #zero16 tilecnt
          sta mode
          sta pseudoc
-         #inibcd gencnt,6
+         jsr zerogc
          #inibcd xcrsr,2
          #inibcd ycrsr,2
 
@@ -529,7 +529,11 @@ cont3    lda tilecnt
          bne cont4
 
          sta mode
-         beq mainloop
+         jsr incgen
+         jsr zerocc
+         jsr scrnorm
+         jsr showscn
+         jmp mainloop
 
 cont4    lda mode
          cmp #2

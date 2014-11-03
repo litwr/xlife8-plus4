@@ -409,14 +409,14 @@ cont1    sta 7
 
 cont3    dec xlimit
          bne cont11
-         jmp gexit
+         rts
 
 cont11   lda cont2+1    ;CY=1
          sbc #<952
          sta cont2+1
          lda cont2+2
          sbc #>952
-         sta cont2+2  
+         sta cont2+2
          lda i1   ;CY=1
          sbc #<tilesize*39
          sta i1
@@ -463,7 +463,7 @@ loop2    sty 7
          ora t1
          sta t1
          ldy 7
-         
+
          lda (i1),y
          ldx #0
 loop1    asl t1             ;pseudocolor
@@ -512,14 +512,14 @@ cont1    sta 7
          bne cont2
 
 cont3    dec xlimit
-         beq gexit
+         beq gexit3
 
          lda cont2+1    ;CY=1
          sbc #<952
          sta cont2+1
          lda cont2+2
          sbc #>952
-         sta cont2+2  
+         sta cont2+2
          lda i1   ;CY=1
          sbc #<tilesize*39
          sta i1
@@ -540,8 +540,9 @@ updatepc .block
          lda #0
          adc i1+1
          sta adjcell+1
-         rts         ;CY is not changed or set to 0
          .bend
+gexit3   rts         ;CY is not changed or set to 0
+
 
 showscn  .block
          jsr infoout
@@ -1829,10 +1830,10 @@ loop12   asl vptilecx
 
 gexit2   rts
 
-crsrset  jsr crsrset1
-         lda zoom
+crsrset  lda zoom
          bne gexit2
 
+         jsr crsrset1
          jmp pixel11
 
 crsrcalc .block      ;its call should be after crsrset!

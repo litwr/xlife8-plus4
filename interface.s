@@ -27,7 +27,7 @@ cont3    cmp #"Q"-"A"+$c1
 
          lda #3
          sta mode
-         rts
+l1       rts
 
 cont5    cmp #"H"-"A"+$41
          bne cont4
@@ -60,7 +60,8 @@ cont6    cmp #"O"-"A"+$41
          lda tilecnt+1
          bne l8
 
-l1       rts
+         jsr incgen
+         jmp infoout
 
 l8       jsr zerocc
          jsr generate
@@ -84,8 +85,11 @@ cont8    cmp #"C"-"A"+$c1
 
          lda tilecnt
          ora tilecnt+1
-         beq l1
+         beq l51
          jmp clear
+
+l51      jsr zerogc
+         jmp infoout
 
 cont10   cmp #"E"-"A"+$c1
          bne cont11

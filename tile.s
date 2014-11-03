@@ -1,6 +1,9 @@
+zerogc   #inibcd gencnt,6
+         rts
+
 clear    .block
          jsr zerocc
-         #inibcd gencnt,6
+         jsr zerogc
          #assign16 currp,startp
 loop     ldy #sum
          lda (currp),y

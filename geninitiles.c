@@ -23,11 +23,11 @@
 #elif defined(BK0011)
 #define TILESIZE 62
 #define TILESTART 19330
-#define XMAX 24
-#define YMAX 20
-#define VIDEOYINC (64*8-48)
+#define XMAX 20
+#define YMAX 24
+#define VIDEOYINC (64*8-XMAX*2)
 #define VIDEOXINC 2
-#define VIDEOSTART (0x4000+4)
+#define VIDEOSTART (0x4000+32-XMAX)
 #else
 #error The architecture is not defined!
 #endif

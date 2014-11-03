@@ -1,5 +1,6 @@
 integer vars (%) to notepad+4?
-better colors?
+better colors? yellow cursor over blank cells?
 rolls pseudocolors
 320x200 (but no zoomed 40x25)?
 L does't work after V
+no check mode and pseudoc - set unconditional jumps
