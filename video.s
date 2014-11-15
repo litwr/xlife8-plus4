@@ -230,7 +230,7 @@ loop1    jsr getkey
          cmp #$30
          bcc loop1
 
-         cmp #$40
+         cmp #$3a
          bcs loop1
 
          eor #$30
