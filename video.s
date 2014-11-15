@@ -35,7 +35,7 @@ loop1    tya
          cmp #$3a
          bcs loop1
 
-         cpy #7
+         cpy #5
          beq loop1
 
          sta scrbench,y  ;temp area
