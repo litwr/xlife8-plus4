@@ -227,14 +227,13 @@ loop1    jsr getkey
          cmp #$1b
          beq exit
 
-         cmp #$30
+         cmp #"0"
          bcc loop1
 
          cmp #$3a
          bcs loop1
 
-         eor #$30
-         adc #1
+         sbc #$2e
          sta density
 exit     rts
          .bend
