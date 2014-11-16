@@ -494,15 +494,11 @@ cont5
 
 calccells
          .block
-         lda tilecnt
+         lda startp+1
          bne cont2
-
-         lda tilecnt+1
-         bne cont2
-
          rts
-cont2
-         jsr zerocc
+
+cont2    jsr zerocc
          #assign16 currp,startp
 loop2    ldy #sum
          lda #0

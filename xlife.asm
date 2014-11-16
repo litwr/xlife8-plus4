@@ -522,10 +522,7 @@ mainloop jsr dispatcher
          jsr NEW
          jmp WARMRESTART
 
-cont3    lda tilecnt
-         bne cont4
-
-         lda tilecnt+1
+cont3    lda startp+1
          bne cont4
 
          sta mode
@@ -1078,14 +1075,9 @@ l2       dec tilecnt
 exit     rts
 
 del1st   #assign16 startp,i1
-         lda tilecnt
+         ;lda startp+1
          ;bne loop
-         beq l7
-         jmp loop
-
-l7       lda tilecnt+1
          beq exit
-
          jmp loop
          .bend
 

@@ -54,10 +54,7 @@ cont6    cmp #"O"-"A"+$41
          lda mode
          bne l1
 
-         lda tilecnt
-         bne l8
-
-         lda tilecnt+1
+         lda startp+1
          bne l8
 
          jsr incgen
@@ -83,8 +80,7 @@ cont7    cmp #"?"
 cont8    cmp #"C"-"A"+$c1
          bne cont10
 
-         lda tilecnt
-         ora tilecnt+1
+         lda startp+1
          beq l51
          jmp clear
 
@@ -154,10 +150,7 @@ m1       jsr decben
          beq qbexit
 
          jsr setbench
-bloop    lda tilecnt
-         bne bl7
-
-         lda tilecnt+1
+bloop    lda startp+1
          bne bl7
 
          jsr incgen

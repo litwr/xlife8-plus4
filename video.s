@@ -550,10 +550,7 @@ showscn  .block
 
          jmp showscnz
 
-cont1    lda tilecnt
-         bne xcont2
-
-         lda tilecnt+1
+cont1    lda startp+1
          beq gexit
          .bend
 
@@ -564,10 +561,7 @@ xcont2   lda pseudoc
 showscn0 lda zoom
          beq rts1
 
-         lda tilecnt
-         bne xcont2
-
-         lda tilecnt+1
+         lda startp+1
          bne xcont2
 rts1     rts
 
@@ -659,10 +653,7 @@ cont     tax
          .bend
 
 xclrscn  .block
-         lda tilecnt
-         bne cont1
-
-         lda tilecnt+1
+         lda startp+1
          bne cont1
 
          rts
