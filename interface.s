@@ -394,7 +394,7 @@ cont17b  cmp #"L"-"A"+$c1
          lda fnlen
          bne cont17v
 
-         rts
+exit7    rts
 
 cont17v  lda zoom
          pha
@@ -410,6 +410,9 @@ nozoom3  jsr totext
 cont17d  cmp #"+"
          bne cont17e
 
+         lda zoom
+         bne exit7
+
 zoomin   jsr crsrclr
          jsr savebl     ;sets YR to 255
          sty zoom
@@ -419,6 +422,9 @@ zoomin   jsr crsrclr
 
 cont17e  cmp #"-"
          bne cont17g
+
+         lda zoom
+         beq exit7
 
 zoomout  lda #0
          sta zoom

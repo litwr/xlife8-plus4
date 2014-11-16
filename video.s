@@ -1820,10 +1820,9 @@ loop12   asl vptilecx
 
 gexit2   rts
 
-crsrset  lda zoom
+crsrset  jsr crsrset1
+         lda zoom
          bne gexit2
-
-         jsr crsrset1
          jmp pixel11
 
 crsrcalc .block      ;its call should be after crsrset!
