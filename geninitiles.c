@@ -39,7 +39,7 @@ void printtile(unsigned short *b) {
    for (i = 0; i < 7; i++) printf("0, ");
    printf("0\n    .word ");
    for (i = 4; i < 12; i++) printf("tiles+$%x, ", b[i]);
-   printf("0\n    .byte ");
+   printf("$%x\n    .byte ", b[12]);
    for (i = 0; i < 15; i++) printf("0, ");
    printf("0\n    .byte ", b[i]);
    for (i = 0; i < 15; i++) printf("0, ");
@@ -49,7 +49,7 @@ void printtile(unsigned short *b) {
    for (i = 0; i < 7; i++) printf("0, ");
    printf("0\n    dw ");
    for (i = 4; i < 12; i++) printf("tiles+$%x, ", b[i]);
-   printf("0\n    db ");
+   printf("$%x\n    db ", b[12]);
    for (i = 0; i < 15; i++) printf("0, ");
    printf("0\n    db ", b[i]);
    for (i = 0; i < 15; i++) printf("0, ");
@@ -57,7 +57,7 @@ void printtile(unsigned short *b) {
 #elif defined(BK0011)
    printf("    .byte ");
    for (i = 0; i < 7; i++) printf("0, ");
-   printf("0\n    .word ");
+   printf("%d\n    .word ", b[12]);
    for (i = 4; i < 12; i++) printf("%u, ", b[i]);
    printf("0\n    .byte ");
    for (i = 0; i < 15; i++) printf("0, ");
@@ -125,7 +125,7 @@ int main() {
           printtile(b);
       }
    cur = TILESTART + YMAX*XMAX*TILESIZE;
-   b[29] = VIDEOSTART;
+   b[12] = b[29] = VIDEOSTART;
    for (i = 4; i <= 11; i++)
       b[i] = cur;
    printtile(b);
