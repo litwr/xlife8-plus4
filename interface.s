@@ -323,6 +323,7 @@ cont17   cmp #$20   ;space
          and crsrbit
          beq lsp1
 
+         ldx #4
          jsr inctsum
 lsp2     sta (crsrtile),y  ;always writes no-zero value, so must be AC != 0
          lda zoom

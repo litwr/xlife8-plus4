@@ -498,23 +498,28 @@ calccells
          bne cont2
          rts
 
-cont2    jsr zerocc
-         #assign16 currp,startp
+cont2    sta currp+1
+         lda startp
+         sta currp
+         jsr zerocc
 loop2    ldy #sum
-         lda #0
+         tya   ;y!=0
          sta (currp),y
          ldy #0
 loop4    lda (currp),y
          tax
-         sty t1
-         ldy #sum       ;sum!=0
-         tya
-         sta (currp),y
          lda tab3,x
          clc
+         adc cellcnt+4
+         sta cellcnt+4
+         sbc #$39  ;CY=0
+         bcc cont3
+
+         eor #$30
+         sta cellcnt+4
+         ldx #3
          jsr inctsum
-         ldy t1
-         iny
+cont3    iny
          cpy #8
          bne loop4
 
@@ -532,7 +537,6 @@ cont1    tax
          .bend
 
 inctsum  .block
-         ldx #4
 loop     inc cellcnt,x
          lda cellcnt,x
          cmp #$3a
