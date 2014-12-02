@@ -1585,13 +1585,6 @@ xcont4   tax
 xcont1   tax
          rts
 
-pixel11  lda vistab,x
-         asl
-         ora vistab,x
-         ora (i1),y
-         sta (i1),y
-         rts
-
 setdirmsk
          .block
          jsr JPRIMM
@@ -1823,7 +1816,13 @@ gexit2   rts
 crsrset  jsr crsrset1
          lda zoom
          bne gexit2
-         jmp pixel11
+
+pixel11  lda vistab,x    ;must be after crsrset
+         asl
+         ora vistab,x
+         ora (i1),y
+         sta (i1),y
+         rts
 
 crsrcalc .block      ;its call should be after crsrset!
          lda i1+1    ;start of coorditates calculation
