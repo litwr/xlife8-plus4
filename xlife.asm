@@ -499,8 +499,6 @@ nochg    sta curdev
          jsr zerocc
          jsr infoout
          jsr showrules
-         jsr crsrset       ;unite with the next!
-         jsr crsrcalc
 mainloop jsr dispatcher
          lda mode
          beq mainloop
