@@ -57,9 +57,9 @@ void printtile(unsigned short *b) {
 #elif defined(BK0011)
    printf("    .byte ");
    for (i = 0; i < 7; i++) printf("0, ");
-   printf("%d\n    .word ", b[12]);
+   printf("0\n    .word ");
    for (i = 4; i < 12; i++) printf("%u, ", b[i]);
-   printf("0\n    .byte ");
+   printf("%u\n    .byte ", b[12]);
    for (i = 0; i < 15; i++) printf("0, ");
    printf("0\n    .byte ", b[i]);
    for (i = 0; i < 15; i++) printf("0, ");
@@ -89,7 +89,7 @@ int main() {
                 b[4] = cur + TILESIZE*(XMAX - 1);
                 b[5] = cur + TILESIZE*(YMAX*XMAX - 1);
                 b[11] = cur + TILESIZE*(XMAX*2 - 1);
-             } 
+             }
              else if (x == XMAX - 1) {
                 b[7] = cur + TILESIZE*((YMAX - 2)*XMAX + 1);
                 b[8] = cur - TILESIZE*(XMAX - 1);
@@ -125,7 +125,8 @@ int main() {
           printtile(b);
       }
    cur = TILESTART + YMAX*XMAX*TILESIZE;
-   b[12] = b[29] = VIDEOSTART;
+   b[12] = 268;
+   b[29] = VIDEOSTART;
    for (i = 4; i <= 11; i++)
       b[i] = cur;
    printtile(b);

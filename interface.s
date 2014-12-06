@@ -190,8 +190,7 @@ finish   jsr tograph
          jsr showrules
          jsr calccells    ;for load sequence
          jsr showscn
-         jsr crsrset      ;showscn also calls crsrset! but crsrset is fast now...
-         jmp crsrcalc
+         jmp cont17u      ;showscn also calls crsrset! but crsrset is fast now...
 
 cont16   cmp #$1d   ;cursor right
          bne cont16x
