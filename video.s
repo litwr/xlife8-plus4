@@ -1944,16 +1944,14 @@ cont1    lda (viewport),y
          sta adjcell+1
          stx viewport
          stx adjcell
-         ldy #down
+         ldy #dr
          jsr nextcell
          dey
          jsr nextcell
-         lda #4
-         sta i2
-loopx    ldy #right
+         ldy #right
          jsr nextcell
-         dec i2
-         bne loopx
+         dey
+         jsr nextcell
 
          lda viewport
          clc
