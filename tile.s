@@ -292,33 +292,25 @@ l2       ldy #ur
          dex
          bne l2
 
-         ldy #ul    ;top left corner
-         lda #<tiles + ((hormax*vermax-1)*tilesize)
-         sta tiles,y
+         lda #<tiles + ((hormax*vermax-1)*tilesize)  ;top left corner
+         sta tiles+ul
          lda #>tiles + ((hormax*vermax-1)*tilesize)
-         iny
-         sta tiles,y
+         sta tiles+ul+1
 
-         ldy #ur    ;top right corner
-         lda #<tiles+(hormax*(vermax-1)*tilesize)
-         sta tiles+((hormax-1)*tilesize),y
+         lda #<tiles+(hormax*(vermax-1)*tilesize)  ;top right corner
+         sta tiles+((hormax-1)*tilesize)+ur
          lda #>tiles+(hormax*(vermax-1)*tilesize)
-         iny
-         sta tiles+((hormax-1)*tilesize),y
+         sta tiles+((hormax-1)*tilesize)+ur+1
 
-         ldy #dl   ;bottom left corner
-         lda #<tiles+((hormax-1)*tilesize)
-         sta tiles+(hormax*(vermax-1)*tilesize),y
+         lda #<tiles+((hormax-1)*tilesize)        ;bottom left corner
+         sta tiles+(hormax*(vermax-1)*tilesize)+dl
          lda #>tiles+((hormax-1)*tilesize)
-         iny
-         sta tiles+(hormax*(vermax-1)*tilesize),y
+         sta tiles+(hormax*(vermax-1)*tilesize)+dl+1
 
-         ldy #dr   ;bottom right corner
-         lda #<tiles
-         sta tiles+((vermax*hormax-1)*tilesize),y
+         lda #<tiles    ;bottom right corner
+         sta tiles+((vermax*hormax-1)*tilesize)+dr
          lda #>tiles
-         iny
-         sta tiles+((vermax*hormax-1)*tilesize),y
+         sta tiles+((vermax*hormax-1)*tilesize)+dr+1
          rts
          .bend
 
