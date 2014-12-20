@@ -287,9 +287,9 @@ help     jsr JPRIMM
          .byte $d,$d,144,146,"u",18
          .text "se "
          .byte 28
-         .text "cursor keys "
+         .text "cursor keys"
          .byte 144
-         .text "to set the position and "
+         .text " to set the position and "
          .byte 28
          .text "space key"
          .byte 144
@@ -1914,27 +1914,40 @@ l3       stx xcrsr
          rts
 
 l8       ldy #up
-         ldx #7
          lda vptilecy
+         clc
+         php
+         adc #8
+         tax
+         plp
          bmi cont3
 
          ldy #down
+         sbc #15   ;CY=0
+         tax
+         lda vptilecy
          cmp #24
          bcc cont4
 
-         ldx #16
 cont3    stx vptilecy
-         bne cont1
+         jmp cont1
 
 cont4    ldy #left
          lda vptilecx
+         clc
+         php
+         adc #8
+         tax
+         plp
          bmi cont5
 
          ldy #right
+         sbc #15   ;CY=0
+         tax
+         lda vptilecx
          cmp #40
          bcc cont2
 
-         ldx #32
 cont5    stx vptilecx
 cont1    lda (viewport),y
          tax
