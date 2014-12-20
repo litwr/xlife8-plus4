@@ -192,9 +192,6 @@ loop1    lda $ff1e
          ora (adjcell),y
          tax
          sta (adjcell),y
-         ldy #sum
-         tya
-         sta (adjcell),y
          dec adjcell2
          bne loop1
 

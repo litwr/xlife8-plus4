@@ -5,29 +5,29 @@
 //#define BK0011
 
 #ifdef PLUS4
-#define TILESIZE 61
-#define TILESTART 0
-#define XMAX 20
-#define YMAX 24
-#define VIDEOYINC 0
-#define VIDEOXINC 16
-#define VIDEOSTART 0x2000
+   #define TILESIZE 61
+   #define TILESTART 0
+   #define XMAX 20
+   #define YMAX 24
+   #define VIDEOYINC 0
+   #define VIDEOXINC 16
+   #define VIDEOSTART 0x2000
 #elif defined(CPC6128)
-#define TILESIZE 61
-#define TILESTART 0
-#define XMAX 20
-#define YMAX 24
-#define VIDEOYINC 0
-#define VIDEOXINC 4
-#define VIDEOSTART 0xc000
+   #define TILESIZE 61
+   #define TILESTART 0
+   #define XMAX 20
+   #define YMAX 24
+   #define VIDEOYINC 0
+   #define VIDEOXINC 4
+   #define VIDEOSTART 0xc000
 #elif defined(BK0011)
-#define TILESIZE 62
-#define TILESTART 19330
-#define XMAX 20
-#define YMAX 24
-#define VIDEOYINC (64*8-XMAX*2)
-#define VIDEOXINC 2
-#define VIDEOSTART (0x4000+32-XMAX)
+   #define TILESIZE 62
+   #define TILESTART 19330
+   #define XMAX 20
+   #define YMAX 24
+   #define VIDEOYINC (64*8-XMAX*2)
+   #define VIDEOXINC 2
+   #define VIDEOSTART (0x4000+32-XMAX+64*2)
 #else
 #error The architecture is not defined!
 #endif
