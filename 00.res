@@ -19,4 +19,5 @@ v4
 +memory reorganization
 +better (immediate, without 1 step delay) pseudocolor support
 +flashing cursor
++fixed errors
 *renamed colors-cf to colors.cf due to incompatibility, add note about the conversion

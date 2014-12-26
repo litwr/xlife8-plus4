@@ -564,12 +564,8 @@ x8bit    = adjcell2+1
 y8pos    = t1
 y8byte   = $fd    ;connected to seti1
          jsr xchgxy
-         ldx #8
          lda crsrbit
-loop1    dex
-         lsr
-         bcc loop1
-
+         jsr calcx
          stx m1+1
          lda crsrx
          lsr
