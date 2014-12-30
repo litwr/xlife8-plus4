@@ -1106,11 +1106,8 @@ ycut     = t2
          sta y8byte
          lda crsrbit
          sta x8bit
-         ldx #8
-loop1    dex
-         lsr
-         bcc loop1
-
+         jsr calcx
+         lda #0
          sta xcut        ;0 -> xcut
          sta ycut
          stx m1+1
