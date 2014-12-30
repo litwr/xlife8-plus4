@@ -558,12 +558,9 @@ xcont2   lda pseudoc
          beq showscn2
          jmp showscnp
 
-showscn0 lda zoom
-         beq rts1
-
-         lda startp+1
+showscn0 lda startp+1
          bne xcont2
-rts1     rts
+         rts
 
 showscn2 .block
          #assign16 currp,startp

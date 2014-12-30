@@ -4,3 +4,4 @@ rolls pseudocolors
 320x200 (but no zoomed 40x25)?
 L does't work after V
 no check mode and pseudoc - set unconditional jumps
+showscn0 doesn't call crsrset - compare this with showscn.cont1

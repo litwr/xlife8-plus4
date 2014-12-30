@@ -673,7 +673,7 @@ cleft    ldy #left      ;y=0, x=/=0
          jmp loop3
          .bend
 
-putpixel3 .block 
+putpixel3 .block
 y8byte   = $fd      ;connected to seti1, putpixel
          ldy y8byte
          ora (adjcell),y

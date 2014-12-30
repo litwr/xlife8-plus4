@@ -29,7 +29,7 @@ loadram  .block   ;in: AC
          ldy #0
          lda ($14),y
          sta x0       ;geometry
-         iny 
+         iny
          lda ($14),y
          sta y0       ;geometry
          jsr maketent
