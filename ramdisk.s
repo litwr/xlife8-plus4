@@ -19,6 +19,48 @@ loop     lda ($14),y
          rts
          .bend
 
+ramdisk  .block
+         jsr JPRIMM
+         .byte 147,30
+         .text "enter file# or hit "
+         .byte 28
+         .text "esc"
+         .byte $d,"0",144
+         .text " glider"
+         .byte $d,28,"1",144
+         .text " small fish"
+         .byte $d,28,"2",144
+         .text " heavyweight spaceship"
+         .byte $d,28,"3",144
+         .text " r-pentomino"
+         .byte $d,28,"4",144
+         .text " bunnies"
+         .byte $d,28,"5",144
+         .text " lidka"
+         .byte $d,28,"6",144
+         .text " toad"
+         .byte $d,28,"7",144
+         .text " bi-gun"
+         .byte $d,28,"8",144
+         .text " acorn"
+         .byte $d,28,"9",144
+         .null " switch engine puffer"
+
+loop     jsr getkey
+         cmp #27
+         bne cont
+
+         rts
+
+cont     cmp #$30
+         bcc loop
+
+         cmp #$3a
+         bcs loop
+
+         eor #$30
+         .bend
+
 loadram  .block   ;in: AC
          asl
          tax
@@ -78,48 +120,5 @@ l1       lda $b9
 
 l2       clc
 l3       rts
-         .bend
-
-ramdisk  .block
-         jsr JPRIMM
-         .byte 147,30
-         .text "enter file# or hit "
-         .byte 28
-         .text "esc"
-         .byte $d,"0",144
-         .text " glider"
-         .byte $d,28,"1",144
-         .text " small fish"
-         .byte $d,28,"2",144
-         .text " heavyweight spaceship"
-         .byte $d,28,"3",144
-         .text " r-pentomino"
-         .byte $d,28,"4",144
-         .text " bunnies"
-         .byte $d,28,"5",144
-         .text " lidka"
-         .byte $d,28,"6",144
-         .text " toad"
-         .byte $d,28,"7",144
-         .text " bi-gun"
-         .byte $d,28,"8",144
-         .text " acorn"
-         .byte $d,28,"9",144
-         .null " switch engine puffer"
-
-loop     jsr getkey
-         cmp #27
-         bne cont
-
-         rts
-
-cont     cmp #$30
-         bcc loop
-
-         cmp #$3a
-         bcs loop
-
-         eor #$30
-         jmp loadram
          .bend
 

@@ -5,3 +5,4 @@ rolls pseudocolors
 L does't work after V
 no check mode and pseudoc - set unconditional jumps
 showscn0 doesn't call crsrset - compare this with showscn.cont1
+cursor flash as at BK?
