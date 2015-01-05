@@ -220,9 +220,9 @@ cont2   lda #1
 
 showrules
         .block
-        ldy #8
+        ldy #10
         lda #32
-loop6   sta $fd5,y
+loop6   sta $fd3,y
         dey
         bne loop6
 
