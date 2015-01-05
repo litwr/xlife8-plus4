@@ -444,14 +444,14 @@ loop4    iny
          jsr inccurrp
          inc curx
          ldx curx
-         cpx #20
+         cpx #hormax
          bne loop0
 
          ldx #0
          stx curx
          inc cury
          ldy cury
-         cpy #24
+         cpy #vermax
          bne loop0
          beq eof
 

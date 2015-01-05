@@ -1659,10 +1659,10 @@ setviewport
 
          dec vptilecy
          lda viewport          ;up
-         adc #<tilesize*20     ;CY=0
+         adc #<tilesize*hormax ;CY=0
          sta viewport
          lda viewport+1
-         adc #>tilesize*20
+         adc #>tilesize*hormax
          sta viewport+1
          bne cont2
 
@@ -1682,10 +1682,10 @@ cont1    lda $fe5
 
 cont4    inc vptilecy
          lda viewport          ;down
-         sbc #<tilesize*20     ;CY=1
+         sbc #<tilesize*hormax ;CY=1
          sta viewport
          lda viewport+1
-         sbc #>tilesize*20
+         sbc #>tilesize*hormax
          sta viewport+1
 
 cont2    lda $fe0

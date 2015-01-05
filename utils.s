@@ -96,7 +96,7 @@ loop3    lsr
          adc t1
          cmp xmax
          bcc cont3
-         
+
          sta xmax
 cont3    ldy #0
 loop4    lda (currp),y
@@ -134,7 +134,7 @@ cont6    sty t1
 cont7    jsr inccurrp
          ldx curx
          inx
-         cpx #20
+         cpx #hormax
          beq cont8
 
          stx curx
@@ -144,12 +144,12 @@ cont8    ldx #0
          stx curx
          ldy cury
          iny
-         cpy #24
+         cpy #vermax
          beq cont1
 
          sty cury
          jmp loop0
-         
+
 cont1    lda ymax
          sbc ymin
          adc #0
