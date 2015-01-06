@@ -499,16 +499,20 @@ cont4    sta i2
 
 showcomm .block
          ldx fnlen
+         stx t3
          bne cont2
 
          rts
 
-cont2    lda #"#"
-         cpx #16
+cont2    cpx #16
          beq cont1
 
          inx
-cont1    sta fn-1,x
+cont1    lda fn-1,x
+         sta t2      ;saves fn
+         stx t1
+         lda #"#"
+         sta fn-1,x
          ;lda #","     ;check file type
          ;inx
          ;sta fn-1,x
@@ -518,6 +522,13 @@ cont1    sta fn-1,x
          txa
          ldx #<fn
          ldy #>fn
+         jsr showtxt
+         ldx t1      ;restores fn
+         lda t2
+         sta fn-1,x
+         lda t3
+         sta fnlen
+         rts
          .bend
 
 showtxt  .block
@@ -532,9 +543,6 @@ showtxt  .block
          lda #8
          jsr set_ntsc
          jsr TOCHARSET2  ;to smalls & caps
-         ;jsr PRIMM
-         ;db 9,$e,0
-
 loop6    jsr READSS
          bne checkst
 
@@ -555,10 +563,10 @@ error    jsr showds
          bne endio
 
 eof      jsr getkey
-         jsr TOCHARSET1   ;to caps & graphs
          .bend
 
 endio    jsr CLRCH      ;must be after showcomm!
+         jsr TOCHARSET1   ;to caps & graphs
          LDA #8         ; filenumber 8
          jmp CLOSE
 
