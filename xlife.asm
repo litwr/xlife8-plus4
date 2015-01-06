@@ -469,8 +469,7 @@ nochg    sta curdev
          #iniram
          jsr setcolor
          jsr help
-         lda #147
-         jsr BSOUT
+         jsr out147
          sei
          lda #>irq194
          sta $ffff

@@ -341,12 +341,12 @@ loop     lda i1
          sta $1c00,y
          sta $1d00,y
          sta $1e00,y
-         sta $1ee8,y
+         sta $1ec0,y
          lda i2
          sta $1800,y
          sta $1900,y
          sta $1a00,y
-         sta $1ae8,y
+         sta $1ac0,y
          iny
          bne loop
          rts        ;ZF=1

@@ -402,8 +402,7 @@ cont17v  lda zoom
 
          jsr zoomout
 nozoom3  jsr totext
-         lda #147
-         jsr BSOUT
+         jsr out147
          jsr curoff
          jmp cont17w
 
@@ -462,6 +461,7 @@ cont17j  cmp #"X"-"A"+$c1
          bne cont18
 
          jsr totext
+         jsr out147
          jsr loadcf
          bcc l2
 

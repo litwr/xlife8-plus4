@@ -1,3 +1,6 @@
+out147   lda #147
+         jmp BSOUT
+
 readtent .block
          ldy #0
          sty $b8
@@ -132,8 +135,7 @@ loop3    lda $fe8,y
          .bend
 
 showds   .block
-         lda #147
-         jsr BSOUT
+         jsr out147
          lda #0
          jsr SETNAM
          lda #15
