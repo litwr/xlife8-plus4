@@ -242,7 +242,7 @@ exit     rts
 
 inmode  .block
          jsr JPRIMM
-         .byte $d
+         .byte $d,$d,30
          .text "select benchmark mode"
          .byte $d,32,28,"0",30
          .text " - calculations"

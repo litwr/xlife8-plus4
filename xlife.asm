@@ -99,7 +99,7 @@ irqbench pha    ;timer interrupt
          jsr subrben1
          bpl irqe
 
-subrben  rts   ;ldx
+subrben  rts   ;ldx zp
          .byte ntscmask
          beq subrben1
 
