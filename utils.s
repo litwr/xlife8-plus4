@@ -10,6 +10,8 @@ loop1   lda irqcnt,y
         bne cont1
 
         iny
+        cpy #5
+        beq cont1
         bne loop1
 
 cont1   ldx #0
@@ -17,7 +19,13 @@ loop2   lda irqcnt,y
         sta $c06,x
         inx
         iny
-        cpy #9
+        cpy #6
+        bne cont2
+
+        lda #"."
+        sta $c06,x
+        inx
+cont2   cpy #8
         bne loop2
 
         lda #"S"-"A"+$81

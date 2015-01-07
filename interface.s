@@ -116,9 +116,10 @@ cont12   cmp #"%"
          jmp finish
 
 cont14   cmp #"B"-"A"+$c1
-         bne cont15
+         beq bl12
+         jmp cont15
 
-         jsr xclrscn
+bl12     jsr xclrscn
          jsr totext
          jsr zerocnt
          jsr insteps
@@ -135,7 +136,7 @@ bl4      cpy #7
 
          clc
          lda m1+1
-         adc #$d
+         adc #10
          sta m1+1
          sta m2+1
          bcc bl6
@@ -145,7 +146,8 @@ bl4      cpy #7
 bl6      iny
          bne bl4
 
-bl5      lda #$39
+bl5      jsr inmode
+         lda #$39
 m1       jsr decben
          beq qbexit
 
@@ -153,11 +155,17 @@ m1       jsr decben
 bloop    lda startp+1
          bne bl7
 
+         lda t3
+         beq bl8
+
          jsr incgen
          jmp bl8
 
-bl7      jsr generate
-         jsr cleanup
+bl7      lda t3
+         bpl bl9
+
+         jsr generate
+bl11     jsr cleanup
 bl8      lda #$39
 m2       jsr decben
          bne bloop
@@ -168,9 +176,18 @@ bexit    jsr exitbench
 qbexit   jsr tograph
          jsr zerocc
          jsr calccells
-         ;lda #0
-         ;sta mode
-         jmp showscn
+         jsr showscn
+         jmp cont17u
+
+bl9      beq bl10
+
+         jsr zerocc
+         jsr generate
+         jsr showscn
+         jmp bl11
+
+bl10     jsr showscn
+         jmp bl8
 
 cont15   cmp #"R"-"A"+$c1
          bne cont16
@@ -504,51 +521,56 @@ cm4x     sta crsrtile+1
          rts
          .bend
 
-decben   dec scrbench+6   ;ac = $39
-         ldy scrbench+6
+decben   dec bencnt2+6   ;ac = $39
+         ldy bencnt2+6
          cpy #$2f
          bne dbexit
 
-         sta scrbench+6
-         dec scrbench+5
-         ldy scrbench+5
+         sta bencnt2+6
+         dec bencnt2+5
+         ldy bencnt2+5
          cpy #$2f
          bne dbexit
 
-         sta scrbench+5
-         dec scrbench+4
-         ldy scrbench+4
+         sta bencnt2+5
+         dec bencnt2+4
+         ldy bencnt2+4
          cpy #$2f
          bne dbexit
 
-         sta scrbench+4
-         dec scrbench+3
-         ldy scrbench+3
+         sta bencnt2+4
+         dec bencnt2+3
+         ldy bencnt2+3
          cpy #$2f
          bne dbexit
 
-         sta scrbench+3
-         dec scrbench+2
-         ldy scrbench+2
+         sta bencnt2+3
+         dec bencnt2+2
+         ldy bencnt2+2
          cpy #$2f
          bne dbexit
 
-         sta scrbench+2
-         dec scrbench+1
-         ldy scrbench+1
+         sta bencnt2+2
+         dec bencnt2+1
+         ldy bencnt2+1
          cpy #$2f
          bne dbexit
 
-         sta scrbench+1
-         dec scrbench
-         ldy scrbench
+         sta bencnt2+1
+         dec bencnt2
+         ldy bencnt2
          cpy #$2f
          bne dbexit
 
-         sta scrbench   ;zf is set at 9999999
+         sta bencnt2   ;zf is set at 9999999
 dbexit   rts
 
 setbench .block
+         sei
+         sta $ff3f
+         lda t3
+         bpl cont3
+
          jsr restbl
          lda mode
          sta temp+1
@@ -556,10 +578,10 @@ setbench .block
          sta mode
          lda #$b
          sta $ff06
-         sei
-         sta $ff3f
          lda #<irqbench
          sta $fffe
+         ldy #$a8
+         sty $ff0a
          ldx #<8850  ;0.01 sec
          ldy #>8850
          lda ntscmask
@@ -569,37 +591,48 @@ setbench .block
          ldy #>8940
 cont1    stx $ff00
          sty $ff01
-         lda #$a8
-         sta $ff0a
+         bpl cont2
+
+cont3    jsr tograph
+cont2    lda #$a6
+         sta subrben     ;$a6 = ldx zp
          cli
-         rts         
+         rts
          .bend
 
-exitbench
-         .block
+exitbench .block
+         sei
+         lda t3
+         bpl cont3
+
          jsr savebl
          lda #$1b
          sta $ff06
-         lda #$a2
-         sta $ff0a
-         sta $ff3e
          lda temp+1
          sta mode
-         rts         
+         lda #$a2
+         sta $ff0a
+         bne cont2
+
+cont3    jsr totext0
+cont2    sta $ff3e
+         lda #$60
+         sta subrben     ;$60 = rts
+         cli
+         rts
          .bend
 
 zerocnt  .block
 ;prepares/zeros benchmark counters
          lda #$30
-         ldy #5
+         ldy #6
 loop1    sta irqcnt,y
          sta bencnt,y
+         sta bencnt2,y
          dey
          bpl loop1
 
          sta irqcnt+7
-         sta irqcnt+8
-         sta bencnt+6
          rts
          .bend
 

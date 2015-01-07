@@ -25,16 +25,16 @@ irq210x  pha         ;for zoom in - text mode
          sta $fffe
          lda #195
          bne irqe1
-         ;jmp irqe
 
 irq195x  pha
          lda bgbl
          sta $ff15
+         txa
+         pha
          lda #<irq210x
          sta $fffe
          lda #210
-         sta $ff0b
-         bne irqe2
+         bne irqe1
 
 irq194   pha       ;irq194, irq195x, irqbench, irq210, irq210x must start at the same page
          txa
@@ -86,67 +86,75 @@ irqi     pla
          tay
          lda #194
 irqe1    sta $ff0b
+         jsr subrben
 irqe     pla
          tax
 irqe2    pla
          inc $ff09
          rti
 
-irqbench .block       ;timer interrupt
-         pha
+irqbench pha    ;timer interrupt
          txa
          pha
-         inc irqcnt+8
-         ldx irqcnt+8
-         cpx #$3a
-         bne irqe
+         jsr subrben1
+         bpl irqe
+
+subrben  rts   ;ldx
+         .byte ntscmask
+         beq subrben1
+
+         inc xdir
+         ldx xdir
+         cpx #6
+         bcc subrben1
+
+         ldx #0
+         stx xdir
+         rts
+
+subrben1 inc irqcnt+7
+         ldx #$3a
+         cpx irqcnt+7
+         bne end_subrben
 
          lda #$30
-         sta irqcnt+8
-         inc irqcnt+7
-         ldx irqcnt+7
-         cpx #$3a
-         bne irqe
-
          sta irqcnt+7
+         inc irqcnt+6
+         cpx irqcnt+6
+         bne end_subrben
+
+         sta irqcnt+6
          inc irqcnt+5
-         ldx irqcnt+5
-         cpx #$3a
-         bne irqe
+         cpx irqcnt+5
+         bne end_subrben
 
          sta irqcnt+5
          inc irqcnt+4
-         ldx irqcnt+4
-         cpx #$3a
-         bne irqe
+         cpx irqcnt+4
+         bne end_subrben
 
          sta irqcnt+4
          inc irqcnt+3
-         ldx irqcnt+3
-         cpx #$3a
-         bne irqe
+         cpx irqcnt+3
+         bne end_subrben
 
          sta irqcnt+3
          inc irqcnt+2
-         ldx irqcnt+2
-         cpx #$3a
-         bne irqe
+         cpx irqcnt+2
+         bne end_subrben
 
          sta irqcnt+2
          inc irqcnt+1
-         ldx irqcnt+1
-         cpx #$3a
-         bne irqe
+         cpx irqcnt+1
+         bne end_subrben
 
          sta irqcnt+1
          inc irqcnt
-         ldx irqcnt
-         cpx #$3a
-         bne irqe
+         cpx irqcnt
+         bne end_subrben
 
          sta irqcnt
-         beq irqe
-         .bend
+end_subrben rts
 
 iniadjc  lda (currp),y
          sta adjcell
@@ -278,7 +286,7 @@ density  .byte 3          ;maybe linked to live-born
 
 eval1    .byte $c4,"("              ;str$(ddddddd/dddddd.dd)
 bencnt   .byte 0,0,0,0,0,0,0,$ad
-irqcnt   .byte 0,0,0,0,0,0,".", 0,0,")",0
+irqcnt   .byte 0,0,0,0,0,0,0,0,$ac,"1","0","0",")",0
 vptilecx .byte 0
 vptilecy .byte 0
 copyleft .text "(c)"

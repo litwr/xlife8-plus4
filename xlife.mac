@@ -1,5 +1,5 @@
-;used zp: 3-7, $14, $8e-8f, $92, $9b-$9c, $b6-b7, $a7-a8, $b8-b9, $bb, $d0-e7, $f1-f8, $fc-fd
-;free zp: $9f-a2, $f2-$f8 (former pctemp)
+;used zp: 3-7, $14, $8e-8f, $92, $9b-$9c, $b6-b7, $a7-a8, $b8-b9, $bb, $d0-e7, $f1-f8, $fc-fd, $f2-$f8 (former pctemp)
+;free zp: $9f-a2
 viewport = $8e    ;+$8f
 startp   = $D4    ;+$D5
 currp    = $D8    ;+$D9
@@ -28,6 +28,7 @@ xcrsr    = $fe0   ; .. $fe2
 ycrsr    = $fe5   ; .. $fe7
 ;$fe8-feb are used by io to keep live/born info
 temp     = $b6    ; .. $b7
+bencnt2  = $f2    ; .. $f8
 
 hormax   = 20     ;160
 vermax   = 24     ;192

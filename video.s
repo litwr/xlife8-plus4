@@ -11,8 +11,9 @@ showbench
 scrbench = $c17
 insteps  .block
          jsr JPRIMM
-         .byte 144,147
-         .null "number of generations: "
+         .byte 147,30
+         .text "number of generations: "
+         .byte 144,0
 loop3    ldy #0
          sty $ff0c
 loop1    tya
@@ -53,6 +54,7 @@ cont3    ldx #6
          dey
 loop2    lda scrbench,y
          sta bencnt,x
+         sta bencnt2,y
          dex
          dey
          bpl loop2
@@ -238,6 +240,29 @@ loop1    jsr getkey
 exit     rts
          .bend
 
+inmode  .block
+         jsr JPRIMM
+         .byte $d
+         .text "select benchmark mode"
+         .byte $d,32,28,"0",30
+         .text " - calculations"
+         .byte $d,32,28,"1",30
+         .text " - video"
+         .byte $d,32,28,"2",30
+         .text " - both"
+         .byte 144,0
+loop1    jsr getkey
+         cmp #"0"
+         bcc loop1
+
+         cmp #"3"
+         bcs loop1
+
+         sbc #"0"   ;CY=0
+         sta t3
+         rts
+         .bend
+
 help     jsr JPRIMM
          .byte 144,147
          .text "        *** xlife commands ***"
@@ -367,7 +392,7 @@ ylimit   = $15
          sta cont2+1
 loop3    lda #3
          sta ylimit
-loop4    ldy #0
+loop4    ldy #0              ;check sum?
 loop2    lda (i1),y
          ldx #0
 loop1    asl
