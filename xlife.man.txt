@@ -16,15 +16,16 @@
     the universe on the screen.
  \x%  Set a percentage density for a  ran-
     domly filled area.  Default is 42%.
- \x+  Zoom the view in.  This mode  is  a
-    bit faster.
+ \x+  Zoom the view in.  This mode is  fa-
+    ster for the big patterns  and  slower
+    for the small ones.
  \x-  Zoom the view out.
  \x.  Place cursor to the center  of  uni-
     verse.
  \x?  Help for xlife.
  \xB  Benchmark. Enter number  of  genera-
-    tions and get time. This is also the
-    fastest  mode of the evolution.
+    tions and get time. This also provi-
+    des a way for the fastest evolution.
  \xC  Clear the universe.
  \xE  Toggle pseudocolor display mode.  In
     this mode, the new cells  are  shown

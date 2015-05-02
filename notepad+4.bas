@@ -1,7 +1,7 @@
- 0 rem *** notepad+4, the sequential files editor, v1 rev.3
- 4 rem *** by litwr, 2014, (C) GNU GPL
+ 0 rem *** notepad+4, the sequential files editor, v1 rev.4
+ 4 rem *** by litwr, 2014-15, (C) GNU GPL
  6 rem *** the initial banner was made by Text Resizer by MIRKOSOFT
- 8 cc$=chr$(233):mc=40:cf$=chr$(230):mo$="owr":u=8:un$="u8":q=0
+ 8 cc$=chr$(233):mc=40:cf$=chr$(230):mo$="ins":im=1:u=8:un$="u8":q=0
 10 ml=700:dima$(ml)
 
 15 trap 20000
@@ -25,7 +25,7 @@
 120 for i=0 to 3:for k=0 to 35
 130 readl:iflthenpoke3354+i*40+k,l
 140 nextk:nexti
-150 char1,8,11,"v1r3, by litwr, (c) 2014 gnu gpl"
+150 char1,5,11,"v1r4, by litwr, (c) 2014-15 gnu gpl"
 160 i=ti
 170 if ti-i<150 then170
 180 getc$:if c$<>"" then 180
@@ -172,7 +172,7 @@
 3690 l=len(s$):i=instr(s$,chr$(34)):s$=left$(s$,i-1):close8:scnclr:goto3014
 
 3700 if len(s$)<>27 then 3780
-3710 if left$(s$,3)="   " then s$=right$(s$,len(s$)-2):else:if left$(s$,2)="  " then s$=right$(s$,len(s$)-1)
+3710 if left$(s$,3)="   " then s$=mid$(s$,3):else:if left$(s$,2)="  " then s$=mid$(s$,2)
 3725 if right$(s$,3)="   " then s$=left$(s$,len(s$)-2):else:if right$(s$,2)="  " then s$=left$(s$,len(s$)-1)
 3730 if right$(s$,2)="  " then s$=left$(s$,len(s$)-1)
 3740 k=k+1:printusing"###";k;:print s$;ol
@@ -235,14 +235,14 @@
 
 4700 rem backspace
 4710 ifcx=0then5400
-4720 cx=cx-1:a$(cy)=left$(a$(cy),cx)+right$(a$(cy),len(a$(cy))-cx-1)
+4720 cx=cx-1:a$(cy)=left$(a$(cy),cx)+mid$(a$(cy),cx+2)
 4730 d$=right$(a$(cy),1)
 4740 if d$<>cc$ and d$<>cf$ then gosub5100:else:i=cy:gosub2500
 4750 goto2400
 
 4800 rem shift+backspace
 4810 c$=" "
-4820 a$(cy)=left$(a$(cy),cx)+c$+right$(a$(cy),len(a$(cy))-cx)
+4820 a$(cy)=left$(a$(cy),cx)+c$+mid$(a$(cy),cx+1)
 4830 if len(a$(cy))>mc then 5500
 4840 i=cy:goto2500
 
@@ -317,7 +317,7 @@
 7400 gosub7500
 7410 if cy+2>ml then 7450:else:c$=a$(cy):a$(cy)=left$(c$,cx)+cc$
 7415 if cy+3>ml then 7450
-7420 a$(cy+1)=right$(c$,len(c$)-cx):cx=0:c$=right$(a$(cy+1),1)
+7420 a$(cy+1)=mid$(c$,cx+1):cx=0:c$=right$(a$(cy+1),1)
 7440 if c$<>cc$ and c$<>cf$ then gosub4200:goto5100
 7450 cx=0:goto4200
 
@@ -332,7 +332,7 @@
 
 8000 rem esc
 8010 getc$:ifc$=""goto8010
-8020 i=asc(c$)
+8020 i=asc(c$):if i>192 and i<219 then i=i-128
 8030 if i=68 then8200
 8040 if i=73 then8300
 8050 if i=74 then8400
@@ -368,7 +368,7 @@
 
 8600 rem esc+p
 8610 c$=a$(cy):if cx=len(c$)-1 then 8200
-8620 a$(cy)=right$(c$,len(c$)-cx-1):cx=0:c$=right$(c$,1)
+8620 a$(cy)=mid$(c$,cx+2):cx=0:c$=right$(c$,1)
 8630 if c$=cf$ or c$=cc$ then i=cy:gosub2500:goto2400
 8640 goto5100
 
