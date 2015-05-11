@@ -466,4 +466,3 @@
 10250 return
 
 20000 poke2024,39:print "an error's occured or run/stop's pressed at line"el
-

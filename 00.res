@@ -21,5 +21,5 @@ v4
 +flashing graphic cursor
 +more benchmark modes
 +fixed errors
-*renamed colors-cf to colors.cf due to incompatibility, add note about the conversion
-+updated Notepad+4
+*renamed colors-cf to colors.cf due to incompatibility, added note about the conversion
++updated Notepad+4 rev.4

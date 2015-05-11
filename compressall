@@ -1,4 +1,4 @@
-p4compress -m1 -start 0x3e00 xlife.prg xlifec.prg
+p4compress -m1 -start 0x3f00 xlife.prg xlifec.prg
 p4compress -m1 -start 0x1800 manpage.prg manpagec.prg
 p4compress -m1 -start 0x101c notepad+4-c.prg notepad+4-cc.prg || echo make notepad+4-c.prg by the compilation from notepad+4-s.prg
 #p4compress -m1 cat.prg catc.prg
