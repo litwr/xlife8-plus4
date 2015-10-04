@@ -266,11 +266,7 @@ cm1      sta t1
 
          cpx #<plainbox
          bne cm4
-
-         ldx i2
-         lda crsrbit,x
-         sta t1
-         bcs cm5
+         jmp cont17u
 
 cm4      sta crsrtile+1
          stx crsrtile

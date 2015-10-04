@@ -396,9 +396,10 @@ loop4    ldy #0              ;check sum?
 loop2    lda (i1),y
          ldx #0
 loop1    asl
-         bcc cont1
-
          sta 7
+         lda #32
+         bcc cont2
+
          lda #81         ;live cell char
 cont2    sta $c00,x
          lda 7
@@ -426,10 +427,6 @@ nocy1    iny
          adc #>tilesize*20
          sta i1+1
          bcc loop4
-
-cont1    sta 7
-         lda #32
-         bne cont2
 
 cont3    dec xlimit
          bne cont11

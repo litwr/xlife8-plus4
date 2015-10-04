@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <string.h>
-#ifdef CPC6128
+#if defined(CPC6128) || defined(IBMPC)
 #define BFMT "db"
 #else
 #define BFMT ".byte"
@@ -41,6 +41,9 @@ int main() {
           printf("%3d,", t[i*16 + n + off]);
       printf("%3d\n", t[i*16 + n + off]);
       if (i*16 + n == 127) {printf("gentab:\n"); off = -128;}
+#elif defined(IBMPC)
+         printf("0%xh,", t[i*16 + n]);
+      printf("0%xh\n", t[i*16 + n]);
 #else
          printf("$%02x,", t[i*16 + n]);
       printf("$%02x\n", t[i*16 + n]);

@@ -1,6 +1,8 @@
 #include <stdio.h>
-#ifdef CPC6128
+#if defined(CPC6128)
 #define BFMT "db"
+#elif defined(IBMPC)
+#define BFMT "dw"
 #elif defined(PLUS4)
 #define BFMT ".byte"
 #elif defined(BK0011)
@@ -17,10 +19,22 @@ void print(unsigned *tn, unsigned *p[]) {
       for (i = 0; i < 16; i++) {
          printf("    %s ", BFMT);
          for (n = 0; n < 15; n++)
-            printf("%5d,", p[2*k][i*16 + n + off] 
+            printf("%5d,", p[2*k][i*16 + n + off]
                 + (p[2*k + 1][i*16 + n + off] << 8));
          printf("%5d\n", p[2*k][i*16 + n + off]  + (p[2*k + 1][i*16 + n + off] << 8));
          if (i*16 + n == 127) {printf("tab%d%d:\n", tn[2*k], tn[2*k + 1]); off = -128;}
+      }
+      printf("\n");
+   }
+#elif IBMPC
+   for (k = 0; k < 2; k++) {
+      for (i = 0; i < 16; i++) {
+         n = 0;
+         if (i*16 + n == 0) printf("tab%d%d:\n", tn[2*k], tn[2*k + 1]);
+         printf("    %s ", BFMT);
+         for (; n < 15; n++)
+            printf("0%xh,", p[2*k][i*16 + n] + (p[2*k + 1][i*16 + n] << 8));
+         printf("0%xh\n", p[2*k][i*16 + n]  + (p[2*k + 1][i*16 + n] << 8));
       }
       printf("\n");
    }

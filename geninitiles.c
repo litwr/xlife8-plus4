@@ -3,6 +3,7 @@
 //#define CPC6128
 //#define PLUS4
 //#define BK0011
+//#define IBMPC
 
 #ifdef PLUS4
    #define TILESIZE 61
@@ -28,8 +29,16 @@
    #define VIDEOYINC (64*8-XMAX*2)
    #define VIDEOXINC 2
    #define VIDEOSTART (0x4000+32-XMAX+64*2)
+#elif defined(IBMPC)
+   #define TILESIZE 62
+   #define TILESTART 0
+   #define XMAX 20
+   #define YMAX 24
+   #define VIDEOYINC (40*8-XMAX*2)
+   #define VIDEOXINC 2
+   #define VIDEOSTART (40-XMAX)
 #else
-#error The architecture is not defined!
+   #error The architecture is not defined!
 #endif
 
 void printtile(unsigned short *b) {
@@ -54,6 +63,16 @@ void printtile(unsigned short *b) {
    printf("0\n    db ", b[i]);
    for (i = 0; i < 15; i++) printf("0, ");
    printf("0\n    dw $%x\n    db 0\n", b[29]);
+#elif defined(IBMPC)
+   printf("    db ");
+   for (i = 0; i < 7; i++) printf("0, ");
+   printf("0\n    dw ");
+   for (i = 4; i < 12; i++) printf("tiles+0%xh, ", b[i]);
+   printf("0%xh\n    db ", b[12]);
+   for (i = 0; i < 15; i++) printf("0, ");
+   printf("0\n    db ", b[i]);
+   for (i = 0; i < 15; i++) printf("0, ");
+   printf("0\n    dw 0%xh\n    db 0, 0\n", b[29]);
 #elif defined(BK0011)
    printf("    .byte ");
    for (i = 0; i < 7; i++) printf("0, ");
