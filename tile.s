@@ -192,7 +192,7 @@ l4       ldy #dr
          lda i1+1
          sbc #>((vermax-1)*hormax-1)*tilesize
          iny
-         sta (i1),y       
+         sta (i1),y
          lda i1
          sbc #<(vermax-1)*hormax*tilesize
          iny		;down
@@ -200,7 +200,7 @@ l4       ldy #dr
          lda i1+1
          sbc #>(vermax-1)*hormax*tilesize
          iny
-         sta (i1),y    
+         sta (i1),y
          lda i1
          sbc #<((vermax-1)*hormax+1)*tilesize
          iny		;dl
@@ -355,7 +355,7 @@ l4       ldy #dr
          sta (i1),y
          lda #>plainbox
          iny
-         sta (i1),y    
+         sta (i1),y
          lda #<plainbox
          iny		;dl
          sta (i1),y

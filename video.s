@@ -1468,7 +1468,7 @@ loop15   jsr clrect3
          sta x8bit
          jsr clrect4
          jmp loop15
- 
+
 nextlt   ldy #left
          jsr nextcell
          lda #1
@@ -1604,7 +1604,7 @@ xcont1   tax
 setdirmsk
          .block
          jsr JPRIMM
-         .byte 147
+         .byte 147,30
 msglen   = 40
          .text "set directory mask ("
          .byte 28
@@ -2253,7 +2253,7 @@ loop     jsr getkey
 exit     rts
          .bend
 
-putpixel2 .block 
+putpixel2 .block
          tax
          jsr seti1
          txa
@@ -2284,7 +2284,7 @@ l2       lda vistab,x
          rts
          .bend
 
-showtent .block   ;used: 
+showtent .block   ;used:
          lda x0
          pha
          lda y0

@@ -314,7 +314,7 @@ set_ntsc ora ntscmask
 
 inputhex .block
 ;gets 2 hex digits and prints them
-;out: ZF=1 - empty input 
+;out: ZF=1 - empty input
 ;in: a - hicur, y - lowcur
 ;changes: t1
 ;uses: getkey, curoff
@@ -369,7 +369,7 @@ cont2    dey
 inccurrp .block
 ;increases currp
 ;change: currp:2
-;# of calls: 2 
+;# of calls: 2
          lda currp
          clc
          adc #tilesize

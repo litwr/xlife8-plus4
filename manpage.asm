@@ -125,7 +125,7 @@ l29    CPY #<textn+1
        BCC l30
 
        LDA lineslo
-       BNE l11 
+       BNE l11
 
        DEC lineshi
 l11    DEC lineslo
@@ -184,7 +184,7 @@ l23    CPY #<textn
 
 l15    INC lineslo
        BNE l16
-       
+
        INC lineshi
 l16    JMP l7
 
@@ -203,13 +203,13 @@ l17    JMP l1
 l8     LDA lineslo
        BNE l12
 
-       DEC lineshi 
+       DEC lineshi
 l12    DEC lineslo
        JMP l7
 
 l21    CMP #$EF
        BNE l22
-       
+
        STA $FF3E        ;esc
 l40    LDA #0
        JSR keysc
@@ -305,7 +305,7 @@ l33    LDA lineslo
 
 e      CMP #$BF
        BNE r1
- 
+
        LDA linen       ;end
        ASL
        STA 7
@@ -480,7 +480,7 @@ l1     LDA e5_0b,X
        STA $FFFE
        LDX $DB
        LDA $DA
-       RTI 
+       RTI
 
 wt35l  LDA #<iel	;waits 35 lines
        STA $FFFE
@@ -605,7 +605,7 @@ comm3  .block
 
        LDA #$32
        RTS
-       
+
 cont2  CMP #$44
        BNE cont3
 
@@ -655,7 +655,7 @@ help   .block
        AND #$40
        BNE ntsc
 
-       JSR $FF4F         
+       JSR $FF4F
        .BYTE 28
        .TEXT "  cursor right "
        .BYTE 30
