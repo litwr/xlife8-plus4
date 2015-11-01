@@ -1,4 +1,4 @@
-Xlife for Commodore plus/4 v4
+Xlife for Commodore plus/4 v5
 ported to 8-bit universe by litwr
 
 (c) 2013-15 GNU GPL

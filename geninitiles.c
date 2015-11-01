@@ -32,7 +32,7 @@
 #elif defined(IBMPC)
    #define TILESIZE 62
    #define TILESTART 0
-   #define XMAX 22
+   #define XMAX 31
    #define YMAX 24
    #define VIDEOYINC (40*8-XMAX*2)
    #define VIDEOXINC 2

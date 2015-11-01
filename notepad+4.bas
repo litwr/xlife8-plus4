@@ -1,4 +1,4 @@
- 0 rem *** notepad+4, the sequential files editor, v1 rev.4
+ 0 rem *** notepad+4, the sequential files editor, v1 rev.5
  4 rem *** by litwr, 2014-15, (C) GNU GPL
  6 rem *** the initial banner was made by Text Resizer by MIRKOSOFT
  8 cc$=chr$(233):mc=40:cf$=chr$(230):mo$="ins":im=1:u=8:un$="u8":q=0
@@ -25,7 +25,7 @@
 120 for i=0 to 3:for k=0 to 35
 130 readl:iflthenpoke3354+i*40+k,l
 140 nextk:nexti
-150 char1,5,11,"v1r4, by litwr, (c) 2014-15 gnu gpl"
+150 char1,5,11,"v1r5, by litwr, (c) 2014-15 gnu gpl"
 160 i=ti
 170 if ti-i<150 then170
 180 getc$:if c$<>"" then 180
@@ -416,7 +416,7 @@
 9600 rem page down
 9610 cx=0:l=ty+24:if l>=lc then l=lc-24
 9620 if l<0 then l=0
-9630 cy=cy+l-ty:if cy>=lc then cy=lc-1
+9630 cy=cy+24:if cy>=lc then cy=lc-1
 9640 goto9420
 
 9700 rem new
@@ -435,7 +435,7 @@
 
 9900 rem repeat find
 9910 if fs$="" then return
-9920 scnclr:print"seek "fs$:l=len(fs$):goto9830
+9920 scnclr:print"searching "fs$:l=len(fs$):goto9830
 
 10000 for j=cy to lc-1
 10010 s$=a$(j):gosub10100:printchr$(27)"j"j+1;
