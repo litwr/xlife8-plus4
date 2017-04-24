@@ -1,5 +1,5 @@
  0 rem *** notepad+4, the sequential files editor, v1 rev.5
- 4 rem *** by litwr, 2014-15, (C) GNU GPL
+ 4 rem *** by litwr, 2014-16, (C) GNU GPL
  6 rem *** the initial banner was made by Text Resizer by MIRKOSOFT
  8 cc$=chr$(233):mc=40:cf$=chr$(230):mo$="ins":im=1:u=8:un$="u8":q=0
 10 ml=700:dima$(ml)
@@ -31,7 +31,7 @@
 180 getc$:if c$<>"" then 180
 190 return
 
-2000 printchr$(9)chr$(14)chr$(147)tab(8)"Notepad+4 commands list":print
+2000 printchr$(9)chr$(14)chr$(147)tab(10)"Notepad+4 commands":print
 2010 print"C=H - help          C=N - new"
 2020 print"C=L - load          C=S - save"
 2030 print"C=U - page up       C=D - page down"
@@ -150,7 +150,7 @@
 3430 gosub2260:goto2400
 
 3500 rem directory & load
-3510 scnclr:dm$="":print"unit"u:print"enter directory mask (* by default)":input dm$:if dm$="" then dm$="*"
+3510 scnclr:dm$="":print"unit"u:print"enter directory mask, e.g., b*=seq (* by default)":input dm$:if dm$="" then dm$="*"
 3515 print"Hit any key to stop"
 3520 open8,u,0,"$0:"+dm$
 3530 get#8,c$:if st=0 then get#8,c$:k=0:else:print"bad mask or unit":printds$:getkeyc$:goto3090
