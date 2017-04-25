@@ -1,0 +1,7 @@
+# $1 - d64-image
+cbccwif notepad+4.bas >notepad+4.asm
+tmpx notepad+4.asm -o notepad+4-c.prg
+p4compress -m1 -start 0x100d notepad+4-c.prg notepad+4-cc.prg
+txt2seq notepad+4.bas u
+cbmconvert -D4 $1 -p notepad+4.s00
+petcat -w3 -o notepad+4-s.prg notepad+4.bas
