@@ -4,6 +4,7 @@
 //#define PLUS4
 //#define BK0011
 //#define IBMPC
+//#define AMIGA
 
 #ifdef PLUS4
    #define TILESIZE 61
@@ -37,11 +38,23 @@
    #define VIDEOYINC (40*8-XMAX*2)
    #define VIDEOXINC 2
    #define VIDEOSTART (40-XMAX)
+#elif defined(AMIGA)
+   #define TILESIZE 82
+   #define TILESTART 0
+   #define XMAX 31
+   #define YMAX 24
+   #define VIDEOYINC (40*8-XMAX)
+   #define VIDEOXINC 1
+   #define VIDEOSTART ((40-XMAX)/2)
 #else
    #error The architecture is not defined!
 #endif
 
+#ifdef AMIGA
+void printtile(unsigned int *b) {
+#else
 void printtile(unsigned short *b) {
+#endif
    int i;
 #ifdef PLUS4
    printf("    .byte ");
@@ -73,6 +86,16 @@ void printtile(unsigned short *b) {
    printf("0\n    db ", b[i]);
    for (i = 0; i < 15; i++) printf("0, ");
    printf("0\n    dw 0%xh\n    db 0, 0\n", b[29]);
+#elif defined(AMIGA)
+   printf("    dc.b ");
+   for (i = 0; i < 7; i++) printf("0, ");
+   printf("0\n    dc.l ");
+   for (i = 4; i < 12; i++) printf("tiles+$%x, ", b[i]);
+   printf("$%x\n    dc.b ", b[12]);
+   for (i = 0; i < 15; i++) printf("0, ");
+   printf("0\n    dc.b ", b[i]);
+   for (i = 0; i < 15; i++) printf("0, ");
+   printf("0\n    dc.l $%x\n    dc.b 0, 0\n", b[29]);
 #elif defined(BK0011)
    printf("    .byte ");
    for (i = 0; i < 7; i++) printf("0, ");
@@ -83,12 +106,18 @@ void printtile(unsigned short *b) {
    printf("0\n    .byte ", b[i]);
    for (i = 0; i < 15; i++) printf("0, ");
    printf("0\n    .word %u, 0\n", b[29]);
+#else
+   #error The architecture is not defined!
 #endif
 }
 
 int main() {
    int i, x, y, cur, video = VIDEOSTART;
+#ifdef AMIGA
+   unsigned int b[TILESIZE/2] = {0};
+#else
    unsigned short b[TILESIZE/2] = {0};
+#endif
    for (y = 0; y < YMAX; y++, video += VIDEOYINC)
        for (x = 0; x < XMAX; x++, video += VIDEOXINC) {
           cur = TILESTART + (y*XMAX + x)*TILESIZE;

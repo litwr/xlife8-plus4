@@ -3,6 +3,8 @@
 #define BFMT "db"
 #elif defined(IBMPC)
 #define BFMT "dw"
+#elif defined(AMIGA)
+#define BFMT "dc.w"
 #elif defined(PLUS4)
 #define BFMT ".byte"
 #elif defined(BK0011)
@@ -38,7 +40,19 @@ void print(unsigned *tn, unsigned *p[]) {
       }
       printf("\n");
    }
-#else
+#elif AMIGA
+   for (k = 0; k < 2; k++) {
+      for (i = 0; i < 16; i++) {
+         n = 0;
+         if (i*16 + n == 0) printf("tab%d%d:\n", tn[2*k], tn[2*k + 1]);
+         printf("    %s ", BFMT);
+         for (; n < 15; n++)
+            printf("$%x,", (p[2*k][i*16 + n] << 8) + p[2*k + 1][i*16 + n]);
+         printf("$%x\n", (p[2*k][i*16 + n] << 8)  + p[2*k + 1][i*16 + n]);
+      }
+      printf("\n");
+   }
+#elif defined(PLUS4) || defined(CPC6128)
    for (k = 0; k < 4; k++) {
       printf("tab%d\n", tn[k]);
       for (i = 0; i < 16; i++) {
@@ -48,6 +62,8 @@ void print(unsigned *tn, unsigned *p[]) {
          printf("$%02x\n", p[k][i*16 + n]);
       }
    }
+#else
+#error Not defined architecture
 #endif
 }
 int main() {

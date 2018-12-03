@@ -1,13 +1,18 @@
 #include <stdio.h>
 #include <string.h>
+
 #if defined(CPC6128) || defined(IBMPC)
 #define BFMT "db"
+#elif defined(AMIGA)
+#define BFMT "dc.b"
 #else
 #define BFMT ".byte"
 #endif
+
 #ifdef BK0011
 int off = 128;
 #endif
+
 int main() {
    unsigned i, n, t[256] = {0};
    char born[] = "3", live[] = "23";
