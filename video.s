@@ -274,24 +274,24 @@ help     jsr JPRIMM
          .null " zoom in/out"
          jsr JPRIMM
          .byte $d,18,28,".",30,"/",28,"h","o","m","e",30
-         .text " center/home cursor"
+         .text " center/home the cursor"
          .byte $d,18,28,"?",30
          .text " show this help"
          .byte $d,28,146,"b",18,30
          .text " benchmark"
          .byte $d,28,146,"c",18,30
-         .text " clear screen"
+         .text " clear the screen"
          .byte $d,28,146,"e",18,30
          .text " toggle pseudocolor mode"
          .byte $d,18,28,"g",30
-         .text " toggle run/stop mode"
+         .text " - the run/stop mode"
          .byte $d,18,28,"h",30
-         .text " toggle hide mode - about 70% faster"
+         .text " - the hiding (fastest) mode"
          .byte $d,18,28,"l",30
-         .null " load and transform file"
+         .null " load and transform a pattern"
          jsr JPRIMM
          .byte $d,28,146,"l",18,30
-         .text " reload pattern"
+         .text " reload a pattern"
          .byte $d,18,28,"o",30
          .text " one step"
          .byte $d,28,146,"q",18,30
@@ -305,22 +305,22 @@ help     jsr JPRIMM
          .byte $d,28,18,"v",30
          .text " show some info"
          .byte $d,28,146,"v",18,30
-         .text " show comments to the pattern"
+         .text " show comments to a pattern"
          .byte $d,28,146,"x",30,"/",28,"z",18,30
-         .null " reload/set&save palette"
+         .null " reload/set&save a palette"
          jsr JPRIMM
          .byte $d,$d,144,146,"u",18
          .text "se "
          .byte 28
          .text "cursor keys"
          .byte 144
-         .text " to set the position and "
+         .text " to set a position and a "
          .byte 28
          .text "space key"
          .byte 144
          .text " to toggle the current cell."
          .byte $d,146,"u",18
-         .text "se "
+         .text "se a "
          .byte 28
          .text "shift"
          .byte 144
@@ -2114,8 +2114,8 @@ chgcolors             ;t1,i1
          .block
 curpos1  = 183
 curpos2  = 223
-curpos3  = 272
-curpos4  = 313
+curpos3  = 274
+curpos4  = 316
 curpos5  = 340
 curpos6  = 379
 curpos7  = 426
@@ -2129,8 +2129,8 @@ curpos9  = 508
          .byte 28
          .text "enter"
          .byte 30
-         .text " to use default color or input hexadecimal number of color. the"
-         .text " firstdigit of this number means luminance andthe second - color."
+         .text " to use the default color or input a hexadecimal number of color. "
+         .text "thefirst digit of this number means luminance and the second - color."
          .byte $d,144
          .null "the plain border ("
          jsr chgclrs1
@@ -2156,7 +2156,7 @@ cont1    jsr JPRIMM
          jsr chgclrs2
 cont2    jsr JPRIMM
          .byte $d
-         .null "the cursor over live cell ("
+         .null "the cursor over a live cell ("
          jsr chgclrs1
          lda #>curpos3
          ldy #<curpos3
@@ -2168,7 +2168,7 @@ cont2    jsr JPRIMM
          jsr chgclrs2
 cont3    jsr JPRIMM
          .byte $d
-         .null "the cursor over empty cell ("
+         .null "the cursor over an empty cell ("
          jsr chgclrs1
          lda #>curpos4
          ldy #<curpos4

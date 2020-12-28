@@ -3,7 +3,7 @@
 \bNAME
 
 \g Xlife - Conway's Game of Life and other
- cellular automata for Commodore +4.
+ cellular automata for the Commodore +4.
 
 \bDESCRIPTION
 
@@ -20,10 +20,10 @@
     ster for the big patterns and slower
     for the small ones.
  \x-  Zoom the view out.
- \x.  Place cursor to the center  of  uni-
-    verse.
+ \x.  Place the cursor to  the  center  of
+    the universe.
  \x?  Help for xlife.
- \xB  Benchmark. Enter number  of  genera-
+ \xB  Benchmark. Enter a number of genera-
     tions and get time. This also provi-
     des a way for the fastest evolution.
  \xC  Clear the universe.
@@ -34,8 +34,8 @@
  \xg  Toggle running  the  game.   Evolve/
     Stop.  Then step through generations
     until  something   exceptional  hap-
-    pens, like still life or a key pres-
-    sed.
+    pens, like no live cells  or  a  key
+    pressed.
  \xh  (Hide) stop  displaying  after  each
     generation.  This mode is up to  70%
     faster   than  established   by   g-
@@ -52,12 +52,12 @@
     by a bounding box.)  Clear the  uni-
     verse if  you  want  to  start  from
     scratch.  It is possible  either  to
-    select pattern at the directory list
-    directly or  to  enter  the  pattern
-    name.
+    select a pattern in a directory list
+    directly or to enter a pattern name.
  \xL  Immediately reload, at  the  cursor,
     a copy of the last  pattern  loaded.
-    It doesn't work for ramdisk pattern.
+    It doesn't  work  for  ramdisk  pat-
+    terns.
  \xo  Forward one generation.
  \xQ  Quit.
  \xR  Change the (2-state) rules in "stays
@@ -66,7 +66,7 @@
     three  neighbors,  birth  on   three
     neighbors for an empty cell).
  \xS  Save the universe to a file.  It  is
-    correct to save to the existed  file
+    correct to save to an  existed  file
     but no warning message is provided.
  \xT  Set up the topology.  It is possible
     to use the rectangular area with the
@@ -75,18 +75,17 @@
  \xv  View current pattern information.
  \xV  View comments to a file.
  \xX  Reload   palette   from   the   file
-    "colors-cf".  This  file  is  loaded
-    automatically at the  start  of  the
-    program.
+    "colors-cf". This file is loaded au-
+    tomatically when the program starts.
  \xZ  Set and optionally save a palette.
 
  Use (\rshift\g+) \rcursor keys\g and  \rHome\g  key
  to move the cursor.  Use \rspace  bar\g  to
- change the cell under cursor.
+ change a cell under cursor.
 
 \bSTATUS BAR
 
-\g It shows  number  of  generations,  the
+\g It shows the number of generations, the
  total sum of live cells,  the  slowness
  indicator (100% means the maximum slow-
  ness), the rules, and the cursor  coor-
@@ -95,50 +94,49 @@
 \bLIMITS
 
 \g It is possible to see only  up  to  256
- files from the disk directory. Use mask
+ files from a disk directory. Use a mask
  to show only matched files.
 
  The tentative pattern may show only  up
- to 960 cells.  The other cells are  not
- shown but loaded later.  This  quantity
- is enough to show the every cell from a
- pattern file with the size up to 8 disk
- blocks.
+ to 960 cells. Other cells are not shown
+ but loaded later. This quantity is eno-
+ ugh to show every cell from  a  pattern
+ file with the size that is equal  to  8
+ disk blocks.
 
  The universe size is 160x192.
 
  The rules with  "born on"  condition  0
  are not supported.
 
- The files on ramdisk are  without  com-
- ments.
+ Files on ramdisk are without comments.
 
  If a wrong filename is given for a file
  to save then the save will not be  done
- but without the error message.  The fi-
+ but without an error message.  The  fi-
  lename should  not  contain  wildcards,
  commas, ...
 
 \bFORMATS
 
 \g The first two bytes of  a pattern  file
- are width  and  height.  The  next  two
+ are its width and height.  The next two
  bytes  describes "stay alive on"  cond-
  ition, and the next  two  -  "born on".
  The next contents are the sequence of X
  and Y coordinate pairs of  live  cells.
- The patterns should have USR type.
+ Patterns must have USR type.
 
- The file with comments must have almost
+ A file with comments must  have  almost
  the  same  name  as  the  corresponding
  pattern filename.  The only  difference
- is the sign # at its end.  This sign is
+ is sign # at  its  end.  This  sign  is
  added to  the  pattern's  filename.  If
  this filename has  the  maximum  length
  then "#" replaces the last character of
  the pattern's filename.  The  comments'
  file is a common text  file  with  type
- SEQ.  It maybe edited by any editor.
+ SEQ.  It may be edited by any editor.
 
 \bUsing the "lifeconv" utility
 
@@ -157,7 +155,7 @@
 \g where destination  is  any  valid  file
  name.  The "-4" option sets the  format
  for 8-bit  Xlife  for  the  destination
- file is written.  At Microsoft  Windows
+ file is written.  In Microsoft  Windows
  environment (Mingw Xlife port) the sign
  \p>\g must be omitted.
 
@@ -190,14 +188,15 @@
         most 10 generations, but the  R-
         pentomino does not do  so  until
         generation 1103, by  which  time
-        it has a population of 116.  The
+        it has a population  of  116.  A
         glider it releases in generation
         69, was the  first  glider  ever
         observed.
 
 \pbunnies\g, \plidka\g, \pacorn\g
         methuselahs with  17332,  29055,
-        5206 generations lifespan.
+        5206 generations lifespan respe-
+        ctively.
 
 \ptoad\g    a period 2 oscillator.
 
@@ -226,12 +225,12 @@
 
   \p12345/45\g    patterns become contained
 
-  \p12345/4\g     same as above, but
-              settles VERY quickly
+  \p12345/4\g     same as above,  but  sett-
+              les VERY quickly
 
   \p5/12\g        floor  tile patterns...
-              Variations of this tend
-              to be interesting as well
+              Variations of this tend to
+              be interesting as well
 
   \p1357/1357\g   replicators world...
 
@@ -246,9 +245,9 @@
 \bFILES
 
   \pcolors-cf\g   this program file contains
-              palette.    It's  actually
-              binary  sequential   data-
-              file.  Maybe omitted.
+              a palette.  It's  actually
+              a binary sequential  data-
+              file.  May be omitted.
 
   \p(c)\g         the sequential file   with
               copyright  and  historical

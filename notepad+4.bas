@@ -1,6 +1,6 @@
  0 rem *** notepad+4, the sequential files editor, v1 rev.6
- 4 rem *** by litwr, 2014-16, (C) GNU GPL
- 6 rem *** the initial banner was made by Text Resizer by MIRKOSOFT
+ 4 rem *** by litwr, 2014-16, (c) gnu gpl
+ 6 rem *** the initial banner was made by text resizer by mirkosoft
  8 cc$=chr$(233):mc%=40:cf$=chr$(230):mo$="ins":im%=1:u%=8:un$="u8"
 10 ml%=700:dima$(700)
 
