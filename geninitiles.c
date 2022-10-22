@@ -15,7 +15,7 @@
    #define VIDEOXINC 16
    #define VIDEOSTART 0x2000
 #elif defined(CPC6128)
-   #define TILESIZE 61
+   #define TILESIZE 62
    #define TILESTART 0
    #define XMAX 20
    #define YMAX 24
@@ -75,7 +75,7 @@ void printtile(unsigned short *b) {
    for (i = 0; i < 15; i++) printf("0, ");
    printf("0\n    db ", b[i]);
    for (i = 0; i < 15; i++) printf("0, ");
-   printf("0\n    dw $%x\n    db 0\n", b[29]);
+   printf("0\n    dw $%x\n    db 0, 0\n", b[29]);
 #elif defined(IBMPC)
    printf("    db ");
    for (i = 0; i < 7; i++) printf("0, ");
@@ -152,7 +152,7 @@ int main() {
                 b[4] = cur + TILESIZE*(XMAX - 1);
                 b[5] = cur - TILESIZE;
                 b[11] = cur - TILESIZE*((YMAX - 2)*XMAX + 1);
-             } 
+             }
              else if (x == XMAX - 1) {
                 b[7] = cur - TILESIZE*(2*XMAX-1);
                 b[8] = cur - TILESIZE*(XMAX - 1);
