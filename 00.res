@@ -23,3 +23,7 @@ v4
 +fixed errors
 *renamed colors-cf to colors.cf due to incompatibility, added note about the conversion
 +updated Notepad+4 rev.4
+
+v5
++updated Notepad+4 rev.6
++better texts (manpage and messages)
