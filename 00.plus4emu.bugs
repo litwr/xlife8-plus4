@@ -1,0 +1,21 @@
+bugs
+* PAL inv - 40x36, xlife's manpage, ...
+* fix to dir for load files (disk images, prg, ...)
+* dir"*=s" does not work for working directory
+* sometimes debugger shows incorrect (disp =1) address
+* the screenshot resolution is always the same 768x576 regardless of display mode
+* read status word after error during load with IEC emulation only drives
+
+missed
+* return & 'step to' buttons at debugger
+* screen not blank at debugger
+* no flash screen at debugger step
+* cpc6128emu is 2-3 times faster
+* CPU flags
+* set 1581 when d81 image?
+
+question
+* mouse-cursor interface
+
+cpc6128
+* working directory is not accessible

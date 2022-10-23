@@ -1,0 +1,28 @@
+This program was developed under Linux.  Cygwin for Microsoft Windows provides
+similar environment.  The script `compile' makes all necessary steps to build
+all files of Xlife distribution.  The script `compressall' makes the optional
+compression of several executable prg-files.
+
+The table files are generated during the compilation by C-programs which
+require the presence of the C-compiler (gcc or almost any other).
+
+The compilation requires presence of `tmpx' cross assembler -
+http://turbo.style64.org/.  It is theoretically possible to compile sources
+under Commodore 64 or Plus/4 with Turbo Assembler Macro.
+
+The script `compile' also converts several ASCII texts to PETSCII texts.  This
+requires the presence of several special utilities:
+   1) awk, sed, tr, rm - standard utilities for any Unix relative OS;
+   2) txt2seq - a converter of ASCII texts to S00 format -
+      http://litwr2.atspace.eu/p4_download.html
+
+The script `compile' also converts Basic programs from ASCII texts to C+4
+prg-format.  This requires the presence of `petcat' utility from VICE
+emulator distribution.
+
+There is one special case.  The text editor `Notepad+4' is much better after the
+compilation.  So it should be made by the real or emulated C+4.  The recommended
+compiler is AustroSpeed.
+
+The optional compression is made by `p4compress' (a part of plus4emu emulator) -
+http://sourceforge.net/projects/plus4emu

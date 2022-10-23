@@ -1,0 +1,411 @@
+;used zp: 3-7, $14, $8e-8f, $92, $9b-$9c, $b6-b7, $a7-a8, $b8-b9, $bb, $d0-e7, $f1-f8, $fc-fd, $f2-$f8 (former pctemp)
+;free zp: $9f-a2
+viewport = $8e    ;+$8f
+startp   = $D4    ;+$D5
+currp    = $D8    ;+$D9
+i1       = $D0    ;+$D1
+i2       = $D2
+t1       = $D3
+adjcell  = $D6    ;+$D7
+adjcell2 = $DA    ;+$DB
+clncnt   = $DC
+mode     = $DD    ;0-stop, 1-run, 2-hide, 3-exit
+tilecnt  = $DE    ;+$DF
+pseudoc  = $E0
+cellcnt  = $E1    ;+$E2 .. $E5
+crsrtile = $E6    ;+$E7
+t2       = $F1
+t3       = $BB
+ntscmask = $FC
+gencnt   = $FC1   ; .. $FC7
+xdir     = 3      ;linear transformation
+ydir     = 4
+x0       = 5
+y0       = 6
+xchgdir  = $92
+tcscr    = $fcf   ; .. $fd1
+xcrsr    = $fe0   ; .. $fe2
+ycrsr    = $fe5   ; .. $fe7
+;$fe8-feb are used by io to keep live/born info
+temp     = $b6    ; .. $b7
+bencnt2  = $f2    ; .. $f8
+
+hormax   = 20     ;160
+vermax   = 24     ;192
+total    = hormax*vermax+1
+plainbox = tiles+(hormax*vermax*tilesize)
+
+left     = 8      ;all directions
+ul       = 10     ;not zero!
+up       = 12
+ur       = 14
+right    = 16
+dr       = 18
+down     = 20
+dl       = 22
+next     = 24
+count0   = 26
+count1   = 30
+count2   = 34
+count3   = 38
+count4   = 42
+count5   = 46
+count6   = 50
+count7   = 54
+video    = 58
+sum      = 60       ;sum != 0, see calccells
+tile     .macro
+l0       .byte 0
+l1       .byte 0
+l2       .byte 0
+l3       .byte 0
+l4       .byte 0
+l5       .byte 0
+l6       .byte 0
+l7       .byte 0
+left     .word 0	;+8
+ul       .word 0
+up       .word 0        ;+12
+ur       .word 0
+right    .word 0        ;+16
+dr       .word 0
+down     .word 0        ;+20
+dl       .word 0
+next     .word 0        ;+24
+count0   .repeat 4,0    ;+26
+count1   .repeat 4,0    ;+30
+count2   .repeat 4,0    ;+34
+count3   .repeat 4,0    ;+38
+count4   .repeat 4,0    ;+42
+count5   .repeat 4,0    ;+46
+count6   .repeat 4,0    ;+50
+count7   .repeat 4,0    ;+54
+video    .word 0        ;+58
+sum      .byte 0        ;+60
+         .endm
+tilesize = 61
+
+testlf   .macro
+         lda (currp),y
+         and #$80
+         beq finish
+
+         lda #1
+         sta t1
+         ora (adjcell),y
+         sta (adjcell),y
+finish
+         .endm
+
+testrt   .macro
+         lda (currp),y
+         and #1
+         beq finish
+
+         lda #$80
+         sta t1
+         ora (adjcell),y
+         sta (adjcell),y
+finish
+         .endm
+
+assign16 .macro  ;\1 <- \2
+         lda \2
+         sta \1
+         lda \2+1
+         sta \1+1
+         .endm
+
+vidmac12 .macro
+         lda (currp),y
+         bne l1
+
+         sta (i1),y
+         beq l2
+
+l1
+         #vidmac1x
+         #vidmac2x
+l2       sta (temp),y
+         .endm
+
+vidmac1x .macro
+         lsr
+         lsr
+         lsr
+         lsr
+         tax
+         lda vistab,x
+         sta (i1),y
+         .endm
+
+vidmac2x .macro
+         lda (currp),y
+         and #$f
+         tax
+         lda vistab,x
+         .endm
+
+vidmac1  .macro
+         lda (currp),y
+         #vidmac1x
+         .endm
+
+vidmac2  .macro
+         #vidmac2x
+         sta (i1),y
+         .endm
+
+vidmacp  .macro
+         lda (currp),y
+         bne l1
+
+         sta (i1),y
+         beq l2
+
+l1       tax
+         sty adjcell2
+         tya
+         asl
+         asl
+         tay
+         lda (adjcell),y
+         and #$c0
+         sta 7
+         iny
+         sty adjcell2+1
+         lda (adjcell),y
+         asl
+         and #$30
+         ora 7
+         sta 7
+         txa
+         lsr
+         lsr
+         lsr
+         lsr
+         ora 7
+         tay
+         lda vistabpc,y
+         ldy adjcell2
+         sta (i1),y
+         ldy adjcell2+1
+         iny
+         lda (adjcell),y
+         lsr
+         and #$c
+         sta 7
+         iny
+         lda (adjcell),y
+         and #3
+         ora 7
+         asl
+         asl
+         asl
+         asl
+         sta 7
+         txa
+         and #$f
+         ora 7
+         tay
+         lda vistabpc,y
+         ldy adjcell2
+l2       sta (temp),y
+         .endm
+
+genmac   .macro
+         ldy #\1+3
+         lda (currp),y
+         beq l1
+
+         tax
+         lda gentab,x
+         and #3
+l1       sta i2
+
+         dey
+         lda (currp),y
+         beq l2
+
+         tax
+         lda gentab,x
+         and #$c
+         ora i2
+         sta i2
+
+l2       dey
+         lda (currp),y
+         beq l3
+
+         tax
+         lda gentab,x
+         and #$30
+         ora i2
+         sta i2
+
+l3       dey
+         lda (currp),y
+         beq l4
+
+         tax
+         lda gentab,x
+         and #$c0
+l4       ora i2
+         ldy #\2
+         tax
+         sta (currp),y
+
+         lda tab3,x
+         beq cont2
+
+         ldy #sum
+         sta (currp),y
+
+         ldy mode
+         cpy #2       ;hide?
+         beq cont2
+
+         #cellsum
+cont2
+         .endm
+
+cellsum  .macro
+         adc cellcnt+4   ;CY=0
+         cmp #$3a
+         bcs l1
+
+         sta cellcnt+4
+         bcc cont2
+
+l1       sbc #$a
+         sta cellcnt+4
+         ldy #$30
+         #incbcd cellcnt+3
+         sty cellcnt+3
+         #incbcd cellcnt+2
+         sty cellcnt+2
+         #incbcd cellcnt+1
+         sty cellcnt+1
+         #incbcd cellcnt
+         sty cellcnt
+cont2
+         .endm
+
+setcount .macro
+         ldy #\1
+         lda (currp),y
+         ldy #\2
+
+         tax
+         and #$c0
+         sta (currp),y
+
+         txa
+         and #$30
+         lsr
+         iny
+         sta (currp),y
+
+         txa
+         and #$c
+         asl
+         iny
+         sta (currp),y
+
+         txa
+         and #3
+         iny
+         sta (currp),y
+         .endm
+
+zero16   .macro
+         lda #0
+         sta \1
+         sta \1+1
+         .endm
+
+incbcd   .segment
+         inc \1
+         lda \1
+         cmp #$3A
+         bne cont2
+         .endm
+
+inibcd   .macro
+         lda #$30
+         ldx #\2
+loop0    sta \1,x
+         dex
+         bpl loop0
+         .endm
+
+iniram   .macro
+         ldy #0
+loop1    lda $1800,y
+         sta $332,y
+         iny
+         bne loop1
+loop2    lda $1900,y
+         sta $432,y
+         iny
+         cpy #$0a
+         bne loop2
+         .endm
+
+ispyr1   .segment
+         .byte $f3,\1     ;incsbc
+         .endm
+
+ispyr4   .segment
+         lda #4
+         adc (\1),y
+         sta (\1),y
+         clc     ;plain only
+         .endm
+
+ispyr8   .segment
+         lda #8
+         adc (\1),y
+         sta (\1),y
+         clc      ;plain only
+         .endm
+
+dcpyr1   .segment
+         .byte $d3,\1     ;deccmp
+         .endm
+
+printhex .macro
+         and #$7f       ;print hex number in AC
+         pha
+         lsr
+         lsr
+         lsr
+         lsr
+         eor #$30
+         jsr BSOUT
+         pla
+         and #$f
+         eor #$30
+         cmp #"9"+1
+         bcc l1
+
+         adc #6     ;CY=1
+l1       jsr BSOUT
+         .endm
+
+chgtopology .macro
+         lda topology
+         beq l2
+
+         jsr torus
+         lda bordertc
+         dec topology
+         beq l1
+
+l2       jsr plain
+         inc topology
+         lda borderpc
+l1       sta $ff19
+         rts
+         .endm
+
